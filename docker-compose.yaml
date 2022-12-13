@@ -1,0 +1,56 @@
+services:
+  minio:
+    image: minio/minio
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    volumes:
+      - minio_storage:/data
+    environment:
+      MINIO_ROOT_USER: minio
+      MINIO_ROOT_PASSWORD: miniotest
+    command: server --console-address ":9001" /data
+  temporalite:
+    build:
+      context: .
+      dockerfile: Dockerfile.temporalite
+    ports:
+      - 7233:7233
+      - 8233:8233
+  import-app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: import-app
+    depends_on:
+      - temporalite
+    environment:
+      TEMPORAL_SERVER: temporalite:7233
+    restart: on-failure:5
+    command:
+      - yarn
+      - start:app:dev
+    ports:
+      - 3000:3000
+    volumes:
+      - ./src:/app/src
+  worker:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: worker
+    depends_on:
+      - temporalite
+    environment:
+      TEMPORAL_SERVER: temporalite:7233
+      AWS_ACCESS_KEY_ID: ${AWS_ACCESS_KEY}
+      AWS_SECRET_ACCESS_KEY: ${AWS_SECRET_KEY}
+    restart: on-failure:5
+    command:
+      - yarn
+      - start:worker:dev
+    volumes:
+      - ./src:/app/src
+
+volumes:
+  minio_storage: {}
