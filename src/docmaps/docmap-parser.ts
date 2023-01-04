@@ -83,7 +83,7 @@ const getVersionFromExpression = (expression: Expression): Version => {
   }
 
   const contentUrls = [`https://doi.org/${expression.doi}`];
-  if (expression.url) {
+  if (expression.url && expression.url !== `https://doi.org/${expression.doi}`) {
     contentUrls.push(expression.url);
   }
 
@@ -124,7 +124,6 @@ const findAndUpdateOrCreateVersionDescribedBy = (results: ParseResult, expressio
     foundVersion.publishedDate = newVersion.publishedDate ?? foundVersion.publishedDate;
 
     newVersion.contentUrls.forEach((contentUrl) => foundVersion.contentUrls.includes(contentUrl) || foundVersion.contentUrls.push(contentUrl));
-
 
     return foundVersion;
   }

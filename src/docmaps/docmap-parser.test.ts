@@ -117,6 +117,66 @@ describe('docmap-parser', () => {
     });
   });
 
+  it('constructs a contentUrl from the doi', () => {
+    const preprint = generatePreprint('preprint/article1', new Date('2022-03-01'));
+    const firstStep = generateStep([preprint], [], []);
+    const parsedData = parseDocMapFromFirstStep(firstStep);
+
+    expect(parsedData.versions.length).toStrictEqual(1);
+    expect(parsedData.versions[0].contentUrls).toContain('https://doi.org/preprint/article1');
+
+    expect(parsedData.timeline.length).toStrictEqual(1);
+    expect(parsedData.timeline[0]).toMatchObject({
+      name: 'Preprint posted',
+      date: new Date('2022-03-01'),
+      link: {
+        text: 'Go to preprint',
+        url: 'https://doi.org/preprint/article1',
+      },
+    });
+  });
+
+  it('uses URL to add a contentUrl and set the link URL in the timeline', () => {
+    const preprint = generatePreprint('preprint/article1', new Date('2022-03-01'), 'https://somewhere.preprint/article1');
+    const firstStep = generateStep([preprint], [], []);
+    const parsedData = parseDocMapFromFirstStep(firstStep);
+
+    expect(parsedData.versions.length).toStrictEqual(1);
+    expect(parsedData.versions[0].contentUrls.length).toStrictEqual(2);
+    expect(parsedData.versions[0].contentUrls).toContain('https://doi.org/preprint/article1');
+    expect(parsedData.versions[0].contentUrls).toContain('https://somewhere.preprint/article1');
+
+    expect(parsedData.timeline.length).toStrictEqual(1);
+    expect(parsedData.timeline[0]).toMatchObject({
+      name: 'Preprint posted',
+      date: new Date('2022-03-01'),
+      link: {
+        text: 'Go to preprint',
+        url: 'https://somewhere.preprint/article1',
+      },
+    });
+  });
+
+  it('does not add DOI-based contentUrl if it already matches the url', () => {
+    const preprint = generatePreprint('preprint/article1', new Date('2022-03-01'), 'https://doi.org/preprint/article1');
+    const firstStep = generateStep([preprint], [], []);
+    const parsedData = parseDocMapFromFirstStep(firstStep);
+
+    expect(parsedData.versions.length).toStrictEqual(1);
+    expect(parsedData.versions[0].contentUrls.length).toStrictEqual(1);
+    expect(parsedData.versions[0].contentUrls).toContain('https://doi.org/preprint/article1');
+
+    expect(parsedData.timeline.length).toStrictEqual(1);
+    expect(parsedData.timeline[0]).toMatchObject({
+      name: 'Preprint posted',
+      date: new Date('2022-03-01'),
+      link: {
+        text: 'Go to preprint',
+        url: 'https://doi.org/preprint/article1',
+      },
+    });
+  });
+
   it('finds a preprint from a docmap describing under review assertion', () => {
     // Arrange
     const preprint = generatePreprint('preprint/article1', new Date('2022-03-01'), 'https://something.org/preprint/article1');
