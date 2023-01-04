@@ -66,8 +66,8 @@ export type Version = {
   sentForReviewDate?: Date,
   reviewedDate?: Date,
   authorResponseDate?: Date,
-  supercededBy?: Version,
-  supercedes?: Version,
+  originalContentDoi?: string
+  superceded: boolean,
 };
 
 export type ParseResult = {
@@ -83,6 +83,7 @@ const getVersionFromExpression = (expression: Expression): Version => {
   }
   return {
     type: upperCaseFirstLetter(expression.type),
+    superceded: false,
     status: '',
     id: expression.identifier ?? expression.doi,
     doi: expression.doi,
@@ -194,9 +195,9 @@ const parseStep = (step: Step, results: ParseResult): ParseResult => {
     // if there is an input and output preprint, let's assume it's a republish with the intent to review
     if (preprintInputs.length === 1 && preprintOutputs.length === 1) {
       const newVersion = findAndUpdateOrCreateVersionDescribedBy(results, preprintOutputs[0]);
-      if (newVersion && newVersion !== version) {
-        version.supercededBy = newVersion;
-        newVersion.supercedes = version;
+      if (newVersion !== version) {
+        version.superceded = true;
+        newVersion.originalContentDoi = version.originalContentDoi ?? version.doi;
 
         // Update type
         newVersion.status = '(Preview) Reviewed';
@@ -209,18 +210,14 @@ const parseStep = (step: Step, results: ParseResult): ParseResult => {
     // assume there is only one input, which is the preprint
     const preprint = findAndUpdateOrCreateVersionDescribedBy(results, step.inputs[0]);
     const replacementPreprint = findAndUpdateOrCreateVersionDescribedBy(results, preprintRepublishedAssertion.item);
-    if (preprint && replacementPreprint) {
-      preprint.supercededBy = replacementPreprint;
-      replacementPreprint.supercedes = preprint;
-    }
+    preprint.superceded = true;
+    replacementPreprint.originalContentDoi = preprint.originalContentDoi ?? preprint.doi;
   } else if (preprintInputs.length === 1 && evaluationInputs.length > 0 && preprintOutputs.length === 1) {
     // preprint input, evaluation input, and preprint output = superceed input preprint with output Reviewed Preprint
     const inputVersion = findAndUpdateOrCreateVersionDescribedBy(results, preprintInputs[0]);
     const outputVersion = findAndUpdateOrCreateVersionDescribedBy(results, preprintOutputs[0]);
-    if (outputVersion) {
-      inputVersion.supercededBy = outputVersion;
-      outputVersion.supercedes = inputVersion;
-    }
+    inputVersion.superceded = true;
+    outputVersion.originalContentDoi = inputVersion.originalContentDoi ?? inputVersion.doi;
   }
 
   const preprintPeerReviewedAssertion = step.assertions.find((assertion) => assertion.status === AssertionStatus.PeerReviewed);
@@ -314,7 +311,7 @@ const getEventsFromVersion = (version: Version): TimelineEvent[] => {
 const getTimelineFromVersions = (versions: Version[]): TimelineEvent[] => versions.flatMap((version: Version): TimelineEvent[] => getEventsFromVersion(version));
 
 // Removes any that has collected a superceded By property
-const reducedSupercededVersions = (versions: Version[]): Version[] => versions.filter((version) => !version.supercededBy);
+const removeSupercededVersions = (versions: Version[]): Version[] => versions.filter((version) => !version.superceded);
 
 const parseDocMapJson = (docMapJson: string): DocMap => {
   const docMapStruct = JSON.parse(docMapJson, (key, value) => {
@@ -355,6 +352,6 @@ export const parsePreprintDocMap = (docMap: DocMap | string): ParseResult => {
   }
 
   results.timeline = getTimelineFromVersions(results.versions);
-  results.versions = reducedSupercededVersions(results.versions);
+  results.versions = removeSupercededVersions(results.versions);
   return results;
 };
