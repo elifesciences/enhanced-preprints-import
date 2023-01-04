@@ -66,7 +66,7 @@ export type Version = {
   sentForReviewDate?: Date,
   reviewedDate?: Date,
   authorResponseDate?: Date,
-  originalContentDoi?: string
+  contentUrls: string[],
   superceded: boolean,
 };
 
@@ -81,6 +81,12 @@ const getVersionFromExpression = (expression: Expression): Version => {
   if (!expression.doi) {
     throw Error('Cannot identify Expression by DOI');
   }
+
+  const contentUrls = [`https://doi.org/${expression.doi}`];
+  if (expression.url) {
+    contentUrls.push(expression.url);
+  }
+
   return {
     type: upperCaseFirstLetter(expression.type),
     superceded: false,
@@ -88,6 +94,7 @@ const getVersionFromExpression = (expression: Expression): Version => {
     id: expression.identifier ?? expression.doi,
     doi: expression.doi,
     url: expression.url ?? `https://doi.org/${expression.doi}`,
+    contentUrls,
     versionIdentifier: expression.versionIdentifier,
     publishedDate: expression.published,
   };
@@ -115,6 +122,10 @@ const findAndUpdateOrCreateVersionDescribedBy = (results: ParseResult, expressio
     foundVersion.type = newVersion.type ?? foundVersion.type;
     foundVersion.status = newVersion.status ?? foundVersion.status;
     foundVersion.publishedDate = newVersion.publishedDate ?? foundVersion.publishedDate;
+
+    newVersion.contentUrls.forEach((contentUrl) => foundVersion.contentUrls.includes(contentUrl) || foundVersion.contentUrls.push(contentUrl));
+
+
     return foundVersion;
   }
   results.versions.push(newVersion);
@@ -197,7 +208,11 @@ const parseStep = (step: Step, results: ParseResult): ParseResult => {
       const newVersion = findAndUpdateOrCreateVersionDescribedBy(results, preprintOutputs[0]);
       if (newVersion !== version) {
         version.superceded = true;
-        newVersion.originalContentDoi = version.originalContentDoi ?? version.doi;
+        // bring forward any content
+        newVersion.contentUrls = [
+          ...version.contentUrls,
+          ...newVersion.contentUrls,
+        ];
 
         // Update type
         newVersion.status = '(Preview) Reviewed';
@@ -211,13 +226,21 @@ const parseStep = (step: Step, results: ParseResult): ParseResult => {
     const preprint = findAndUpdateOrCreateVersionDescribedBy(results, step.inputs[0]);
     const replacementPreprint = findAndUpdateOrCreateVersionDescribedBy(results, preprintRepublishedAssertion.item);
     preprint.superceded = true;
-    replacementPreprint.originalContentDoi = preprint.originalContentDoi ?? preprint.doi;
+    // bring forward any content
+    replacementPreprint.contentUrls = [
+      ...preprint.contentUrls,
+      ...replacementPreprint.contentUrls,
+    ];
   } else if (preprintInputs.length === 1 && evaluationInputs.length > 0 && preprintOutputs.length === 1) {
     // preprint input, evaluation input, and preprint output = superceed input preprint with output Reviewed Preprint
     const inputVersion = findAndUpdateOrCreateVersionDescribedBy(results, preprintInputs[0]);
     const outputVersion = findAndUpdateOrCreateVersionDescribedBy(results, preprintOutputs[0]);
     inputVersion.superceded = true;
-    outputVersion.originalContentDoi = inputVersion.originalContentDoi ?? inputVersion.doi;
+    // bring forward any content
+    outputVersion.contentUrls = [
+      ...inputVersion.contentUrls,
+      ...outputVersion.contentUrls,
+    ];
   }
 
   const preprintPeerReviewedAssertion = step.assertions.find((assertion) => assertion.status === AssertionStatus.PeerReviewed);

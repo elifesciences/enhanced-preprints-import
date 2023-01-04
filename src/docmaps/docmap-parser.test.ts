@@ -308,7 +308,6 @@ describe('docmap-parser', () => {
       id: 'elife/12345.1',
       type: 'Preprint',
       versionIdentifier: '1',
-      originalContentDoi: 'preprint/article1',
     });
 
     expect(parsedData.timeline.length).toStrictEqual(2);
@@ -447,6 +446,7 @@ describe('docmap-parser', () => {
       type: 'Preprint',
       status: 'Reviewed',
       versionIdentifier: '1',
+      contentUrls: ['https://doi.org/preprint/article1'],
       peerReview: {
         reviews: [
           {
@@ -564,6 +564,7 @@ describe('docmap-parser', () => {
       type: 'Preprint',
       status: 'Reviewed',
       versionIdentifier: '1',
+      contentUrls: ['https://doi.org/preprint/article1'],
       peerReview: {
         reviews: [
           {
@@ -662,6 +663,7 @@ describe('docmap-parser', () => {
       type: 'Preprint',
       status: 'Reviewed',
       versionIdentifier: '1',
+      contentUrls: ['https://doi.org/preprint/article1'],
       peerReview: {
         reviews: [
           {
@@ -762,6 +764,7 @@ describe('docmap-parser', () => {
       type: 'Preprint',
       status: 'Reviewed',
       versionIdentifier: '1',
+      contentUrls: ['https://doi.org/preprint/article1'],
       peerReview: {
         reviews: [
           {
@@ -871,6 +874,7 @@ describe('docmap-parser', () => {
       type: 'Preprint',
       status: '',
       versionIdentifier: '2',
+      contentUrls: ['https://doi.org/preprint/article1', 'https://doi.org/preprint/article2'],
     });
 
     expect(parsedData.timeline.length).toStrictEqual(3);
