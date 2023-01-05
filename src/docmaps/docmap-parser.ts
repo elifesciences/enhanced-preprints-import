@@ -54,6 +54,18 @@ export type TimelineEvent = {
   }
 };
 
+export enum ContentType {
+  Article = 'article',
+  EvaluationSummary = 'evaluation-summary',
+  Review = 'review-article',
+  AuthorResponse = 'author-response',
+}
+
+export type Content = {
+  type: ContentType,
+  url: string,
+};
+
 export type Version = {
   id: string,
   versionIdentifier?: string,
@@ -66,7 +78,7 @@ export type Version = {
   sentForReviewDate?: Date,
   reviewedDate?: Date,
   authorResponseDate?: Date,
-  contentUrls: string[],
+  content: Content[],
   superceded: boolean,
 };
 
@@ -81,10 +93,9 @@ const getVersionFromExpression = (expression: Expression): Version => {
   if (!expression.doi) {
     throw Error('Cannot identify Expression by DOI');
   }
-
-  const contentUrls = [`https://doi.org/${expression.doi}`];
-  if (expression.url && expression.url !== `https://doi.org/${expression.doi}`) {
-    contentUrls.push(expression.url);
+  const content = [];
+  if (expression.url) {
+    content.push({ type: ContentType.Article, url: expression.url });
   }
 
   return {
@@ -94,7 +105,7 @@ const getVersionFromExpression = (expression: Expression): Version => {
     id: expression.identifier ?? expression.doi,
     doi: expression.doi,
     url: expression.url ?? `https://doi.org/${expression.doi}`,
-    contentUrls,
+    content,
     versionIdentifier: expression.versionIdentifier,
     publishedDate: expression.published,
   };
@@ -111,7 +122,7 @@ const isVersionAboutExpression = (version: Version, expression: Expression): boo
 
   return true;
 };
-
+const isContentEqual = (contentA: Content, contentB: Content): boolean => contentA.url === contentB.url && contentA.type === contentB.type;
 const findVersionDescribedBy = (results: ParseResult, expression: Expression): Version | undefined => results.versions.find((version) => isVersionAboutExpression(version, expression));
 const findAndUpdateOrCreateVersionDescribedBy = (results: ParseResult, expression: Expression): Version => {
   const foundVersion = findVersionDescribedBy(results, expression);
@@ -123,7 +134,7 @@ const findAndUpdateOrCreateVersionDescribedBy = (results: ParseResult, expressio
     foundVersion.status = newVersion.status ?? foundVersion.status;
     foundVersion.publishedDate = newVersion.publishedDate ?? foundVersion.publishedDate;
 
-    newVersion.contentUrls.forEach((contentUrl) => foundVersion.contentUrls.includes(contentUrl) || foundVersion.contentUrls.push(contentUrl));
+    newVersion.content.forEach((contentEntry) => foundVersion.content.find((contentEntryInFoundVersion) => isContentEqual(contentEntryInFoundVersion, contentEntry)) || foundVersion.content.push(contentEntry));
 
     return foundVersion;
   }
@@ -208,9 +219,9 @@ const parseStep = (step: Step, results: ParseResult): ParseResult => {
       if (newVersion !== version) {
         version.superceded = true;
         // bring forward any content
-        newVersion.contentUrls = [
-          ...version.contentUrls,
-          ...newVersion.contentUrls,
+        newVersion.content = [
+          ...version.content,
+          ...newVersion.content,
         ];
 
         // Update type
@@ -226,9 +237,9 @@ const parseStep = (step: Step, results: ParseResult): ParseResult => {
     const replacementPreprint = findAndUpdateOrCreateVersionDescribedBy(results, preprintRepublishedAssertion.item);
     preprint.superceded = true;
     // bring forward any content
-    replacementPreprint.contentUrls = [
-      ...preprint.contentUrls,
-      ...replacementPreprint.contentUrls,
+    replacementPreprint.content = [
+      ...preprint.content,
+      ...replacementPreprint.content,
     ];
   } else if (preprintInputs.length === 1 && evaluationInputs.length > 0 && preprintOutputs.length === 1) {
     // preprint input, evaluation input, and preprint output = superceed input preprint with output Reviewed Preprint
@@ -236,9 +247,9 @@ const parseStep = (step: Step, results: ParseResult): ParseResult => {
     const outputVersion = findAndUpdateOrCreateVersionDescribedBy(results, preprintOutputs[0]);
     inputVersion.superceded = true;
     // bring forward any content
-    outputVersion.contentUrls = [
-      ...inputVersion.contentUrls,
-      ...outputVersion.contentUrls,
+    outputVersion.content = [
+      ...inputVersion.content,
+      ...outputVersion.content,
     ];
   }
 
