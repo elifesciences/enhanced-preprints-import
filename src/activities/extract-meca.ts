@@ -50,7 +50,6 @@ const extractFileContents = async (zip: JSZip, item: MecaFile, toDir: string): P
   };
 };
 
-
 export const extractMeca = async (mecaFile: string, toDir: string): Promise<MecaFiles> => {
   const zip = await JSZip.loadAsync(readFileSync(mecaFile));
 
@@ -79,10 +78,7 @@ export const extractMeca = async (mecaFile: string, toDir: string): Promise<Meca
   })));
 
   // define a closure that curries the zip and toDir in this scope
-  const extractFromThisArchive = async (item: MecaFile) => {
-    console.log(item);
-    return extractFileContents(zip, item, toDir);
-  };
+  const extractFromThisArchive = async (item: MecaFile) => extractFileContents(zip, item, toDir);
 
   const unprocessedArticle = items.filter((item) => item.type === 'article' && item.mimeType === 'application/xml')[0];
   const otherArticleInstances = items.filter((item) => item.type === 'article' && item.mimeType !== 'application/xml');

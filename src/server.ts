@@ -40,9 +40,11 @@ const createApp = (client: WorkflowClient) => {
 
 createTemporalClient().then((temporalClient) => {
   createApp(temporalClient).listen(3000, () => {
+    // eslint-disable-next-line no-console
     console.log('Import app listening on port 3000');
   });
 }).catch((err) => {
+  // eslint-disable-next-line no-console
   console.error(err);
   process.exit(1);
 });
