@@ -1,1 +1,2 @@
-export { importMeca } from './import-meca';
+export { importDocmaps } from './import-docmaps';
+export { importDocmap } from './import-docmap';

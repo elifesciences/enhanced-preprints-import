@@ -1,6 +1,6 @@
 import express from 'express';
 import { Connection, WorkflowClient } from '@temporalio/client';
-import { importMeca } from './workflows';
+import { importDocmaps } from './workflows';
 
 const createTemporalClient = async () => {
   const address = process.env.TEMPORAL_SERVER ?? 'localhost';
@@ -22,18 +22,14 @@ const createTemporalClient = async () => {
 const createApp = (client: WorkflowClient) => {
   const app = express();
 
-  app.get('/import/:publisherId/:articleId', async (req, res) => {
-    const {
-      publisherId,
-      articleId,
-    } = req.params;
-    const doi = `${publisherId}/${articleId}`;
-    const workflowId = `import-${doi}`;
+  app.get('/import', async (req, res) => {
+    const timestamp = new Date().toISOString();
+    const workflowId = `import-docmaps-${timestamp}`;
 
-    const handle = await client.start(importMeca, {
+    const handle = await client.start(importDocmaps, {
       workflowId,
       taskQueue: 'epp',
-      args: [{ id: '12345', version: '1', preprintDoi: doi }], // this is typechecked against workflowFn's args
+      args: ['https://data-hub-api.elifesciences.org/enhanced-preprints/docmaps/v1/index'],
     });
 
     res.send((await handle.describe()).workflowId);

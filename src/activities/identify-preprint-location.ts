@@ -29,7 +29,7 @@ export const identifyPreprintLocation = async (doi: string): Promise<PreprintMec
   try {
     const metadata = await fetchBiorxivMecaMetadata(articleId);
     if (metadata.status[0].messages !== 'ok') {
-      throw Error(`"message" was: ${metadata.status[0].messages}`);
+      throw Error(metadata.status[0].messages);
     }
 
     if (metadata.status[0].count !== 1) {
