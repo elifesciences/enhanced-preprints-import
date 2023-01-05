@@ -6,6 +6,8 @@ WORKDIR /app
 FROM base as deps
 ADD package.json package.json
 ADD yarn.lock yarn.lock
+ADD .yarnrc.yml .yarnrc.yml
+ADD .yarn .yarn
 ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true
 RUN yarn
 
