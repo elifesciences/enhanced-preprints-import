@@ -29,7 +29,7 @@ const createApp = (client: WorkflowClient) => {
     const handle = await client.start(importDocmaps, {
       workflowId,
       taskQueue: 'epp',
-      args: ['https://data-hub-api.elifesciences.org/enhanced-preprints/docmaps/v1/index'],
+      args: ['http://data-hub-api.elifesciences.org/enhanced-preprints/docmaps/v1/index'],
     });
 
     res.send((await handle.describe()).workflowId);

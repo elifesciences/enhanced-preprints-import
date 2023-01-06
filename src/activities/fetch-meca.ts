@@ -21,7 +21,7 @@ const parseS3Path = (s3Path: string) => {
   };
 };
 
-export const fetchMeca = async (id: string, version: string, doi: string, s3Path: string): Promise<Result> => {
+export const fetchMeca = async (doi: string, s3Path: string): Promise<Result> => {
   const [publisherId, articleId] = doi.split('/');
   const client = new S3Client({ region: 'us-east-1' });
 
