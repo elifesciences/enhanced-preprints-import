@@ -23,7 +23,7 @@
     },
     {
       "packagePatterns": ["^minio"],
-      "versioning": "regex:^RELEASE\\.(?<major>\\d{4})-(?<minor>\\d{2})-(?<patch>\\d{2})"
+      "enabled": false
     },
     {
       "matchPackageNames": ["node"],
