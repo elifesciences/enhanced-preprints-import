@@ -1,5 +1,4 @@
-ARG node_version=18
-FROM node:${node_version} as base
+FROM node:18 as base
 RUN mkdir /app
 WORKDIR /app
 

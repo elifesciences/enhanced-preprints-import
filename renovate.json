@@ -3,15 +3,6 @@
   "extends": [
     "config:base"
   ],
-  "regexManagers": [
-    {
-      "fileMatch": ["^Dockerfile$"],
-      "matchStrings": ["node_version=(?<currentValue>.*?)"],
-      "depNameTemplate": "node",
-      "datasourceTemplate": "node",
-      "versioningTemplate": "node"
-    }
-  ],
   "packageRules": [
     {
       "matchUpdateTypes": [
@@ -21,11 +12,6 @@
         "digest"
       ],
       "automerge": true
-    },
-    {
-      "matchPackageNames": ["node"],
-      "matchDatasources": ["docker"],
-      "enabled": false
     },
     {
       "matchPackageNames": [
