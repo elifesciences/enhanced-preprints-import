@@ -1,0 +1,39 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": [
+    "config:base"
+  ],
+  "regexManagers": [
+    {
+      "fileMatch": ["^Dockerfile$"],
+      "matchStrings": ["node_version=(?<currentValue>.*?)"],
+      "depNameTemplate": "node",
+      "datasourceTemplate": "node",
+      "versioningTemplate": "node"
+    }
+  ],
+  "packageRules": [
+    {
+      "matchUpdateTypes": [
+        "minor",
+        "patch",
+        "pin",
+        "digest"
+      ],
+      "automerge": true
+    },
+    {
+      "matchPackageNames": ["node"],
+      "matchDatasources": ["docker"],
+      "enabled": false
+    },
+    {
+      "matchPackageNames": [
+        "ghcr.io/elifesciences/epp-image-server",
+        "ghcr.io/elifesciences/enhanced-preprints"
+      ],
+      "versioning": "regex:^master-(.*)-(?<minor>.*)$",
+      "automerge": true
+    }
+  ]
+}
