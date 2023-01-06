@@ -11,7 +11,7 @@ services:
       MINIO_ROOT_PASSWORD: miniotest
     command: server --console-address ":9001" /data
   createbucket:
-    image: minio/mc:RELEASE.2022-12-02T23-48-47Z
+    image: minio/mc:RELEASE.2022-12-24T15-21-38Z
     depends_on:
       - minio
     entrypoint: >
