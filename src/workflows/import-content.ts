@@ -1,21 +1,18 @@
 import { proxyActivities } from '@temporalio/workflow';
-import { MecaFiles } from '../activities/extract-meca';
 import type * as activities from '../activities/index';
+import { config } from '../config';
 import { Version } from '../docmaps';
 
 const {
-  identifyPreprintLocation,
-  fetchMeca,
-  extractMeca,
-  convertXmlToJson,
+  identifyBiorxivPreprintLocation,
+  copyBiorxivPreprintToEPP,
 } = proxyActivities<typeof activities>({
   startToCloseTimeout: '1 minute',
 });
 
-type ImportContentOutput = MecaFiles & {
+type ImportContentOutput = {
   preprintPath: string,
-  localMecaPath: string,
-  json: string,
+  mecaPath: string,
 };
 
 export async function importContent(version: Version): Promise<ImportContentOutput> {
@@ -23,29 +20,27 @@ export async function importContent(version: Version): Promise<ImportContentOutp
   if (!bioRxivContent) {
     throw Error('Cannot find a supported content file');
   }
-  const doi = bioRxivContent.url.match(/https:\/\/doi.org\/(10.1101\/.+)/)?.[1];
-  if (!doi) {
+  const biorxivDoi = bioRxivContent.url.match(/https:\/\/doi.org\/(10.1101\/.+)/)?.[1];
+  if (!biorxivDoi) {
     throw Error('Cannot find a supported content file');
   }
 
-  const preprintPath = await identifyPreprintLocation(doi);
-  const { file, dir } = await fetchMeca(doi, preprintPath);
+  const preprintPath = await identifyBiorxivPreprintLocation(biorxivDoi);
 
-  // upload MECA to S3
+  const destinationPathForContent = `${config.eppContentUri}/${version.id}/v${version.versionIdentifier ? version.versionIdentifier : '0'}/content.meca`;
+  await copyBiorxivPreprintToEPP(preprintPath, destinationPathForContent);
 
-  const mecaFiles = await extractMeca(file, dir);
+  // Extract Meca
+  // const mecaFiles = await extractMeca(file, dir);
 
   // Upload images to S3
   // Upload additional files to S3
 
-  const json = await convertXmlToJson(mecaFiles.id, mecaFiles.article.path);
-
+  // const json = await convertXmlToJson(mecaFiles.id, mecaFiles.article.path);
   // Store JSON content in EPP
 
   return {
     preprintPath,
-    localMecaPath: file,
-    json,
-    ...mecaFiles,
+    mecaPath: destinationPathForContent,
   };
 }

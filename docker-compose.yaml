@@ -18,6 +18,7 @@ services:
       /bin/sh -c "
       /usr/bin/mc config host add myminio http://minio:9000 minio miniotest;
       /usr/bin/mc mb myminio/epp;
+      /usr/bin/mc mb myminio/biorxiv;
       exit 0;
       "
   temporalite:

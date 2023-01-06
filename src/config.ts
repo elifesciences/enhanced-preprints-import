@@ -1,12 +1,28 @@
-export const config = {
-  s3AccessKeyId: 'minio',
-  s3SecretAccessKey: 'miniotest',
-  s3Region: 'us-east-1',
-  s3Endpoint: 'http://minio:9000/',
-  s3Bucket: 'epp',
-  docmapImportPath: '/docmaps/import',
-  docmapProcessedPath: '/docmaps/processed',
-  mecaImportPath: '/meca/import',
-  mecaProcessedPath: '/meca/import',
-  contentPath: '/content',
+import { ClientOptions } from 'minio';
+
+type Config = {
+  s3Connections: { [key: string]: ClientOptions; },
+  eppContentUri: string,
+};
+
+export const config: Config = {
+  s3Connections: {
+    biorxiv: {
+      accessKey: 'minio',
+      secretKey: 'miniotest',
+      region: 'us-east-1',
+      endPoint: 'minio',
+      port: 9000,
+      useSSL: false,
+    },
+    epp: {
+      accessKey: 'minio',
+      secretKey: 'miniotest',
+      region: 'us-east-1',
+      endPoint: 'minio',
+      port: 9000,
+      useSSL: false,
+    },
+  },
+  eppContentUri: 's3://epp/',
 };
