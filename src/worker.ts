@@ -1,7 +1,13 @@
-import { NativeConnection, Worker } from '@temporalio/worker';
+import { NativeConnection, Worker, Runtime, DefaultLogger } from '@temporalio/worker';
 import * as activities from './activities/index';
 
 async function run() {
+  // setup logging
+  const logger = new DefaultLogger('DEBUG', ({ level, message }) => {
+    console.log(`Custom logger: ${level} — ${message}`);
+  });
+  Runtime.install({ logger });
+
   const address = process.env.TEMPORAL_SERVER ?? 'localhost';
 
   const connectionOptions = {

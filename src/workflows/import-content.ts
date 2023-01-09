@@ -1,4 +1,5 @@
 import { proxyActivities } from '@temporalio/workflow';
+import { MecaFiles } from '../activities/extract-meca';
 import type * as activities from '../activities/index';
 import { config } from '../config';
 import { Version } from '../docmaps';
@@ -6,6 +7,7 @@ import { Version } from '../docmaps';
 const {
   identifyBiorxivPreprintLocation,
   copyBiorxivPreprintToEPP,
+  extractMeca,
 } = proxyActivities<typeof activities>({
   startToCloseTimeout: '1 minute',
 });
@@ -13,6 +15,7 @@ const {
 type ImportContentOutput = {
   preprintPath: string,
   mecaPath: string,
+  mecaFiles: MecaFiles,
 };
 
 export async function importContent(version: Version): Promise<ImportContentOutput> {
@@ -27,11 +30,11 @@ export async function importContent(version: Version): Promise<ImportContentOutp
 
   const preprintPath = await identifyBiorxivPreprintLocation(biorxivDoi);
 
-  const destinationPathForContent = `${config.eppContentUri}/${version.id}/v${version.versionIdentifier ? version.versionIdentifier : '0'}/content.meca`;
-  await copyBiorxivPreprintToEPP(preprintPath, destinationPathForContent);
+  const destinationPathForContent = `${config.eppContentUri}/${version.id}/v${version.versionIdentifier ? version.versionIdentifier : '0'}`;
+  await copyBiorxivPreprintToEPP(preprintPath, `${destinationPathForContent}/content.meca`);
 
   // Extract Meca
-  // const mecaFiles = await extractMeca(file, dir);
+  const mecaFiles = await extractMeca(`${destinationPathForContent}/content.meca`, `${destinationPathForContent}/content/`);
 
   // Upload images to S3
   // Upload additional files to S3
@@ -42,5 +45,6 @@ export async function importContent(version: Version): Promise<ImportContentOutp
   return {
     preprintPath,
     mecaPath: destinationPathForContent,
+    mecaFiles,
   };
 }
