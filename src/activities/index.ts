@@ -1,4 +1,3 @@
-export { identifyPreprintLocation } from './identify-preprint-location';
 export { extractMeca } from './extract-meca';
 export { convertXmlToJson } from './convert-xml-to-json';
 export { findAllDocmaps } from './find-all-docmaps';
