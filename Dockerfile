@@ -24,6 +24,7 @@ COPY --from=deps /app/node_modules node_modules
 
 FROM app as tests
 ADD .eslintignore .eslintignore
+ADD .eslintrc.js .eslintrc.js
 ADD jest.config.ts jest.config.ts
 
 FROM app as worker
