@@ -7,3 +7,11 @@ export const getS3ClientByName = (name: string): Client => {
   }
   return new Client(config.s3Connections[name]);
 };
+
+export const parseS3Path = (s3Path: string) => {
+  const url = new URL(s3Path);
+  return {
+    Bucket: url.host,
+    Key: url.pathname.replace(/^\//, ''),
+  };
+};

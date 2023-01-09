@@ -2,7 +2,7 @@ import axios from 'axios';
 import { mkdtemp } from 'fs';
 import { UploadedObjectInfo } from 'minio';
 import { promisify } from 'util';
-import { getS3ClientByName } from '../S3Bucket';
+import { getS3ClientByName, parseS3Path } from '../S3Bucket';
 
 type PreprintMecaLocation = string;
 type BiorxivMecaMetadataStatus = {
@@ -47,14 +47,6 @@ export const identifyBiorxivPreprintLocation = async (doi: string): Promise<Prep
 };
 
 const makeTmpDirectory = promisify(mkdtemp);
-
-const parseS3Path = (s3Path: string) => {
-  const url = new URL(s3Path);
-  return {
-    Bucket: url.host,
-    Key: url.pathname.replace(/^\//, ''),
-  };
-};
 
 type CopyBiorxivPreprintToEPPOutput = {
   file: UploadedObjectInfo,
