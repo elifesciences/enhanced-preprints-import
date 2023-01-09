@@ -1,9 +1,11 @@
-FROM node:18 as base
+FROM node:16 as base
 RUN mkdir /app
 WORKDIR /app
 
 
 FROM base as deps
+RUN apt-get update && apt-get install -y git python3 build-essential libc-dev
+
 ADD package.json package.json
 ADD yarn.lock yarn.lock
 ADD .yarnrc.yml .yarnrc.yml
