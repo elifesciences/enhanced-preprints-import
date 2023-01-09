@@ -1,4 +1,6 @@
-import { NativeConnection, Worker, Runtime, DefaultLogger } from '@temporalio/worker';
+import {
+  NativeConnection, Worker, Runtime, DefaultLogger,
+} from '@temporalio/worker';
 import * as activities from './activities/index';
 
 async function run() {
