@@ -9,7 +9,7 @@ on:
       - '*'
 
 jobs:
-  build-test-image:
+  test:
     runs-on: ubuntu-latest
     env:
       IMPORT_WORKER_IMAGE_REPO: ghcr.io/elifesciences/enhanced-preprints-import-worker
