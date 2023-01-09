@@ -9,7 +9,7 @@ on:
       - '*'
 
 jobs:
-  build-preview-image:
+  build-test-image:
     runs-on: ubuntu-latest
     env:
       IMPORT_WORKER_IMAGE_REPO: ghcr.io/elifesciences/enhanced-preprints-import-worker
@@ -25,7 +25,7 @@ jobs:
           registry: ghcr.io
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
-      - name: Build and load preview image
+      - name: Build and load test image
         uses: docker/build-push-action@v3
         with:
           context: .
@@ -34,11 +34,11 @@ jobs:
           target: tests
           load: true
           tags: |
-            ${{ env.IMPORT_WORKER_IMAGE_REPO }}:preview-${{ github.sha }}
+            ${{ env.IMPORT_WORKER_IMAGE_REPO }}:test-${{ github.sha }}
       - name: run test
-        run: docker run ${{ env.IMPORT_WORKER_IMAGE_REPO }}:preview-${{ github.sha }} yarn test
+        run: docker run ${{ env.IMPORT_WORKER_IMAGE_REPO }}:test-${{ github.sha }} yarn test
       - name: run lint
-        run: docker run ${{ env.IMPORT_WORKER_IMAGE_REPO }}:preview-${{ github.sha }} yarn lint
+        run: docker run ${{ env.IMPORT_WORKER_IMAGE_REPO }}:test-${{ github.sha }} yarn lint
   build-and-push:
     needs: [test]
     runs-on: ubuntu-18.04
