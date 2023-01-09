@@ -25,7 +25,7 @@ describe('parse-docmap-activity', () => {
 
     // @ts-ignore
     mockedGet.mockImplementation(() => Promise.resolve({
-      data: { docmaps: [{'@id': 'fake-docmap'}] },
+      data: { docmaps: [{ '@id': 'fake-docmap' }] },
       status: 200,
     }));
 
