@@ -8,6 +8,7 @@ const {
   identifyBiorxivPreprintLocation,
   copyBiorxivPreprintToEPP,
   extractMeca,
+  convertXmlToJson,
 } = proxyActivities<typeof activities>({
   startToCloseTimeout: '1 minute',
 });
@@ -16,6 +17,7 @@ type ImportContentOutput = {
   preprintPath: string,
   mecaPath: string,
   mecaFiles: MecaFiles,
+  jsonContentFile: string,
 };
 
 export async function importContent(version: Version): Promise<ImportContentOutput> {
@@ -28,7 +30,8 @@ export async function importContent(version: Version): Promise<ImportContentOutp
     throw Error('Cannot find a supported content file');
   }
 
-  const preprintPath = await identifyBiorxivPreprintLocation(biorxivDoi);
+  // const preprintPath = await identifyBiorxivPreprintLocation(biorxivDoi);
+  const preprintPath = 's3://biorxiv/6b7b2bfb-6c3e-1014-b4a7-d4f626fa4849.meca';
 
   const destinationPathForContent = `${config.eppContentUri}/${version.id}/v${version.versionIdentifier ? version.versionIdentifier : '0'}`;
   await copyBiorxivPreprintToEPP(preprintPath, `${destinationPathForContent}/content.meca`);
@@ -36,15 +39,12 @@ export async function importContent(version: Version): Promise<ImportContentOutp
   // Extract Meca
   const mecaFiles = await extractMeca(`${destinationPathForContent}/content.meca`, `${destinationPathForContent}/content/`);
 
-  // Upload images to S3
-  // Upload additional files to S3
-
-  // const json = await convertXmlToJson(mecaFiles.id, mecaFiles.article.path);
-  // Store JSON content in EPP
+  const jsonContentFile = await convertXmlToJson(`${destinationPathForContent}/content/article.xml`, `${destinationPathForContent}/content/article.json`);
 
   return {
     preprintPath,
     mecaPath: destinationPathForContent,
     mecaFiles,
+    jsonContentFile,
   };
 }
