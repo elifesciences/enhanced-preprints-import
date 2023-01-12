@@ -11,7 +11,7 @@ describe('fetch-docmap-activity', () => {
 
     // @ts-ignore
     mockedGet.mockImplementation(() => Promise.resolve({
-      data: {},
+      data: '{}',
       status: 200,
     }));
 
