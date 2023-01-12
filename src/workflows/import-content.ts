@@ -32,7 +32,7 @@ export async function importContent(version: Version): Promise<ImportContentOutp
 
   const preprintPath = await identifyBiorxivPreprintLocation(biorxivDoi);
 
-  const destinationPathForContent = `${config.eppContentUri}/${version.id}/v${version.versionIdentifier ? version.versionIdentifier : '0'}`;
+  const destinationPathForContent = `${config.eppContentUri}/${version.id}/v${version.versionIdentifier}`;
   await copyBiorxivPreprintToEPP(preprintPath, `${destinationPathForContent}/content.meca`);
 
   // Extract Meca
