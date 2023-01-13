@@ -6,6 +6,7 @@
   "author": "Scott Aubrey <scott@aubrey.org.uk>",
   "license": "MIT",
   "dependencies": {
+    "@scottaubrey/docmap-ts": "https://github.com/scottaubrey/docmap-ts#tag=v0.0.10",
     "@stencila/encoda": "^0.119.6",
     "@temporalio/activity": "^1.4.4",
     "@temporalio/client": "^1.4.4",

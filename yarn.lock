@@ -2014,6 +2014,17 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@scottaubrey/docmap-ts@https://github.com/scottaubrey/docmap-ts#tag=v0.0.10":
+  version: 0.0.10
+  resolution: "@scottaubrey/docmap-ts@https://github.com/scottaubrey/docmap-ts.git#commit=b6eae88d91f6b96641d74ac99f71cd994725a7a2"
+  dependencies:
+    "@tsconfig/node18": ^1.0.1
+    ts-node: ^10.9.1
+    typescript: ^4.9.3
+  checksum: a5553b272d3f50404a05cd7642de0095022b8e79b04d90f32fb09da933c6d61f0f0fbbcd94c4a2b6a7877f0b6d70f046641a59621ab40156a2ddf75138bc8887
+  languageName: node
+  linkType: hard
+
 "@simonwep/pickr@npm:^1.8.2":
   version: 1.8.2
   resolution: "@simonwep/pickr@npm:1.8.2"
@@ -6159,6 +6170,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "enhanced-preprints-import@workspace:."
   dependencies:
+    "@scottaubrey/docmap-ts": "https://github.com/scottaubrey/docmap-ts#tag=v0.0.10"
     "@stencila/encoda": ^0.119.6
     "@temporalio/activity": ^1.4.4
     "@temporalio/client": ^1.4.4
@@ -13825,7 +13837,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"ts-node@npm:10.9.1":
+"ts-node@npm:10.9.1, ts-node@npm:^10.9.1":
   version: 10.9.1
   resolution: "ts-node@npm:10.9.1"
   dependencies:
@@ -14017,7 +14029,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"typescript@npm:4.9.4":
+"typescript@npm:4.9.4, typescript@npm:^4.9.3":
   version: 4.9.4
   resolution: "typescript@npm:4.9.4"
   bin:
@@ -14027,7 +14039,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"typescript@patch:typescript@4.9.4#~builtin<compat/typescript>":
+"typescript@patch:typescript@4.9.4#~builtin<compat/typescript>, typescript@patch:typescript@^4.9.3#~builtin<compat/typescript>":
   version: 4.9.4
   resolution: "typescript@patch:typescript@npm%3A4.9.4#~builtin<compat/typescript>::version=4.9.4&hash=ad5954"
   bin:

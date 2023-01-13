@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { DocMap } from '../docmaps';
+import { DocMap } from '@scottaubrey/docmap-ts';
 
 type DocMapIndex = {
   docmaps: DocMap[],
