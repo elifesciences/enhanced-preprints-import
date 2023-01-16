@@ -6186,7 +6186,7 @@ __metadata:
     "@typescript-eslint/eslint-plugin": 5.48.1
     "@typescript-eslint/parser": ^5.43.0
     axios: ^1.2.2
-    eslint: 8.31.0
+    eslint: 8.32.0
     eslint-config-airbnb: 19.0.4
     eslint-config-airbnb-typescript: 17.0.0
     eslint-config-prettier: 8.6.0
@@ -6199,7 +6199,7 @@ __metadata:
     jszip: ^3.10.1
     minio: ^7.0.32
     nodemon: ^2.0.20
-    ts-jest: 29.0.4
+    ts-jest: 29.0.5
     ts-node: 10.9.1
     typescript: 4.9.4
   languageName: unknown
@@ -6542,9 +6542,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"eslint@npm:8.31.0":
-  version: 8.31.0
-  resolution: "eslint@npm:8.31.0"
+"eslint@npm:8.32.0":
+  version: 8.32.0
+  resolution: "eslint@npm:8.32.0"
   dependencies:
     "@eslint/eslintrc": ^1.4.1
     "@humanwhocodes/config-array": ^0.11.8
@@ -6587,7 +6587,7 @@ __metadata:
     text-table: ^0.2.0
   bin:
     eslint: bin/eslint.js
-  checksum: 5e5688bb864edc6b12d165849994812eefa67fb3fc44bb26f53659b63edcd8bcc68389d27cc6cc9e5b79ee22f24b6f311fa3ed047bddcafdec7d84c1b5561e4f
+  checksum: 23c8fb3c57291eecd9c1448faf603226a8f885022a2cd96e303459bf72e39b7f54987c6fb948f0f9eecaf7085600e6eb0663482a35ea83da12e9f9141a22b91e
   languageName: node
   linkType: hard
 
@@ -13804,9 +13804,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"ts-jest@npm:29.0.4":
-  version: 29.0.4
-  resolution: "ts-jest@npm:29.0.4"
+"ts-jest@npm:29.0.5":
+  version: 29.0.5
+  resolution: "ts-jest@npm:29.0.5"
   dependencies:
     bs-logger: 0.x
     fast-json-stable-stringify: 2.x
@@ -13833,7 +13833,7 @@ __metadata:
       optional: true
   bin:
     ts-jest: cli.js
-  checksum: c3daa71835fabd0c98eefc8611edc083cd2c78cbe9a02c1edea707a907afffafc1e61051f4746c0634904d4c68cd70736d0875ae644f55c6ed8beb950bf78689
+  checksum: f60f129c2287f4c963d9ee2677132496c5c5a5d39c27ad234199a1140c26318a7d5bda34890ab0e30636ec42a8de28f84487c09e9dcec639c9c67812b3a38373
   languageName: node
   linkType: hard
 
