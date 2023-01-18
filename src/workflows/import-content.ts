@@ -26,8 +26,7 @@ export async function importContent(version: VersionedReviewedPreprint): Promise
     throw Error('Cannot find a supported content file');
   }
 
-  // const preprintPath = await identifyBiorxivPreprintLocation(version.preprint.doi);
-  const preprintPath = 's3://biorxiv/6b7b2bfb-6c3e-1014-b4a7-d4f626fa4849.meca';
+  const preprintPath = await identifyBiorxivPreprintLocation(version.preprint.doi);
 
   const destinationPathForContent = `${config.eppContentUri}/${version.id}/v${version.versionIdentifier}`;
   await copyBiorxivPreprintToEPP(preprintPath, `${destinationPathForContent}/content.meca`);
