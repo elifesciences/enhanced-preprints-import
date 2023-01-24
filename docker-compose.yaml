@@ -28,25 +28,6 @@ services:
     ports:
       - 7233:7233
       - 8233:8233
-  import-app:
-    build:
-      context: .
-      dockerfile: Dockerfile
-      target: import-app
-    depends_on:
-      - createbucket
-      - temporalite
-    environment:
-      TEMPORAL_SERVER: temporalite:7233
-
-    restart: on-failure:5
-    command:
-      - yarn
-      - start:app:dev
-    ports:
-      - 3000:3000
-    volumes:
-      - ./src:/app/src
   worker:
     build:
       context: .
