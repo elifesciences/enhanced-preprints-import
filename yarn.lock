@@ -884,6 +884,17 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@elifesciences/docmap-ts@https://github.com/elifesciences/docmap-ts#tag=v0.0.12":
+  version: 0.0.12
+  resolution: "@elifesciences/docmap-ts@https://github.com/elifesciences/docmap-ts.git#commit=0218b4bfac21d35cf834afee9b6c76d863d57a0f"
+  dependencies:
+    "@tsconfig/node18": ^1.0.1
+    ts-node: ^10.9.1
+    typescript: ^4.9.3
+  checksum: 7aca5ceb700da7a068b5a3d75a552ae84dd13e1534aaf7d56f509dfa2e4497e3bd89abbe6fca0d3d998e300ef92e1f8d4c6aba0a58f1d38a49ec75fd6db031c4
+  languageName: node
+  linkType: hard
+
 "@elifesciences/pattern-library@npm:0.0.6":
   version: 0.0.6
   resolution: "@elifesciences/pattern-library@npm:0.0.6"
@@ -6060,6 +6071,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "enhanced-preprints-import@workspace:."
   dependencies:
+    "@elifesciences/docmap-ts": "https://github.com/elifesciences/docmap-ts#tag=v0.0.12"
     "@stencila/encoda": ^0.119.6
     "@temporalio/activity": ^1.4.4
     "@temporalio/client": ^1.4.4
@@ -13643,7 +13655,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"ts-node@npm:10.9.1":
+"ts-node@npm:10.9.1, ts-node@npm:^10.9.1":
   version: 10.9.1
   resolution: "ts-node@npm:10.9.1"
   dependencies:
@@ -13825,7 +13837,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"typescript@npm:4.9.4":
+"typescript@npm:4.9.4, typescript@npm:^4.9.3":
   version: 4.9.4
   resolution: "typescript@npm:4.9.4"
   bin:
@@ -13835,7 +13847,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"typescript@patch:typescript@4.9.4#~builtin<compat/typescript>":
+"typescript@patch:typescript@4.9.4#~builtin<compat/typescript>, typescript@patch:typescript@^4.9.3#~builtin<compat/typescript>":
   version: 4.9.4
   resolution: "typescript@patch:typescript@npm%3A4.9.4#~builtin<compat/typescript>::version=4.9.4&hash=ad5954"
   bin:

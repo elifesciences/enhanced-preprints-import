@@ -1,6 +1,6 @@
 import { proxyActivities, executeChild } from '@temporalio/workflow';
+import { ManuscriptData } from '@elifesciences/docmap-ts';
 import type * as activities from '../activities/index';
-import { ParseResult } from '../docmaps';
 
 const {
   fetchDocMap,
@@ -10,7 +10,7 @@ const {
 });
 
 type DocMapImportOutput = {
-  result: ParseResult,
+  result: ManuscriptData,
   mecaLocation?: string,
 };
 

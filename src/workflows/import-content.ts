@@ -1,8 +1,8 @@
 import { proxyActivities } from '@temporalio/workflow';
+import { VersionedReviewedPreprint } from '@scottaubrey/docmap-ts';
 import { MecaFiles } from '../activities/extract-meca';
 import type * as activities from '../activities/index';
 import { config } from '../config';
-import { Version } from '../docmaps';
 
 const {
   identifyBiorxivPreprintLocation,
@@ -20,17 +20,13 @@ type ImportContentOutput = {
   jsonContentFile: string,
 };
 
-export async function importContent(version: Version): Promise<ImportContentOutput> {
-  const bioRxivContent = version.content.find((content) => content.url.startsWith('https://doi.org/10.1101/'));
-  if (!bioRxivContent) {
-    throw Error('Cannot find a supported content file');
-  }
-  const biorxivDoi = bioRxivContent.url.match(/https:\/\/doi.org\/(10.1101\/.+)/)?.[1];
+export async function importContent(version: VersionedReviewedPreprint): Promise<ImportContentOutput> {
+  const biorxivDoi = version.preprint.doi.startsWith('10.1101/');
   if (!biorxivDoi) {
     throw Error('Cannot find a supported content file');
   }
 
-  const preprintPath = await identifyBiorxivPreprintLocation(biorxivDoi);
+  const preprintPath = await identifyBiorxivPreprintLocation(version.preprint.doi);
 
   const destinationPathForContent = `${config.eppContentUri}/${version.id}/v${version.versionIdentifier}`;
   await copyBiorxivPreprintToEPP(preprintPath, `${destinationPathForContent}/content.meca`);
