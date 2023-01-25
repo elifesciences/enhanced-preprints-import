@@ -1,5 +1,5 @@
 import { proxyActivities, executeChild } from '@temporalio/workflow';
-import { ManuscriptData } from '@scottaubrey/docmap-ts';
+import { ManuscriptData } from '@elifesciences/docmap-ts';
 import type * as activities from '../activities/index';
 
 const {

@@ -1,4 +1,4 @@
-import { parsePreprintDocMap, ManuscriptData } from '@scottaubrey/docmap-ts';
+import { parsePreprintDocMap, ManuscriptData } from '@elifesciences/docmap-ts';
 
 export const parseDocMap = async (docMapInput: string): Promise<ManuscriptData> => {
   const manuscriptData = parsePreprintDocMap(docMapInput);
