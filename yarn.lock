@@ -884,6 +884,17 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@elifesciences/docmap-ts@https://github.com/elifesciences/docmap-ts#tag=v0.0.12":
+  version: 0.0.12
+  resolution: "@elifesciences/docmap-ts@https://github.com/elifesciences/docmap-ts.git#commit=0218b4bfac21d35cf834afee9b6c76d863d57a0f"
+  dependencies:
+    "@tsconfig/node18": ^1.0.1
+    ts-node: ^10.9.1
+    typescript: ^4.9.3
+  checksum: 7aca5ceb700da7a068b5a3d75a552ae84dd13e1534aaf7d56f509dfa2e4497e3bd89abbe6fca0d3d998e300ef92e1f8d4c6aba0a58f1d38a49ec75fd6db031c4
+  languageName: node
+  linkType: hard
+
 "@elifesciences/pattern-library@npm:0.0.6":
   version: 0.0.6
   resolution: "@elifesciences/pattern-library@npm:0.0.6"
@@ -2043,17 +2054,6 @@ __metadata:
   version: 1.1.0
   resolution: "@protobufjs/utf8@npm:1.1.0"
   checksum: f9bf3163d13aaa3b6f5e6fbf37a116e094ea021c0e1f2a7ccd0e12a29e2ce08dafba4e8b36e13f8ed7397e1591610ce880ed1289af4d66cf4ace8a36a9557278
-  languageName: node
-  linkType: hard
-
-"@scottaubrey/docmap-ts@https://github.com/scottaubrey/docmap-ts#tag=v0.0.11":
-  version: 0.0.11
-  resolution: "@scottaubrey/docmap-ts@https://github.com/scottaubrey/docmap-ts.git#commit=587d8c969151ddd624772d47bf2d063d6c3aeb47"
-  dependencies:
-    "@tsconfig/node18": ^1.0.1
-    ts-node: ^10.9.1
-    typescript: ^4.9.3
-  checksum: 0539430bfba93aba727a33da77479ad82dcbf4cd2d444648065095b1a9640b29070f5c60e6d67e01717ccd1b5e2be84c075021e8e9d36d287e204f4b7807b2bc
   languageName: node
   linkType: hard
 
@@ -6071,7 +6071,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "enhanced-preprints-import@workspace:."
   dependencies:
-    "@scottaubrey/docmap-ts": "https://github.com/scottaubrey/docmap-ts#tag=v0.0.11"
+    "@elifesciences/docmap-ts": "https://github.com/elifesciences/docmap-ts#tag=v0.0.12"
     "@stencila/encoda": ^0.119.6
     "@temporalio/activity": ^1.4.4
     "@temporalio/client": ^1.4.4
