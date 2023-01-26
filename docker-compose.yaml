@@ -47,5 +47,80 @@ services:
     volumes:
       - ./src:/app/src
 
+
+  # Downstream services for EPP
+  ## Image Server
+  image-server:
+    image: ghcr.io/elifesciences/epp-image-server:master-e8c4d8e9-20230110.0811
+    ports:
+    - "8182:8182"
+    environment:
+      LOG_APPLICATION_LEVEL: debug
+      SOURCE_STATIC: S3Source
+      S3SOURCE_ENDPOINT: http://minio:9000/
+      S3SOURCE_BASICLOOKUPSTRATEGY_PATH_PREFIX: articles/
+      S3SOURCE_BASICLOOKUPSTRATEGY_BUCKET_NAME: epp
+      AWS_ACCESS_KEY_ID: ${AWS_ACCESS_KEY}
+      AWS_SECRET_ACCESS_KEY: ${AWS_SECRET_KEY}
+    healthcheck:
+      test: curl http://image-server:8182/
+      interval: 5s
+      timeout: 5s
+      retries: 10
+      start_period: 2s
+
+  ## Database (MongoDB) server
+  mongodb:
+    image: mongo
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD: testtest
+    volumes:
+      - mongodb_data:/data/db
+    healthcheck:
+      test: echo 'db.runCommand("ping").ok' | mongosh mongodb:27017/test -u admin -p testtest --authenticationDatabase admin --quiet
+      interval: 5s
+      timeout: 5s
+      retries: 10
+      start_period: 2s
+
+  ## Database (MongoDB) GUI
+  mongo-express:
+    image: mongo-express
+    environment:
+      - ME_CONFIG_OPTIONS_EDITORTHEME=dracula
+      - ME_CONFIG_MONGODB_SERVER=mongodb
+      - ME_CONFIG_MONGODB_ENABLE_ADMIN=true
+      - ME_CONFIG_MONGODB_AUTH_USERNAME=admin
+      - ME_CONFIG_MONGODB_AUTH_PASSWORD=testtest
+    depends_on:
+      mongodb:
+        condition: service_healthy
+    ports:
+      - "8081:8081"
+
+  ## EPP API
+  api:
+    image: ghcr.io/elifesciences/enhanced-preprints:master-4c01df70-20230125.1502
+    healthcheck:
+      test: ["CMD-SHELL", "sh -c 'apk add curl; curl http://api:3000/'"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+      start_period: 2s
+    depends_on:
+      mongodb:
+        condition: service_healthy
+      image-server:
+        condition: service_healthy
+    environment:
+      REPO_TYPE: MongoDB
+      REPO_CONNECTION: mongodb:27017
+      REPO_USERNAME: admin
+      REPO_PASSWORD: testtest
+    ports:
+      - 3000:3000
+
 volumes:
   minio_storage: {}
+  mongodb_data: {}
