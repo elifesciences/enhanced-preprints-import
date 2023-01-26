@@ -2,13 +2,13 @@ import { convert } from '@stencila/encoda';
 import { mkdtemp } from 'fs/promises';
 import { tmpdir } from 'os';
 import { dirname } from 'path';
-import { getS3ClientByName, parseS3Path } from '../S3Bucket';
+import { getS3Client, parseS3Path } from '../S3Bucket';
 
 export const convertXmlToJson = async (s3XmlPath: string, s3JsonDestination: string): Promise<string> => {
   const tmpDirectory = await mkdtemp(`${tmpdir()}/epp_json`);
   const localXmlFilePath = `${tmpDirectory}/article.xml`;
 
-  const s3 = getS3ClientByName('epp');
+  const s3 = getS3Client();
   const { Bucket: SourceBucket, Key: SourceKey } = parseS3Path(s3XmlPath);
   await s3.fGetObject(SourceBucket, SourceKey, localXmlFilePath);
 

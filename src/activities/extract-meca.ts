@@ -4,7 +4,7 @@ import { mkdtemp } from 'fs/promises';
 import JSZip from 'jszip';
 import { tmpdir } from 'os';
 import path, { dirname } from 'path';
-import { getS3ClientByName, parseS3Path } from '../S3Bucket';
+import { getS3Client, parseS3Path } from '../S3Bucket';
 
 export type MecaFile = {
   id: string,
@@ -63,7 +63,7 @@ export const extractMeca = async (s3MecaPath: string, destinationPath: string): 
   const tmpDirectory = await mkdtemp(`${tmpdir()}/epp_content`);
   const localMecaFilePath = `${tmpDirectory}/meca.zip`;
 
-  const s3 = getS3ClientByName('epp');
+  const s3 = getS3Client();
   const { Bucket: SourceBucket, Key: SourceKey } = parseS3Path(s3MecaPath);
   await s3.fGetObject(SourceBucket, SourceKey, localMecaFilePath);
 
