@@ -23,7 +23,6 @@ async function run() {
     workflowsPath: require.resolve('./workflows'),
     taskQueue: 'epp',
     activities,
-    namespace: 'epp',
   });
 
   await worker.run();
