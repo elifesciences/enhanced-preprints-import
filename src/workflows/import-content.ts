@@ -1,5 +1,5 @@
 import { proxyActivities } from '@temporalio/workflow';
-import { VersionedReviewedPreprint } from '@scottaubrey/docmap-ts';
+import { VersionedReviewedPreprint } from '@elifesciences/docmap-ts';
 import { MecaFiles } from '../activities/extract-meca';
 import type * as activities from '../activities/index';
 import { config } from '../config';
