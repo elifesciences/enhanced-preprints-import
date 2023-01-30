@@ -2204,9 +2204,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@stencila/encoda@npm:^0.119.6":
-  version: 0.119.6
-  resolution: "@stencila/encoda@npm:0.119.6"
+"@stencila/encoda@npm:^0.120.0":
+  version: 0.120.0
+  resolution: "@stencila/encoda@npm:0.120.0"
   dependencies:
     "@stencila/jesta": ^1.10.5
     "@stencila/logga": ^4.0.0
@@ -2217,7 +2217,7 @@ __metadata:
     bin-wrapper: ^4.1.0
     citation-js: ^0.5.7
     collapse-whitespace: ^1.1.7
-    content-type: ^1.0.4
+    content-type: ^1.0.5
     datapackage: ^1.1.10
     escape-html: ^1.0.3
     fastest-levenshtein: ^1.0.16
@@ -2232,7 +2232,7 @@ __metadata:
     js-beautify: ^1.14.0
     js-yaml: ^4.1.0
     jsdom: ^18.1.1
-    json5: ^2.2.0
+    json5: ^2.2.3
     jsonld: ^5.2.0
     mathjax-node: ^2.1.1
     mdast-util-compact: ^3.0.0
@@ -2256,7 +2256,7 @@ __metadata:
     remark-stringify: ^8.1.1
     remark-sub-super: ^1.0.20
     sentence-case: ^3.0.4
-    tar: ^6.1.12
+    tar: ^6.1.13
     temp-dir: ^2.0.0
     tempy: ^1.0.1
     to-vfile: ^6.1.0
@@ -2272,7 +2272,7 @@ __metadata:
     "@stencila/schema": ^1.9.0
   bin:
     encoda: dist/index.js
-  checksum: e219c05eb254248c382925f55128e1149327db6c3d001e201c6f3bfcfb08774ead5b0009154cc6fe5e50042844c3fd08683c20ac3f7d26396e819cf8cc158124
+  checksum: 573e7e60f79ead03c2dd18d9bdb3bfe4dce4e540b25a61e5331257a4f11d1c25989ac56bc34218b313ba9bc4b7fb601567ca539584bec6c92f225256b8cdb91a
   languageName: node
   linkType: hard
 
@@ -4914,6 +4914,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"content-type@npm:^1.0.5":
+  version: 1.0.5
+  resolution: "content-type@npm:1.0.5"
+  checksum: 566271e0a251642254cde0f845f9dd4f9856e52d988f4eb0d0dcffbb7a1f8ec98de7a5215fc628f3bce30fe2fb6fd2bc064b562d721658c59b544e2d34ea2766
+  languageName: node
+  linkType: hard
+
 "convert-source-map@npm:^1.6.0, convert-source-map@npm:^1.7.0":
   version: 1.9.0
   resolution: "convert-source-map@npm:1.9.0"
@@ -6072,7 +6079,7 @@ __metadata:
   resolution: "enhanced-preprints-import@workspace:."
   dependencies:
     "@elifesciences/docmap-ts": "https://github.com/elifesciences/docmap-ts#tag=v0.0.12"
-    "@stencila/encoda": ^0.119.6
+    "@stencila/encoda": ^0.120.0
     "@temporalio/activity": ^1.4.4
     "@temporalio/client": ^1.4.4
     "@temporalio/common": ^1.4.4
@@ -9562,7 +9569,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"json5@npm:^2.1.2, json5@npm:^2.2.0, json5@npm:^2.2.1":
+"json5@npm:^2.1.2, json5@npm:^2.2.1":
   version: 2.2.1
   resolution: "json5@npm:2.2.1"
   bin:
@@ -10461,6 +10468,15 @@ __metadata:
   dependencies:
     yallist: ^4.0.0
   checksum: f89f02bcaa0e0e4bb4c44ec796008e69fbca62db0aba6ead1bc57d25bdaefdf42102130f4f9ecb7d9c6b6cd35ff7b0c7b97d001d3435da8e629fb68af3aea57e
+  languageName: node
+  linkType: hard
+
+"minipass@npm:^4.0.0":
+  version: 4.0.0
+  resolution: "minipass@npm:4.0.0"
+  dependencies:
+    yallist: ^4.0.0
+  checksum: 7a609afbf394abfcf9c48e6c90226f471676c8f2a67f07f6838871afb03215ede431d1433feffe1b855455bcb13ef0eb89162841b9796109d6fed8d89790f381
   languageName: node
   linkType: hard
 
@@ -13289,7 +13305,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"tar@npm:^6.1.11, tar@npm:^6.1.12, tar@npm:^6.1.2":
+"tar@npm:^6.1.11, tar@npm:^6.1.2":
   version: 6.1.12
   resolution: "tar@npm:6.1.12"
   dependencies:
@@ -13300,6 +13316,20 @@ __metadata:
     mkdirp: ^1.0.3
     yallist: ^4.0.0
   checksum: 49d72e4420944e7ede2782d6b0826a6ede6cdab23c7de63470917e7a78166bc4d5b1a96279d3d79a85f1ba5a17cd37c0acbb3cbff19a07447691445b8b051c55
+  languageName: node
+  linkType: hard
+
+"tar@npm:^6.1.13":
+  version: 6.1.13
+  resolution: "tar@npm:6.1.13"
+  dependencies:
+    chownr: ^2.0.0
+    fs-minipass: ^2.0.0
+    minipass: ^4.0.0
+    minizlib: ^2.1.1
+    mkdirp: ^1.0.3
+    yallist: ^4.0.0
+  checksum: 8a278bed123aa9f53549b256a36b719e317c8b96fe86a63406f3c62887f78267cea9b22dc6f7007009738509800d4a4dccc444abd71d762287c90f35b002eb1c
   languageName: node
   linkType: hard
 
