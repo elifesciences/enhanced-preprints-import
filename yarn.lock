@@ -2348,7 +2348,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@stencila/schema@npm:^1.0.0":
+"@stencila/schema@npm:^1.0.0, @stencila/schema@npm:^1.18.0":
   version: 1.18.0
   resolution: "@stencila/schema@npm:1.18.0"
   checksum: 0e8dab776afd57c363d70749341d1f3a6ec75ec40a77b4e813ea2d40287a0ee857b6cedac7346c5cb211e84bcf0b4240384fbbce3cd54285fcc9706dff427f53
@@ -6081,6 +6081,7 @@ __metadata:
   dependencies:
     "@elifesciences/docmap-ts": "https://github.com/elifesciences/docmap-ts#tag=v0.0.12"
     "@stencila/encoda": ^0.120.0
+    "@stencila/schema": ^1.18.0
     "@temporalio/activity": ^1.4.4
     "@temporalio/client": ^1.4.4
     "@temporalio/common": ^1.4.4

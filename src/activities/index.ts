@@ -4,3 +4,4 @@ export { findAllDocmaps } from './find-all-docmaps';
 export { fetchDocMap } from './fetch-docmap';
 export { parseDocMap } from './parse-docmap';
 export { identifyBiorxivPreprintLocation, copyBiorxivPreprintToEPP } from './biorxiv';
+export { sendVersionToEpp } from './send-version-to-epp';

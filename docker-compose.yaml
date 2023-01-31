@@ -40,6 +40,7 @@ services:
       TEMPORAL_SERVER: temporalite:7233
       AWS_ACCESS_KEY_ID: minio
       AWS_SECRET_ACCESS_KEY: miniotest
+      EPP_SERVER_URI: http://api:3000
     restart: on-failure:5
     command:
       - yarn
