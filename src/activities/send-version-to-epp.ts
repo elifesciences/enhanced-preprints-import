@@ -2,7 +2,7 @@ import { VersionedReviewedPreprint } from '@elifesciences/docmap-ts';
 import axios from 'axios';
 import { Article, Node, Heading as HeadingContent } from '@stencila/schema';
 import { config } from '../config';
-import { getS3Client, parseS3Path, S3File } from '../S3Bucket';
+import { getS3Client, S3File } from '../S3Bucket';
 
 type EPPImportResponse = {
   result: boolean,
