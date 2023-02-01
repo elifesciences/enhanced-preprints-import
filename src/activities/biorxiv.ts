@@ -1,8 +1,7 @@
+import { VersionedReviewedPreprint } from '@elifesciences/docmap-ts';
 import axios from 'axios';
-import { mkdtemp } from 'fs';
-import { UploadedObjectInfo } from 'minio';
-import { promisify } from 'util';
-import { getS3Client, parseS3Path } from '../S3Bucket';
+import { CopyConditions, BucketItemCopy } from 'minio';
+import { constructEPPS3FilePath, getS3Client, S3File } from '../S3Bucket';
 
 type PreprintMecaLocation = string;
 type BiorxivMecaMetadataStatus = {
@@ -46,26 +45,27 @@ export const identifyBiorxivPreprintLocation = async (doi: string): Promise<Prep
   }
 };
 
-const makeTmpDirectory = promisify(mkdtemp);
-
 type CopyBiorxivPreprintToEPPOutput = {
-  file: UploadedObjectInfo,
+  result: BucketItemCopy,
+  path: S3File,
 };
 
-export const copyBiorxivPreprintToEPP = async (sourcePath: string, destinationPath: string): Promise<CopyBiorxivPreprintToEPPOutput> => {
+export const copyBiorxivPreprintToEPP = async (sourcePath: string, version: VersionedReviewedPreprint): Promise<CopyBiorxivPreprintToEPPOutput> => {
   const S3Connection = getS3Client();
 
-  const tmpDirectory = await makeTmpDirectory('epp_meca');
+  // override in dev environment
+  const sourceUri = (true) ? 's3://biorxiv/6b7b2bfb-6c3e-1014-b4a7-d4f626fa4849.meca' : sourcePath;
 
-  // download meca
-  const { Bucket: SourceBucket, Key: SourceKey } = parseS3Path(sourcePath);
-  await S3Connection.fGetObject(SourceBucket, SourceKey, `${tmpDirectory}/meca.zip`);
+  // extract bucket and Path for Minio client
+  const bucketAndPath = sourceUri.startsWith('s3://') ? sourceUri.substring(4) : sourceUri;
 
-  // upload meca
-  const { Bucket, Key } = parseS3Path(destinationPath);
-  const fileInfo = await S3Connection.fPutObject(Bucket, Key, `${tmpDirectory}/meca.zip`);
+  // copy MECA
+  const s3FilePath = constructEPPS3FilePath('content.meca', version);
+  const conditions = new CopyConditions();
+  const fileInfo = await S3Connection.copyObject(s3FilePath.Bucket, s3FilePath.Key, bucketAndPath, conditions);
 
   return {
-    file: fileInfo,
+    result: fileInfo,
+    path: s3FilePath,
   };
 };

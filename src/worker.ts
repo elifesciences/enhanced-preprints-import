@@ -23,9 +23,6 @@ async function run() {
     workflowsPath: require.resolve('./workflows'),
     taskQueue: 'epp',
     activities,
-    bundlerOptions: {
-      ignoreModules: ['process'],
-    },
   });
 
   await worker.run();

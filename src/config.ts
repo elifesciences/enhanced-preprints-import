@@ -3,7 +3,7 @@ import { env } from 'process';
 
 type Config = {
   s3: ClientOptions,
-  eppContentUri: string,
+  eppBucketName: string,
   eppServerUri: string,
 };
 
@@ -24,6 +24,6 @@ export const config: Config = {
     port: 9000,
     useSSL: false,
   },
-  eppContentUri: 's3://epp/',
+  eppBucketName: env.BUCKET_NAME ?? 'epp',
   eppServerUri: env.EPP_SERVER_URI,
 };
