@@ -38,8 +38,8 @@ services:
       - temporalite
     environment:
       TEMPORAL_SERVER: temporalite:7233
-      AWS_ACCESS_KEY_ID: ${AWS_ACCESS_KEY}
-      AWS_SECRET_ACCESS_KEY: ${AWS_SECRET_KEY}
+      AWS_ACCESS_KEY_ID: minio
+      AWS_SECRET_ACCESS_KEY: miniotest
     restart: on-failure:5
     command:
       - yarn
@@ -60,8 +60,8 @@ services:
       S3SOURCE_ENDPOINT: http://minio:9000/
       S3SOURCE_BASICLOOKUPSTRATEGY_PATH_PREFIX: articles/
       S3SOURCE_BASICLOOKUPSTRATEGY_BUCKET_NAME: epp
-      AWS_ACCESS_KEY_ID: ${AWS_ACCESS_KEY}
-      AWS_SECRET_ACCESS_KEY: ${AWS_SECRET_KEY}
+      AWS_ACCESS_KEY_ID: minio
+      AWS_SECRET_ACCESS_KEY: miniotest
     healthcheck:
       test: curl http://image-server:8182/
       interval: 5s
