@@ -54,7 +54,7 @@ export const copyBiorxivPreprintToEPP = async (sourcePath: string, version: Vers
   const S3Connection = getS3Client();
 
   // override in dev environment
-  const sourceUri = (true) ? 's3://biorxiv/6b7b2bfb-6c3e-1014-b4a7-d4f626fa4849.meca' : sourcePath;
+  const sourceUri = (true) ? 's3://biorxiv/test.meca' : sourcePath;
 
   // extract bucket and Path for Minio client
   const bucketAndPath = sourceUri.startsWith('s3://') ? sourceUri.substring(4) : sourceUri;
