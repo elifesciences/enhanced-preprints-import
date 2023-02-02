@@ -34,14 +34,13 @@ const extractHeadings = (content: Content): Heading[] => {
   const headingContentParts = extractHeadingContentPart(content);
 
   return headingContentParts.map((heading, index) => ({
-    id: heading.id ?? `gen_header_${index}`,
+    id: (!heading.id || heading.id === '') ? `gen_header_${index}` : heading.id,
     text: heading.content,
   }));
 };
 
 const parseJsonContentToProcessedArticle = (content: string) => {
   const contentStruct = JSON.parse(content) as Article;
-
   return {
     title: contentStruct.title,
     authors: contentStruct.authors,
@@ -64,23 +63,26 @@ export const sendVersionToEpp = async (msid: string, version: VersionedReviewedP
   const articleStruct = parseJsonContentToProcessedArticle(json);
 
   const versionImportUri = `${config.eppServerUri}/import-version`;
-  const { result, message } = await axios.post<EPPImportResponse>(versionImportUri, {
-    msid,
-    doi,
-    id: version.id,
-    versionIdentifier: version.versionIdentifier,
-    versionDoi: version.doi,
-    article: articleStruct,
-    preprintDoi: version.preprint.doi,
-    preprintUrl: version.preprint.content,
-    preprintPosted: version.preprint.publishedDate,
-    sentForReview: version.sentForReviewDate,
-    peerReview: version.peerReview,
-    published: version.publishedDate,
-  }).then(async (response) => response.data);
-  if (!result) {
-    throw new Error(`Failed to import version to EPP: ${message}`);
+  try {
+    const { result, message } = await axios.post<EPPImportResponse>(versionImportUri, {
+      msid,
+      doi,
+      id: version.id,
+      versionIdentifier: version.versionIdentifier,
+      versionDoi: version.doi,
+      article: articleStruct,
+      preprintDoi: version.preprint.doi,
+      preprintUrl: version.preprint.content,
+      preprintPosted: version.preprint.publishedDate,
+      sentForReview: version.sentForReviewDate,
+      peerReview: version.peerReview,
+      published: version.publishedDate,
+    }).then(async (response) => response.data);
+    if (!result) {
+      throw new Error(`Failed to import version to EPP: ${message}`);
+    }
+    return result;
+  } catch (error: any) {
+    throw new Error(`Failed to import version to EPP: ${error.response.data.message}`);
   }
-
-  return result;
 };
