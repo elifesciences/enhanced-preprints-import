@@ -24,7 +24,13 @@ export async function importDocmap(url: string): Promise<DocMapImportOutput> {
     result.versions.map(async (version) => executeChild<typeof importContent>('importContent', {
       args: [version],
       workflowId: 'import-content',
-    }).then((importContentResult) => sendVersionToEpp(result.id, version, importContentResult.jsonContentFile, version.doi))),
+    }).then((importContentResult) => sendVersionToEpp({
+      msid: result.id,
+      contentJsonPath: importContentResult.jsonContentFile,
+      doi: version.doi,
+      reviewData: importContentResult.reviewData,
+      version,
+    }))),
   );
 
   return {

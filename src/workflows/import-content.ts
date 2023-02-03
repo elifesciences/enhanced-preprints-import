@@ -1,14 +1,19 @@
 import { proxyActivities } from '@temporalio/workflow';
-import { VersionedReviewedPreprint } from '@elifesciences/docmap-ts';
+import {
+  Evaluation, PeerReview, VersionedReviewedPreprint,
+} from '@elifesciences/docmap-ts';
+import axios from 'axios';
 import { MecaFiles } from '../activities/extract-meca';
 import type * as activities from '../activities/index';
 import { S3File } from '../S3Bucket';
+import { EPPPeerReview } from '../activities/fetch-review-content';
 
 const {
   identifyBiorxivPreprintLocation,
   copyBiorxivPreprintToEPP,
   extractMeca,
   convertXmlToJson,
+  fetchReviewContent,
 } = proxyActivities<typeof activities>({
   startToCloseTimeout: '1 minute',
 });
@@ -18,6 +23,7 @@ type ImportContentOutput = {
   mecaPath: S3File,
   mecaFiles: MecaFiles,
   jsonContentFile: S3File,
+  reviewData?: EPPPeerReview
 };
 
 export async function importContent(version: VersionedReviewedPreprint): Promise<ImportContentOutput> {
@@ -35,10 +41,14 @@ export async function importContent(version: VersionedReviewedPreprint): Promise
 
   const { path: jsonContentFile } = await convertXmlToJson(version);
 
+  // fetch review content (if present)
+  const reviewData = await fetchReviewContent(version);
+
   return {
     preprintPath,
     mecaPath,
     mecaFiles,
     jsonContentFile,
+    reviewData,
   };
 }

@@ -3,6 +3,7 @@ import axios from 'axios';
 import { Article, Node, Heading as HeadingContent } from '@stencila/schema';
 import { config } from '../config';
 import { getS3Client, S3File } from '../S3Bucket';
+import { EPPPeerReview } from './fetch-review-content';
 
 type EPPImportResponse = {
   result: boolean,
@@ -52,7 +53,21 @@ const parseJsonContentToProcessedArticle = (content: string) => {
   };
 };
 
-export const sendVersionToEpp = async (msid: string, version: VersionedReviewedPreprint, contentJsonPath: S3File, doi?: string): Promise<boolean> => {
+type SendVersionToEPPImput = {
+  msid: string,
+  version: VersionedReviewedPreprint,
+  contentJsonPath: S3File,
+  doi?: string,
+  reviewData?: EPPPeerReview
+};
+
+export const sendVersionToEpp = async ({
+  contentJsonPath,
+  msid,
+  version,
+  doi,
+  reviewData,
+}: SendVersionToEPPImput): Promise<boolean> => {
   const s3 = getS3Client();
   const readJsonStream = await s3.getObject(contentJsonPath.Bucket, contentJsonPath.Key);
   let json = '';
@@ -75,7 +90,7 @@ export const sendVersionToEpp = async (msid: string, version: VersionedReviewedP
       preprintUrl: version.preprint.content,
       preprintPosted: version.preprint.publishedDate,
       sentForReview: version.sentForReviewDate,
-      peerReview: version.peerReview,
+      peerReview: reviewData ?? version.peerReview,
       published: version.publishedDate,
     }).then(async (response) => response.data);
     if (!result) {

@@ -884,14 +884,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@elifesciences/docmap-ts@https://github.com/elifesciences/docmap-ts#tag=v0.0.12":
-  version: 0.0.12
-  resolution: "@elifesciences/docmap-ts@https://github.com/elifesciences/docmap-ts.git#commit=0218b4bfac21d35cf834afee9b6c76d863d57a0f"
+"@elifesciences/docmap-ts@https://github.com/elifesciences/docmap-ts#tag=v0.0.16":
+  version: 0.0.16
+  resolution: "@elifesciences/docmap-ts@https://github.com/elifesciences/docmap-ts.git#commit=821a5c4c4b1388e741ae5aa046b0702fedc7b627"
   dependencies:
     "@tsconfig/node18": ^1.0.1
     ts-node: ^10.9.1
     typescript: ^4.9.3
-  checksum: 7aca5ceb700da7a068b5a3d75a552ae84dd13e1534aaf7d56f509dfa2e4497e3bd89abbe6fca0d3d998e300ef92e1f8d4c6aba0a58f1d38a49ec75fd6db031c4
+  checksum: b80d9de3c9d02548117c12f577f5f34d96ce6db823ecb301eefb61f95bb250d2622134f360c2188916f5c4dc8228951df944106f47c24d8485a799b2cd723fb4
   languageName: node
   linkType: hard
 
@@ -6079,7 +6079,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "enhanced-preprints-import@workspace:."
   dependencies:
-    "@elifesciences/docmap-ts": "https://github.com/elifesciences/docmap-ts#tag=v0.0.12"
+    "@elifesciences/docmap-ts": "https://github.com/elifesciences/docmap-ts#tag=v0.0.16"
     "@stencila/encoda": ^0.120.0
     "@stencila/schema": ^1.18.0
     "@temporalio/activity": ^1.4.4

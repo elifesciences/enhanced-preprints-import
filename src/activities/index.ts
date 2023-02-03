@@ -5,3 +5,4 @@ export { fetchDocMap } from './fetch-docmap';
 export { parseDocMap } from './parse-docmap';
 export { identifyBiorxivPreprintLocation, copyBiorxivPreprintToEPP } from './biorxiv';
 export { sendVersionToEpp } from './send-version-to-epp';
+export { fetchReviewContent } from './fetch-review-content';
