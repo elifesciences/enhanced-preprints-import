@@ -1,8 +1,7 @@
 import { proxyActivities } from '@temporalio/workflow';
 import {
-  Evaluation, PeerReview, VersionedReviewedPreprint,
+  VersionedReviewedPreprint,
 } from '@elifesciences/docmap-ts';
-import axios from 'axios';
 import { MecaFiles } from '../activities/extract-meca';
 import type * as activities from '../activities/index';
 import { S3File } from '../S3Bucket';
