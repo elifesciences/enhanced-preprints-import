@@ -31,7 +31,7 @@ yarn install
 To run an import workflow, run:
 
 ```
-tctl wf run import-docmaps-test -tq epp -wt importDocmaps --input '["http://data-hub-api.elifesciences.org/enhanced-preprints/docmaps/v1/index"]'
+tctl wf run -tq epp -wt importDocmaps --input '["http://data-hub-api.elifesciences.org/enhanced-preprints/docmaps/v1/index"]'
 ```
 
 This will kick of a full import for a docmap index from eLife's API.
