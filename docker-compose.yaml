@@ -21,8 +21,6 @@ services:
       /usr/bin/mc mb myminio/biorxiv;
       exit 0;
       "
-    volumes:
-      - ./data:/data
   temporalite:
     build:
       context: .
