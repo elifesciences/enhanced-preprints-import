@@ -16,11 +16,11 @@ Ensure you have docker and docker-compose (v2 tested). Also install [`tctl`](htt
 
 - clone the repo
 - run `docker-compose up` to start temporalite and the worker in "watch" mode
-- run `tctl -ns epp n desc` to list namespaces, you should see epp namespace listed, and not any other error.
+- run `tctl n desc` to list namespaces, you should see epp namespace listed, and not any other error.
 
 # Development
 
-The `docker-compose` workflow above will retart the worker when your mounted filesystem changes, but you may find it helpful if developing locally to install the depenedancies by running:
+The `docker-compose` workflow above will restart the worker when your mounted filesystem changes, but you may find it helpful if developing locally to install the depenedancies by running:
 
 ```
 yarn install
