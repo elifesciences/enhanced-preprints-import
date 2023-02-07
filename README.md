@@ -16,7 +16,7 @@ Ensure you have docker and docker-compose (v2 tested). Also install [`tctl`](htt
 
 - clone the repo
 - run `docker-compose up` to start temporalite and the worker in "watch" mode
-- run `tctl n desc` to list namespaces, you should see epp namespace listed, and not any other error.
+- run `tctl n desc` to list namespaces, you should see default namespace listed, and not any other error.
 
 # Development
 
