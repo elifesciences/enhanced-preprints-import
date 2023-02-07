@@ -23,11 +23,11 @@
   "packageManager": "yarn@3.4.1",
   "devDependencies": {
     "@tsconfig/node18": "^1.0.1",
-    "@types/eslint": "8.4.10",
+    "@types/eslint": "8.21.0",
     "@types/jest": "^29.2.5",
     "@types/minio": "^7.0.15",
     "@types/node": "^18.11.9",
-    "@typescript-eslint/eslint-plugin": "5.50.0",
+    "@typescript-eslint/eslint-plugin": "5.51.0",
     "@typescript-eslint/parser": "^5.43.0",
     "eslint": "8.33.0",
     "eslint-config-airbnb": "19.0.4",
