@@ -4,27 +4,9 @@ import { UploadedObjectInfo } from 'minio';
 import { promisify } from 'util';
 import { getS3ClientByName, parseS3Path } from '../S3Bucket';
 
-type PreprintMecaLocation = string;
-type BiorxivMecaMetadataStatus = {
-  count: number, // 1
-  messages: string, // "ok"
-};
-type BiorxivMecaMetadata = {
-  msid: string, // "446694",
-  tdm_doi: string, // "10.1101\/2021.06.02.446694",
-  ms_version: string, // "1",
-  filedate: string, // "2021-06-02",
-  tdm_path: string, // "s3:\/\/transfers-elife\/biorxiv_Current_Content\/June_2021\/02_Jun_21_Batch_909\/f6678221-6dea-1014-8491-eff8b71b2ffd.meca",
-  transfer_type: string, // ""
-};
-type BiorxivMecaMetadataResponse = {
-  status: BiorxivMecaMetadataStatus[],
-  results: BiorxivMecaMetadata[],
-};
+const fetchBiorxivMecaMetadata = async (doi: string) => axios.get<EPP.BiorxivMecaMetadataResponse>(`https://api.biorxiv.org/meca_index/elife/all/${doi}`).then(async (response) => response.data);
 
-const fetchBiorxivMecaMetadata = async (doi: string) => axios.get<BiorxivMecaMetadataResponse>(`https://api.biorxiv.org/meca_index/elife/all/${doi}`).then(async (response) => response.data);
-
-export const identifyBiorxivPreprintLocation = async (doi: string): Promise<PreprintMecaLocation> => {
+export const identifyBiorxivPreprintLocation = async (doi: string): Promise<EPP.PreprintMecaLocation> => {
   const [publisherId, articleId] = doi.split('/');
 
   if (publisherId !== '10.1101') {

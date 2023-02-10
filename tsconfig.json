@@ -1,8 +1,11 @@
 {
   "extends": "@tsconfig/node18/tsconfig.json",
+  "ts-node": {
+    "files": true, // ts-node can't find the EPP namespace without this
+  },
   "compilerOptions": {
     "lib": [
       "ES2021"
     ],
-  }
+  },
 }

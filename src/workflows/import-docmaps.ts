@@ -11,13 +11,9 @@ const {
   startToCloseTimeout: '1 minute',
 });
 
-type DocMapImportOutput = {
-  docMapIndexUrl: string,
-  count: number,
-  docmapIds: string[],
-};
 
-export async function importDocmaps(docMapIndexUrl: string): Promise<DocMapImportOutput> {
+
+export async function importDocmaps(docMapIndexUrl: string): Promise<EPP.DocMapsImportOutput> {
   const docmaps = await findAllDocmaps(docMapIndexUrl);
 
   if (docmaps === undefined) {

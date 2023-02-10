@@ -1,6 +1,5 @@
 import { proxyActivities } from '@temporalio/workflow';
 import { VersionedReviewedPreprint } from '@elifesciences/docmap-ts';
-import { MecaFiles } from '../activities/extract-meca';
 import type * as activities from '../activities/index';
 import { config } from '../config';
 
@@ -13,14 +12,9 @@ const {
   startToCloseTimeout: '1 minute',
 });
 
-type ImportContentOutput = {
-  preprintPath: string,
-  mecaPath: string,
-  mecaFiles: MecaFiles,
-  jsonContentFile: string,
-};
 
-export async function importContent(version: VersionedReviewedPreprint): Promise<ImportContentOutput> {
+
+export async function importContent(version: VersionedReviewedPreprint): Promise<EPP.ImportContentOutput> {
   const biorxivDoi = version.preprint.doi.startsWith('10.1101/');
   if (!biorxivDoi) {
     throw Error('Cannot find a supported content file');

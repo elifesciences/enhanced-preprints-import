@@ -9,12 +9,8 @@ const {
   startToCloseTimeout: '1 minute',
 });
 
-type DocMapImportOutput = {
-  result: ManuscriptData,
-  mecaLocation?: string,
-};
 
-export async function importDocmap(url: string): Promise<DocMapImportOutput> {
+export async function importDocmap(url: string): Promise<EPP.DocMapImportOutput> {
   const docMap = await fetchDocMap(url);
   const result = await parseDocMap(docMap);
 
