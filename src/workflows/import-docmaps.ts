@@ -11,8 +11,6 @@ const {
   startToCloseTimeout: '1 minute',
 });
 
-
-
 export async function importDocmaps(docMapIndexUrl: string): Promise<EPP.DocMapsImportOutput> {
   const docmaps = await findAllDocmaps(docMapIndexUrl);
 

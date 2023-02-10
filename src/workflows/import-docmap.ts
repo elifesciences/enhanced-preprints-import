@@ -1,5 +1,4 @@
 import { proxyActivities, executeChild } from '@temporalio/workflow';
-import { ManuscriptData } from '@elifesciences/docmap-ts';
 import type * as activities from '../activities/index';
 
 const {
@@ -8,7 +7,6 @@ const {
 } = proxyActivities<typeof activities>({
   startToCloseTimeout: '1 minute',
 });
-
 
 export async function importDocmap(url: string): Promise<EPP.DocMapImportOutput> {
   const docMap = await fetchDocMap(url);

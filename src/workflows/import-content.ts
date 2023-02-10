@@ -12,8 +12,6 @@ const {
   startToCloseTimeout: '1 minute',
 });
 
-
-
 export async function importContent(version: VersionedReviewedPreprint): Promise<EPP.ImportContentOutput> {
   const biorxivDoi = version.preprint.doi.startsWith('10.1101/');
   if (!biorxivDoi) {
