@@ -2,7 +2,7 @@ import { proxyActivities } from '@temporalio/workflow';
 import { VersionedReviewedPreprint } from '@elifesciences/docmap-ts';
 import { MecaFiles } from '../activities/extract-meca';
 import type * as activities from '../activities/index';
-import { config } from '../config';
+import { S3File } from '../S3Bucket';
 
 const {
   identifyBiorxivPreprintLocation,
@@ -15,9 +15,9 @@ const {
 
 type ImportContentOutput = {
   preprintPath: string,
-  mecaPath: string,
+  mecaPath: S3File,
   mecaFiles: MecaFiles,
-  jsonContentFile: string,
+  jsonContentFile: S3File,
 };
 
 export async function importContent(version: VersionedReviewedPreprint): Promise<ImportContentOutput> {
@@ -28,17 +28,16 @@ export async function importContent(version: VersionedReviewedPreprint): Promise
 
   const preprintPath = await identifyBiorxivPreprintLocation(version.preprint.doi);
 
-  const destinationPathForContent = `${config.eppContentUri}/${version.id}/v${version.versionIdentifier}`;
-  await copyBiorxivPreprintToEPP(preprintPath, `${destinationPathForContent}/content.meca`);
+  const { path: mecaPath } = await copyBiorxivPreprintToEPP(preprintPath, version);
 
   // Extract Meca
-  const mecaFiles = await extractMeca(`${destinationPathForContent}/content.meca`, `${destinationPathForContent}/content/`);
+  const mecaFiles = await extractMeca(version);
 
-  const jsonContentFile = await convertXmlToJson(`${destinationPathForContent}/content/article.xml`, `${destinationPathForContent}/content/article.json`);
+  const { path: jsonContentFile } = await convertXmlToJson(version);
 
   return {
     preprintPath,
-    mecaPath: destinationPathForContent,
+    mecaPath,
     mecaFiles,
     jsonContentFile,
   };
