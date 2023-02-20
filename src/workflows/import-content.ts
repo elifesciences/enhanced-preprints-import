@@ -17,7 +17,7 @@ const {
   startToCloseTimeout: '1 minute',
 });
 
-type ImportContentOutput = {
+export type ImportContentOutput = {
   preprintPath: string,
   mecaPath: S3File,
   mecaFiles: MecaFiles,

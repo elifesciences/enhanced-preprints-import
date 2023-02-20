@@ -2,10 +2,12 @@ import { proxyActivities, executeChild } from '@temporalio/workflow';
 import { ManuscriptData } from '@elifesciences/docmap-ts';
 import type * as activities from '../activities/index';
 import { importContent } from './import-content';
+import { EnhancedArticle } from '../activities/send-version-to-epp';
 
 const {
   fetchDocMap,
   parseDocMap,
+  generateVersionJson,
   sendVersionToEpp,
 } = proxyActivities<typeof activities>({
   startToCloseTimeout: '1 minute',
@@ -24,13 +26,8 @@ export async function importDocmap(url: string): Promise<DocMapImportOutput> {
     result.versions.map(async (version) => executeChild<typeof importContent>('importContent', {
       args: [version],
       workflowId: 'import-content',
-    }).then((importContentResult) => sendVersionToEpp({
-      msid: result.id,
-      contentJsonPath: importContentResult.jsonContentFile,
-      doi: version.doi,
-      reviewData: importContentResult.reviewData,
-      version,
-    }))),
+    }).then(async (importContentResult) => generateVersionJson({ importContentResult, msid: result.id, version }))
+      .then(async (versionJson: EnhancedArticle) => sendVersionToEpp(versionJson))),
   );
 
   return {

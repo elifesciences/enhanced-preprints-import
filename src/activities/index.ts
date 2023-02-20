@@ -1,3 +1,4 @@
+export { generateVersionJson } from './generate-version-json';
 export { extractMeca } from './extract-meca';
 export { convertXmlToJson } from './convert-xml-to-json';
 export { findAllDocmaps } from './find-all-docmaps';
