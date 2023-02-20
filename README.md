@@ -16,11 +16,11 @@ Ensure you have docker and docker-compose (v2 tested). Also install [`tctl`](htt
 
 - clone the repo
 - run `docker-compose up` to start temporalite and the worker in "watch" mode
-- run `tctl -ns epp n desc` to list namespaces, you should see epp namespace listed, and not any other error.
+- run `tctl n desc` to list namespaces, you should see default namespace listed, and not any other error.
 
 # Development
 
-The `docker-compose` workflow above will retart the worker when your mounted filesystem changes, but you may find it helpful if developing locally to install the depenedancies by running:
+The `docker-compose` workflow above will restart the worker when your mounted filesystem changes, but you may find it helpful if developing locally to install the depenedancies by running:
 
 ```
 yarn install
@@ -31,7 +31,7 @@ yarn install
 To run an import workflow, run:
 
 ```
-tctl wf run import-docmaps-test -tq epp -wt importDocmaps --input '["http://data-hub-api.elifesciences.org/enhanced-preprints/docmaps/v1/index"]'
+tctl wf run -tq epp -wt importDocmaps --input '["http://data-hub-api.elifesciences.org/enhanced-preprints/docmaps/v1/index"]'
 ```
 
 This will kick of a full import for a docmap index from eLife's API.

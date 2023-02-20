@@ -28,7 +28,7 @@ export async function importDocmaps(docMapIndexUrl: string): Promise<DocMapImpor
     };
   }
 
-  await Promise.all(docmaps.slice(0, 1).map(async (docmap) => {
+  await Promise.all(docmaps.map(async (docmap) => {
     await startChild('importDocmap', {
       args: [docmap.id], // id contains the canonical URL of the docmap
       workflowId: `import-docmap-${new Date().getTime()}`,

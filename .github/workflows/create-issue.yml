@@ -1,0 +1,68 @@
+name: "Create issue: Publish manuscript"
+
+on:
+  workflow_dispatch:
+    inputs:
+      msid:
+        description: "Manuscript ID (e.g. 84855)"
+        required: true
+      doi-prefix:
+        description: "DOI prefix (default: 10.1101)"
+        default: "10.1101"
+      doi-suffix:
+        description: "DOI suffix (e.g. 2021.06.21.449261)"
+        required: true
+      doi-suffix2:
+        description: "DOI suffix2 (e.g. v1)"
+
+jobs:
+  create-doi-issue:
+    runs-on: ubuntu-latest
+    permissions:
+      issues: write
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+
+    - name: Get issue number
+      id: issue
+      run: |
+        echo "ISSUE_NUMBER=$(curl --silent -H "Accept: application/vnd.github+json" https://api.github.com/repos/${{ github.repository }}/issues?state=all | jq -r '.[0].number' | expr "$(cat)" + 1)" >> $GITHUB_ENV
+
+    - uses: imjohnbo/extract-issue-template-fields@v1
+      id: extract
+      with:
+        path: .github/ISSUE_TEMPLATE/publish_manuscript.md
+
+    - uses: bluwy/substitute-string-action@v2
+      id: title
+      with:
+        _input-text: "${{ steps.extract.outputs.title }}"
+        _format-key: '%%key%%'
+        doi-prefix: "${{ github.event.inputs.doi-prefix }}"
+        doi-suffix: "${{ github.event.inputs.doi-suffix }}"
+        doi-suffix2: "${{ github.event.inputs.doi-suffix2 }}"
+        msid: "${{ github.event.inputs.msid }}"
+
+    - uses: bluwy/substitute-string-action@v2
+      id: body
+      with:
+        _input-text: "${{ steps.extract.outputs.body }}"
+        _format-key: '%%key%%'
+        doi-prefix: "${{ github.event.inputs.doi-prefix }}"
+        doi-suffix: "${{ github.event.inputs.doi-suffix }}"
+        doi-suffix2: "${{ github.event.inputs.doi-suffix2 }}"
+        msid: "${{ github.event.inputs.msid }}"
+        repo: "${{ github.repository }}"
+        issue-id: "${{ env.ISSUE_NUMBER }}"
+
+    - name: "Create issue: Publish manuscript ${{ github.event.inputs.doi }}"
+      uses: imjohnbo/issue-bot@v3
+      with:
+        assignees: ${{ steps.extract.outputs.assignees }}
+        labels: ${{ steps.extract.outputs.labels }}
+        title: "${{ steps.title.outputs.result }}"
+        body: "${{ steps.body.outputs.result }}"
+        project-v2-path: orgs/elifesciences/projects/16
+        token: ${{ secrets.PAT }}

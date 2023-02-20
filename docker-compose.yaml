@@ -40,6 +40,7 @@ services:
       TEMPORAL_SERVER: temporalite:7233
       AWS_ACCESS_KEY_ID: minio
       AWS_SECRET_ACCESS_KEY: miniotest
+      EPP_SERVER_URI: http://api:3000
     restart: on-failure:5
     command:
       - yarn
@@ -101,7 +102,7 @@ services:
 
   ## EPP API
   api:
-    image: ghcr.io/elifesciences/enhanced-preprints:master-4c01df70-20230125.1502
+    image: ghcr.io/elifesciences/enhanced-preprints:master-c5afe537-20230215.1956
     healthcheck:
       test: ["CMD-SHELL", "sh -c 'apk add curl; curl http://api:3000/'"]
       interval: 5s
