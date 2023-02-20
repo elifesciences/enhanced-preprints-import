@@ -6,45 +6,7 @@ import { tmpdir } from 'os';
 import path, { dirname } from 'path';
 import { getS3ClientByName, parseS3Path } from '../S3Bucket';
 
-export type MecaFile = {
-  id: string,
-  type: string,
-  title?: string,
-  mimeType: string,
-  fileName: string,
-  path: string,
-};
-
-export type LocalMecaFile = MecaFile & {
-  localPath: string,
-};
-
-export type MecaFiles = {
-  id: string,
-  title: string,
-  article: MecaFile,
-  figures: MecaFile[],
-  supplements: MecaFile[],
-  others: MecaFile[],
-};
-
-type Manifest = {
-  item: ManifestItem[],
-};
-
-type ManifestItemInstance = {
-  '@_media-type': string,
-  '@_href': string,
-};
-
-type ManifestItem = {
-  '@_type': string,
-  '@_id': string,
-  title?: string,
-  instance: ManifestItemInstance[],
-};
-
-const extractFileContents = async (zip: JSZip, item: MecaFile, toDir: string): Promise<LocalMecaFile> => {
+const extractFileContents = async (zip: JSZip, item: EPP.MecaFile, toDir: string): Promise<EPP.LocalMecaFile> => {
   const buffer = await zip.file(item.path)?.async('nodebuffer');
   if (buffer === undefined) {
     throw Error(`MECA archive corrupted, expected ${item.path} from manifest, but it failed`);
@@ -59,7 +21,7 @@ const extractFileContents = async (zip: JSZip, item: MecaFile, toDir: string): P
   };
 };
 
-export const extractMeca = async (s3MecaPath: string, destinationPath: string): Promise<MecaFiles> => {
+export const extractMeca = async (s3MecaPath: string, destinationPath: string): Promise<EPP.MecaFiles> => {
   const tmpDirectory = await mkdtemp(`${tmpdir()}/epp_content`);
   const localMecaFilePath = `${tmpDirectory}/meca.zip`;
 
@@ -84,8 +46,8 @@ export const extractMeca = async (s3MecaPath: string, destinationPath: string): 
     isArray: (name, jpath) => alwaysArray.indexOf(jpath) !== -1,
   });
 
-  const manifest = parser.parse(manifestXml).manifest as Manifest;
-  const items = manifest.item.flatMap<MecaFile>((item: ManifestItem) => item.instance.map((instance) => {
+  const manifest = parser.parse(manifestXml).manifest as EPP.Manifest;
+  const items = manifest.item.flatMap<EPP.MecaFile>((item: EPP.ManifestItem) => item.instance.map((instance) => {
     const instancePath = instance['@_href'];
     const fileName = path.basename(instancePath);
     return ({
@@ -99,7 +61,7 @@ export const extractMeca = async (s3MecaPath: string, destinationPath: string): 
   }));
 
   // define a closure that curries the zip and toDir in this scope
-  const extractFromThisArchive = async (item: MecaFile) => extractFileContents(zip, item, tmpDirectory);
+  const extractFromThisArchive = async (item: EPP.MecaFile) => extractFileContents(zip, item, tmpDirectory);
 
   // get the article content
   const unprocessedArticle = items.filter((item) => item.type === 'article' && item.mimeType === 'application/xml')[0];
