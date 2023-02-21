@@ -1,7 +1,7 @@
 ---
 name: Publish manuscript
 about: Use this template for tracking publication of manuscripts.
-title: "MSID %%msid%% DOI %%doi-suffix%%"
+title: "MSID: %%msid%% DOI: %%doi-suffix%%"
 labels: 
 assignees: 
 ---
