@@ -106,7 +106,7 @@ University of California, Berkeley, United States
 
 ## Step 4: Request DocMap creation
 
-- [ ] DocMap prepared by sciety
+- [ ] DocMap prepared by sciety (will be available at https://sciety.org/docmaps/v1/evaluations-by/elife/%%doi-prefix%%/%%doi-suffix%%.docmap.json)
     - [ ] Post link to [#sciety-general](https://elifesciences.slack.com/archives/C011EQLKP51) comment below
 
 [#sciety-general](https://elifesciences.slack.com/archives/C011EQLKP51) comment thread: [PLACE LINK TO COMMENT HERE]
