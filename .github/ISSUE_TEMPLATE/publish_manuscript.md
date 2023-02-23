@@ -195,18 +195,12 @@ Upload the file `%%doi-suffix%%.pdf` and commit directly to the master branch
 <details>
 <summary>Instructions</summary>
 
-Visit: https://github.com/elifesciences/enhanced-preprints-client/edit/master/manuscripts.json
-Introduce the following in the `preprints > %%doi-prefix%%/%%doi-suffix%%` block:
+- Visit: https://github.com/elifesciences/enhanced-preprints-client/actions/workflows/add-pdf-url-to-manuscript.yaml
+- Click: Run workflow
+- Complete the form and click Run workflow
+- A successful run should result in a new workflow at https://github.com/elifesciences/enhanced-preprints-client/pulls
 
-```
-"pdfUrl": "https://github.com/elifesciences/enhanced-preprints-data/raw/master/data/%%doi-prefix%%/%%doi-suffix%%/%%doi-suffix%%.pdf"
-```
-
-Example pull request: https://github.com/elifesciences/enhanced-preprints-client/pull/379/files
-
-Create a new branch for this commit and start a pull request.
-
-We are working on a github action to allow anyone to create the pull request.
+Example pull request: https://github.com/elifesciences/enhanced-preprints-client/pull/334/files
 
 Once the pull request is merged in it should be available a few minutes later.
 
