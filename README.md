@@ -28,10 +28,18 @@ yarn install
 
 # Run an import workflow
 
-To run an import workflow, run:
+In order for the below importDocmap workflow to succeed we need to upload `s3://transfers-elife/biorxiv_Current_Content/November_2022/18_Nov_22_Batch_1439/fe4b6d19-6eec-1014-b9f6-ec097a2ec1b3.meca` to minio (http://localhost:9001/browser).
+
+To run the importDocmap workflow, run
 
 ```
-tctl wf run -tq epp -wt importDocmaps --input '["http://data-hub-api.elifesciences.org/enhanced-preprints/docmaps/v1/index"]'
+tctl wf run -tq epp -wt importDocmap --input '"https://data-hub-api.elifesciences.org/enhanced-preprints/docmaps/v1/get-by-doi?preprint_doi=10.1101%2F2022.09.30.510381"'
+```
+
+To run the importDocmaps workflow, run:
+
+```
+tctl wf run -tq epp -wt importDocmaps --input '"http://data-hub-api.elifesciences.org/enhanced-preprints/docmaps/v1/index"'
 ```
 
 This will kick of a full import for a docmap index from eLife's API.
