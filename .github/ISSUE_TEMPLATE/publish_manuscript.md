@@ -200,7 +200,7 @@ Upload the file `%%doi-suffix%%.pdf` and commit directly to the master branch
 - Complete the form and click Run workflow
 - A successful run should result in a new workflow at https://github.com/elifesciences/enhanced-preprints-client/pulls
 
-Example pull request: https://github.com/elifesciences/enhanced-preprints-client/pull/334/files
+Example pull request: https://github.com/elifesciences/enhanced-preprints-client/pull/397/files
 
 Once the pull request is merged in it should be available a few minutes later.
 
