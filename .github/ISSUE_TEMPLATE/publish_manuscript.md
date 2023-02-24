@@ -106,14 +106,17 @@ University of California, Berkeley, United States
 
 ## Step 4: Modify manuscripts.json (no PDF)
 
-- [ ] Reviewed preprint is published to EPP (https://prod--epp.elifesciences.org/reviewed-preprints/%%msid%%)
+- [ ] Reviewed preprint is published to EPP (https://elifesciences.org/reviewed-preprints/%%msid%%)
     - [ ] Pull request created to [enhanced-preprint-client](https://github.com/elifesciences/enhanced-preprints-client/pulls)
     - [ ] Post link to pull request below
+- [ ] Request that a doi be registered
+    - [ ] Post link to [#enhanced-preprint](https://elifesciences.slack.com/archives/C03EVJSUA77) comment below
 
 Pull request: [PLACE LINK TO PULL REQUEST HERE]
+[#enhanced-preprint](https://elifesciences.slack.com/archives/C03EVJSUA77) comment thread: [PLACE LINK TO COMMENT HERE]
 
 <details>
-<summary>Instructions</summary>
+<summary>Instructions to modif manuscripts.json</summary>
 
 - Visit: https://github.com/elifesciences/enhanced-preprints-client/actions/workflows/publish-manuscript.yaml
 - Click: Run workflow
@@ -125,6 +128,14 @@ Example pull request: https://github.com/elifesciences/enhanced-preprints-client
 Once the pull request is merged in it should be available a few minutes later.
 
 </details>
+
+### Request that a doi
+
+Post the following in [#enhanced-preprint](https://elifesciences.slack.com/archives/C03EVJSUA77):
+
+```
+@Fred can you register a doi for https://elifesciences.org/reviewed-preprints/%%msid%%
+```
 
 ## Step 5: Awaiting search reindex
 
@@ -144,9 +155,9 @@ https://alfred.elifesciences.org/job/process/job/process-reindex-reviewed-prepri
 ## Step 6: Published! Request PDF generation
 
 - [ ] Post the link to the PDF url at the top of the issue
-    - [ ] Post link to [#sciety-general](https://elifesciences.slack.com/archives/C011EQLKP51) comment below
+    - [ ] Post link to [#enhanced-preprint](https://elifesciences.slack.com/archives/C03EVJSUA77) comment below
 
-[#sciety-general](https://elifesciences.slack.com/archives/C011EQLKP51) comment thread: [PLACE LINK TO COMMENT HERE]
+[#enhanced-preprint](https://elifesciences.slack.com/archives/C03EVJSUA77) comment thread: [PLACE LINK TO COMMENT HERE]
 
 Post the following to the [#enhanced-preprint](https://elifesciences.slack.com/archives/C03EVJSUA77) on slack:
 
@@ -154,12 +165,12 @@ Post the following to the [#enhanced-preprint](https://elifesciences.slack.com/a
 @Ryan Dix-Peek please can you generate a PDF for https://elifesciences.org/reviewed-preprints/%%msid%%
 ```
 
-## Step 7: Add PDF to git repo
+## Step 7: Upload PDF to git repo
 
 - [ ] PDF is avaliable at https://github.com/elifesciences/enhanced-preprints-data/raw/master/data/%%doi-prefix%%/%%doi-suffix%%/%%doi-suffix%%.pdf
 
 <details>
-<summary>Instructions</summary>
+<summary>Instructions to upload pdf to git repo</summary>
 
 Download the PDF and rename to `%%doi-suffix%%.pdf`
 Goto: https://github.com/elifesciences/enhanced-preprints-data/upload/master/data/%%doi-prefix%%/%%doi-suffix%%
@@ -176,7 +187,7 @@ Upload the file `%%doi-suffix%%.pdf` and commit directly to the master branch
 [PLACE LINK TO PULL REQUEST HERE]
 
 <details>
-<summary>Instructions</summary>
+<summary>Instructions to add PDF url to manuscripts.json</summary>
 
 - Visit: https://github.com/elifesciences/enhanced-preprints-client/actions/workflows/add-pdf-url-to-manuscript.yaml
 - Click: Run workflow
