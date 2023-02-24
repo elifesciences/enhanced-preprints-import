@@ -116,7 +116,7 @@ Pull request: [PLACE LINK TO PULL REQUEST HERE]
 [#enhanced-preprint](https://elifesciences.slack.com/archives/C03EVJSUA77) comment thread: [PLACE LINK TO COMMENT HERE]
 
 <details>
-<summary>Instructions to modif manuscripts.json</summary>
+<summary>Instructions to modify manuscripts.json</summary>
 
 - Visit: https://github.com/elifesciences/enhanced-preprints-client/actions/workflows/publish-manuscript.yaml
 - Click: Run workflow
