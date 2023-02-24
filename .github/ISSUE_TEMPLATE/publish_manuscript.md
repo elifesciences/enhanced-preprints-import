@@ -104,24 +104,7 @@ University of California, Berkeley, United States
 
 </details>
 
-## Step 4: Request DocMap creation
-
-- [ ] DocMap prepared by sciety (will be available at https://sciety.org/docmaps/v1/evaluations-by/elife/%%doi-prefix%%/%%doi-suffix%%.docmap.json)
-    - [ ] Post link to [#sciety-general](https://elifesciences.slack.com/archives/C011EQLKP51) comment below
-
-[#sciety-general](https://elifesciences.slack.com/archives/C011EQLKP51) comment thread: [PLACE LINK TO COMMENT HERE]
-
-Post the following to the [#sciety-general](https://elifesciences.slack.com/archives/C011EQLKP51) on slack:
-
-```
-Please can you provide a DocMap for:
-
-- https://github.com/%%repo%%/issues/%%issue-id%% (%%doi-prefix%%/%%doi-suffix%%)
-
-Thank you
-```
-
-## Step 5: Modify manuscripts.json (no PDF)
+## Step 4: Modify manuscripts.json (no PDF)
 
 - [ ] Reviewed preprint is published to EPP (https://prod--epp.elifesciences.org/reviewed-preprints/%%msid%%)
     - [ ] Pull request created to [enhanced-preprint-client](https://github.com/elifesciences/enhanced-preprints-client/pulls)
@@ -143,7 +126,7 @@ Once the pull request is merged in it should be available a few minutes later.
 
 </details>
 
-## Step 6: Awaiting search reindex
+## Step 5: Awaiting search reindex
 
 - [ ] Reviewed preprint is avaliable on journal homepage (https://elifesciences.org)
 
@@ -158,7 +141,7 @@ https://alfred.elifesciences.org/job/process/job/process-reindex-reviewed-prepri
 
 </details>
 
-## Step 7: Published! Request PDF generation
+## Step 6: Published! Request PDF generation
 
 - [ ] Post the link to the PDF url at the top of the issue
     - [ ] Post link to [#sciety-general](https://elifesciences.slack.com/archives/C011EQLKP51) comment below
@@ -171,7 +154,7 @@ Post the following to the [#enhanced-preprint](https://elifesciences.slack.com/a
 @Ryan Dix-Peek please can you generate a PDF for https://elifesciences.org/reviewed-preprints/%%msid%%
 ```
 
-## Step 8: Add PDF to git repo
+## Step 7: Add PDF to git repo
 
 - [ ] PDF is avaliable at https://github.com/elifesciences/enhanced-preprints-data/raw/master/data/%%doi-prefix%%/%%doi-suffix%%/%%doi-suffix%%.pdf
 
@@ -184,7 +167,7 @@ Upload the file `%%doi-suffix%%.pdf` and commit directly to the master branch
 
 </details>
 
-## Step 9: Add PDF url to manuscripts.json
+## Step 8: Add PDF url to manuscripts.json
 
 - [ ] Reviewed preprint PDF is available for download (https://prod--epp.elifesciences.org/reviewed-preprints/%%msid%%)
     - [ ] Pull request created to [enhanced-preprint-client](https://github.com/elifesciences/enhanced-preprints-client/pulls)
@@ -206,6 +189,6 @@ Once the pull request is merged in it should be available a few minutes later.
 
 </details>
 
-## Step 10: Done!
+## Step 9: Done!
 
 - [ ] Kettle is on!
