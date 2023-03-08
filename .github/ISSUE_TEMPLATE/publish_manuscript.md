@@ -108,6 +108,7 @@ University of California, Berkeley, United States
 
 - [ ] Reviewed preprint is published to EPP (https://elifesciences.org/reviewed-preprints/%%msid%%)
     - [ ] Pull request created to [enhanced-preprint-client](https://github.com/elifesciences/enhanced-preprints-client/pulls)
+    - [ ] Pull request switched to "Ready for review"
     - [ ] Post link to pull request below
 - [ ] Request that a doi be registered
     - [ ] Post link to [#enhanced-preprint](https://elifesciences.slack.com/archives/C03EVJSUA77) comment below
@@ -120,8 +121,10 @@ Pull request: [PLACE LINK TO PULL REQUEST HERE]
 
 - Visit: https://github.com/elifesciences/enhanced-preprints-client/actions/workflows/publish-manuscript.yaml
 - Click: Run workflow
-- Complete the form and click Run workflow
-- A successful run should result in a new workflow at https://github.com/elifesciences/enhanced-preprints-client/pulls
+- Complete the form and click "Run workflow"
+- A successful run should result in a new pull request at https://github.com/elifesciences/enhanced-preprints-client/pulls
+- Open the pull request and click the "Ready for review" button to trigger tests
+- Once the tests pass and you are happy with the changes the PR can be merged
 
 Example pull request: https://github.com/elifesciences/enhanced-preprints-client/pull/334/files
 
@@ -182,6 +185,7 @@ Upload the file `%%doi-suffix%%.pdf` and commit directly to the master branch
 
 - [ ] Reviewed preprint PDF is available for download (https://prod--epp.elifesciences.org/reviewed-preprints/%%msid%%)
     - [ ] Pull request created to [enhanced-preprint-client](https://github.com/elifesciences/enhanced-preprints-client/pulls)
+    - [ ] Pull request switched to "Ready for review"
     - [ ] Post link to pull request below
 
 [PLACE LINK TO PULL REQUEST HERE]
@@ -191,8 +195,10 @@ Upload the file `%%doi-suffix%%.pdf` and commit directly to the master branch
 
 - Visit: https://github.com/elifesciences/enhanced-preprints-client/actions/workflows/add-pdf-url-to-manuscript.yaml
 - Click: Run workflow
-- Complete the form and click Run workflow
-- A successful run should result in a new workflow at https://github.com/elifesciences/enhanced-preprints-client/pulls
+- Complete the form and click "Run workflow"
+- A successful run should result in a new pull request at https://github.com/elifesciences/enhanced-preprints-client/pulls
+- Open the pull request and click the "Ready for review" button to trigger tests
+- Once the tests pass and you are happy with the changes the PR can be merged
 
 Example pull request: https://github.com/elifesciences/enhanced-preprints-client/pull/397/files
 
