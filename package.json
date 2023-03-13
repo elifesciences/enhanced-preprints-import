@@ -23,7 +23,7 @@
   "packageManager": "yarn@3.4.1",
   "devDependencies": {
     "@tsconfig/node18": "^1.0.1",
-    "@types/eslint": "8.21.1",
+    "@types/eslint": "8.21.2",
     "@types/jest": "^29.2.5",
     "@types/minio": "^7.0.15",
     "@types/node": "^18.11.9",
