@@ -2230,8 +2230,8 @@ __metadata:
   linkType: hard
 
 "@stencila/encoda@npm:^0.121.0":
-  version: 0.121.0
-  resolution: "@stencila/encoda@npm:0.121.0"
+  version: 0.121.1
+  resolution: "@stencila/encoda@npm:0.121.1"
   dependencies:
     "@stencila/jesta": ^1.10.5
     "@stencila/logga": ^4.0.0
@@ -2263,7 +2263,7 @@ __metadata:
     mdast-util-compact: ^3.0.0
     mime: ^3.0.0
     minimist: ^1.2.8
-    papaparse: ^5.3.2
+    papaparse: ^5.4.0
     parse-author: ^2.0.0
     parse-full-name: ^1.2.6
     patch-package: 6.4.7
@@ -2297,7 +2297,7 @@ __metadata:
     "@stencila/schema": ^1.9.0
   bin:
     encoda: dist/index.js
-  checksum: 5bc0378b86d0374bfecacc033849fda28c3955cdcc98f48c726c4763477b422760f305b09a272d6c48a5906ba5b51f8cbe01696d45f5e9e7665cf81f33d2a27f
+  checksum: dc55b7ad56b9e64aa012bcdc68e2efecc3f1e3728b21dae10d5b92669f97ce0beb7c94b9dfe47cddb5f1a36a647bb3c91200ab99bf184c0093b9ab1206f9f805
   languageName: node
   linkType: hard
 
@@ -11203,10 +11203,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"papaparse@npm:^5.3.2":
-  version: 5.3.2
-  resolution: "papaparse@npm:5.3.2"
-  checksum: a5950ef931a42f6759a8d3823a43dd30f375b37a0ddea6ea5448c0c5024cd226819231958c49c24fbcdeab297c63fd1d630130b3439876ea0fd17d8a267738ae
+"papaparse@npm:^5.4.0":
+  version: 5.4.0
+  resolution: "papaparse@npm:5.4.0"
+  checksum: 019d4e88b369583967c0f779039773ff4faead3586b6d6a73090fc7483176c1f6e09e4f69ff7f73de78f6c5a2315b8d79aac7555eb280bfb1042ae2f81d57f29
   languageName: node
   linkType: hard
 
