@@ -55,7 +55,7 @@ $ git commit -m 'import-%%doi-suffix%%'
 $ git push -u origin import-%%doi-suffix%%
 ```
 
-Create pull request: https://github.com/elifesciences/enhance/compare/master...import-%%doi-suffix%%
+Create pull request: https://github.com/elifesciences/enhanced-preprints-data/compare/master...import-%%doi-suffix%%
 
 Merge in after CI passes and reviewing changes.
 
