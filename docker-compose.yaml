@@ -37,7 +37,6 @@ services:
       - createbucket
       - temporalite
     environment:
-      EPP_SERVER_URI: http://api:3000
       TEMPORAL_SERVER: temporalite:7233
       AWS_ACCESS_KEY_ID: minio
       AWS_SECRET_ACCESS_KEY: miniotest
