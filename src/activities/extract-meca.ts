@@ -1,10 +1,11 @@
+import { VersionedReviewedPreprint } from '@elifesciences/docmap-ts';
 import { XMLParser } from 'fast-xml-parser';
 import { mkdirSync, readFileSync, writeFileSync } from 'fs';
 import { mkdtemp } from 'fs/promises';
 import JSZip from 'jszip';
 import { tmpdir } from 'os';
 import path, { dirname } from 'path';
-import { getS3ClientByName, parseS3Path } from '../S3Bucket';
+import { constructEPPS3FilePath, getS3Client } from '../S3Bucket';
 
 export type MecaFile = {
   id: string,
@@ -59,13 +60,13 @@ const extractFileContents = async (zip: JSZip, item: MecaFile, toDir: string): P
   };
 };
 
-export const extractMeca = async (s3MecaPath: string, destinationPath: string): Promise<MecaFiles> => {
+export const extractMeca = async (version: VersionedReviewedPreprint): Promise<MecaFiles> => {
   const tmpDirectory = await mkdtemp(`${tmpdir()}/epp_content`);
   const localMecaFilePath = `${tmpDirectory}/meca.zip`;
 
-  const s3 = getS3ClientByName('epp');
-  const { Bucket: SourceBucket, Key: SourceKey } = parseS3Path(s3MecaPath);
-  await s3.fGetObject(SourceBucket, SourceKey, localMecaFilePath);
+  const s3 = getS3Client();
+  const source = constructEPPS3FilePath('content.meca', version);
+  await s3.fGetObject(source.Bucket, source.Key, localMecaFilePath);
 
   const zip = await JSZip.loadAsync(readFileSync(localMecaFilePath));
 
@@ -139,12 +140,17 @@ export const extractMeca = async (s3MecaPath: string, destinationPath: string): 
     throw Error(`Found unknown manifest items types ${unknownTypes.join(', ')}`);
   }
 
-  const { Bucket, Key: prefix } = parseS3Path(destinationPath);
-  const articleUploadPromise = s3.fPutObject(Bucket, `${prefix}/article.xml`, article.localPath);
-  const figureUploadPromises = figures.map((figure) => s3.fPutObject(Bucket, `${prefix}/figures/${figure.fileName}`, figure.localPath));
-  const tableUploadPromises = tables.map((table) => s3.fPutObject(Bucket, `${prefix}/figures/${table.fileName}`, table.localPath));
-  const equationUploadPromises = tables.map((equation) => s3.fPutObject(Bucket, `${prefix}/figures/${equation.fileName}`, equation.localPath));
-  const supplementUploadPromises = tables.map((supplement) => s3.fPutObject(Bucket, `${prefix}/supplements/${supplement.fileName}`, supplement.localPath));
+  // define a closure that simplifies uploading a file to the correct location
+  const uploadItem = (localFile: LocalMecaFile, remoteFileName: string) => {
+    const s3Path = constructEPPS3FilePath(remoteFileName, version);
+    s3.fPutObject(s3Path.Bucket, s3Path.Key, localFile.localPath);
+  };
+
+  const articleUploadPromise = uploadItem(article, 'article.xml');
+  const figureUploadPromises = figures.map((figure) => uploadItem(figure, figure.fileName));
+  const tableUploadPromises = tables.map((table) => uploadItem(table, table.fileName));
+  const equationUploadPromises = tables.map((equation) => uploadItem(equation, equation.fileName));
+  const supplementUploadPromises = tables.map((supplement) => uploadItem(supplement, supplement.fileName));
 
   await Promise.all([
     articleUploadPromise,

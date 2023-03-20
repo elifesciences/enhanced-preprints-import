@@ -1,16 +1,23 @@
+import { VersionedReviewedPreprint } from '@elifesciences/docmap-ts';
 import { convert } from '@stencila/encoda';
 import { mkdtemp } from 'fs/promises';
+import { UploadedObjectInfo } from 'minio';
 import { tmpdir } from 'os';
 import { dirname } from 'path';
-import { getS3ClientByName, parseS3Path } from '../S3Bucket';
+import { constructEPPS3FilePath, getS3Client, S3File } from '../S3Bucket';
 
-export const convertXmlToJson = async (s3XmlPath: string, s3JsonDestination: string): Promise<string> => {
+type ConvertXmlToJsonOutput = {
+  result: UploadedObjectInfo,
+  path: S3File
+};
+
+export const convertXmlToJson = async (version: VersionedReviewedPreprint): Promise<ConvertXmlToJsonOutput> => {
   const tmpDirectory = await mkdtemp(`${tmpdir()}/epp_json`);
   const localXmlFilePath = `${tmpDirectory}/article.xml`;
 
-  const s3 = getS3ClientByName('epp');
-  const { Bucket: SourceBucket, Key: SourceKey } = parseS3Path(s3XmlPath);
-  await s3.fGetObject(SourceBucket, SourceKey, localXmlFilePath);
+  const s3 = getS3Client();
+  const source = constructEPPS3FilePath('article.xml', version);
+  await s3.fGetObject(source.Bucket, source.Key, localXmlFilePath);
 
   const converted = await convert(
     localXmlFilePath,
@@ -29,14 +36,17 @@ export const convertXmlToJson = async (s3XmlPath: string, s3JsonDestination: str
   }
 
   // Upload destination in S3
-  const { Bucket, Key } = parseS3Path(s3JsonDestination);
-  const s3Path = dirname(Key);
+  const destination = constructEPPS3FilePath('article.json', version);
 
   // correct any paths in the json
+  const s3Path = dirname(destination.Key);
   const corrected = converted.replaceAll(tmpDirectory, `${s3Path}/figures`);
 
   // Upload
-  await s3.putObject(Bucket, Key, corrected);
+  const result = await s3.putObject(destination.Bucket, destination.Key, corrected);
 
-  return s3XmlPath;
+  return {
+    result,
+    path: destination,
+  };
 };
