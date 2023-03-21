@@ -35,6 +35,11 @@ Thanks
 Who can help: @fred-atherden, @nlisgo, @scottaubrey
 
 - [ ] Manuscript is available for preview (https://prod--epp.elifesciences.org/preview/%%doi-prefix%%/%%doi-suffix%%)
+    - [ ] Trigger import for staging: https://prod--epp.elifesciences.org/import
+    - [ ] Sync data folder with s3://prod-elife-epp-data/data
+    - [ ] Trigger import for staging: https://staging--epp.elifesciences.org/import
+    - [ ] Sync data folder with s3://staging-elife-epp-data/data
+    - [ ] Sync data folder with s3://staging-elife-epp-data/data
     - [ ] Pull request created to [enhanced-preprint-data](https://github.com/elifesciences/enhanced-preprints-data/pulls)
     - [ ] Post link to pull request below
 
@@ -55,20 +60,27 @@ $ git commit -m 'import-%%doi-suffix%%'
 $ git push -u origin import-%%doi-suffix%%
 ```
 
+If there is an issue with the meca file then we should contact Ted and bioRxiv and write a comment on this issue.
+
 Create pull request: https://github.com/elifesciences/enhanced-preprints-data/compare/master...import-%%doi-suffix%%
 
-Merge in after CI passes and reviewing changes.
+Once the PR is created we should review on github and merge in.
 
-Manuscript should be available for preview shortly afterwards.
-
-an example with multiple:
+Once the data folder is prepared with the new manuscript folders we need to sync that data folder with the staging s3 bucket:
 
 ```
-$ for doi in 2022.06.17.496451 2022.10.29.514266; do ./scripts/fetch_meca_archive.sh $doi incoming/; done
-$ ./scripts/extract_mecas.sh incoming/ data/
-$ rm -rf incoming/
-$ for doi in 2022.06.17.496451 2022.10.29.514266; do git checkout --no-track -b "import-$doi" origin/master; git add data/10.1101/$doi/.; git commit -m "import-$doi"; git push origin "import-$doi"; done; git checkout master;
+aws s3 sync ./data s3://staging-elife-epp-data/data --delete
 ```
+
+Visit https://staging--epp.elifesciences.org/import and hit the import button.
+
+Once the data folder is prepared with the new manuscript folders we need to sync that data folder with the prod s3 bucket:
+
+```
+aws s3 sync ./data s3://prod-elife-epp-data/data --delete
+```
+
+Visit https://prod--epp.elifesciences.org/import and hit the import button.
 </details>
 
 ## Step 3: Awaiting public reviews
