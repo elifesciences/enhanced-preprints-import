@@ -52,7 +52,7 @@ services:
   # Downstream services for EPP
   ## Image Server
   image-server:
-    image: ghcr.io/elifesciences/epp-image-server:master-e8c4d8e9-20230110.0811
+    image: ghcr.io/elifesciences/epp-image-server:master-e98296e1-20230316.0421
     ports:
     - "8182:8182"
     environment:
@@ -102,7 +102,7 @@ services:
 
   ## EPP API
   api:
-    image: ghcr.io/elifesciences/enhanced-preprints:master-c5afe537-20230215.1956
+    image: ghcr.io/elifesciences/enhanced-preprints:master-6f17dc7e-20230320.1536
     healthcheck:
       test: ["CMD-SHELL", "sh -c 'apk add curl; curl http://api:3000/'"]
       interval: 5s
