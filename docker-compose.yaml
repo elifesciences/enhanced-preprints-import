@@ -37,14 +37,12 @@ services:
       - createbucket
       - temporalite
     environment:
-      EPP_SERVER_URI: http://api:3000
       TEMPORAL_SERVER: temporalite:7233
       AWS_ACCESS_KEY_ID: minio
       AWS_SECRET_ACCESS_KEY: miniotest
-<<<<<<< Updated upstream
-=======
       EPP_SERVER_URI: http://nginx:3001
->>>>>>> Stashed changes
+    links:
+      - datahub-mock:data-hub-api.elifesciences.org
     restart: on-failure:5
     command:
       - yarn
@@ -126,16 +124,13 @@ services:
     ports:
       - 3000:3000
 
-  # expose EPP API via proxy
-  nginx:
+  # mock datahub via proxy
+  datahub-mock:
     image: nginx:latest
     ports:
-      - 3001:3001
-    depends_on:
-      api:
-        condition: service_healthy
+      - 3002:3002
     volumes:
-      - ./.docker/nginx-mock.conf:/etc/nginx/conf.d/default.conf
+      - ./.docker/nginx-datahub-mock.conf:/etc/nginx/conf.d/default.conf
       - ./mock-data/:/www/test-data/
 
 volumes:
