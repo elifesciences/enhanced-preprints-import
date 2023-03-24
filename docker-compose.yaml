@@ -41,6 +41,10 @@ services:
       TEMPORAL_SERVER: temporalite:7233
       AWS_ACCESS_KEY_ID: minio
       AWS_SECRET_ACCESS_KEY: miniotest
+<<<<<<< Updated upstream
+=======
+      EPP_SERVER_URI: http://nginx:3001
+>>>>>>> Stashed changes
     restart: on-failure:5
     command:
       - yarn
@@ -121,6 +125,18 @@ services:
       REPO_PASSWORD: testtest
     ports:
       - 3000:3000
+
+  # expose EPP API via proxy
+  nginx:
+    image: nginx:latest
+    ports:
+      - 3001:3001
+    depends_on:
+      api:
+        condition: service_healthy
+    volumes:
+      - ./.docker/nginx-mock.conf:/etc/nginx/conf.d/default.conf
+      - ./mock-data/:/www/test-data/
 
 volumes:
   minio_storage: {}
