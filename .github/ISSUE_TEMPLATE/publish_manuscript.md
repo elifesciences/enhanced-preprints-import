@@ -39,49 +39,12 @@ Who can help: @fred-atherden, @nlisgo, @scottaubrey
     - [ ] Sync data folder with s3://prod-elife-epp-data/data
     - [ ] Trigger import for staging: https://staging--epp.elifesciences.org/import
     - [ ] Sync data folder with s3://staging-elife-epp-data/data
-    - [ ] Sync data folder with s3://staging-elife-epp-data/data
     - [ ] Pull request created to [enhanced-preprint-data](https://github.com/elifesciences/enhanced-preprints-data/pulls)
     - [ ] Post link to pull request below
 
 Pull request: [PLACE LINK TO PULL REQUEST HERE]
 
-<details>
-<summary>Instructions</summary>
-
-```
-$ git clone git@github.com:elifesciences/enhanced-preprints-data.git
-$ cd enhanced-preprints-data
-$ git checkout -b import-%%doi-suffix%% origin/master
-$ ./scripts/fetch_meca_archive.sh %%doi-suffix%% incoming/
-$ ./scripts/extract_mecas.sh incoming/ data/
-$ rm -rf incoming/
-$ git add .
-$ git commit -m 'import-%%doi-suffix%%'
-$ git push -u origin import-%%doi-suffix%%
-```
-
-If there is an issue with the meca file then we should contact Ted and bioRxiv and write a comment on this issue.
-
-Create pull request: https://github.com/elifesciences/enhanced-preprints-data/compare/master...import-%%doi-suffix%%
-
-Once the PR is created we should review on github and merge in.
-
-Once the data folder is prepared with the new manuscript folders we need to sync that data folder with the staging s3 bucket:
-
-```
-aws s3 sync ./data s3://staging-elife-epp-data/data --delete
-```
-
-Visit https://staging--epp.elifesciences.org/import and hit the import button.
-
-Once the data folder is prepared with the new manuscript folders we need to sync that data folder with the prod s3 bucket:
-
-```
-aws s3 sync ./data s3://prod-elife-epp-data/data --delete
-```
-
-Visit https://prod--epp.elifesciences.org/import and hit the import button.
-</details>
+Detailed instructions: https://github.com/elifesciences/enhanced-preprints-data#add-a-manuscript
 
 ## Step 3: Awaiting public reviews
 
@@ -180,18 +143,11 @@ Post the following to the [#enhanced-preprint](https://elifesciences.slack.com/a
 @Ryan Dix-Peek please can you generate a PDF for https://elifesciences.org/reviewed-preprints/%%msid%%
 ```
 
-## Step 7: Upload PDF to git repo
+## Step 7: Introduce PDF to data folder and git repo
 
 - [ ] PDF is avaliable at https://github.com/elifesciences/enhanced-preprints-data/raw/master/data/%%doi-prefix%%/%%doi-suffix%%/%%doi-suffix%%.pdf
 
-<details>
-<summary>Instructions to upload pdf to git repo</summary>
-
-Download the PDF and rename to `%%doi-suffix%%.pdf`
-Goto: https://github.com/elifesciences/enhanced-preprints-data/upload/master/data/%%doi-prefix%%/%%doi-suffix%%
-Upload the file `%%doi-suffix%%.pdf` and commit directly to the master branch
-
-</details>
+Detailed instructions: https://github.com/elifesciences/enhanced-preprints-data#add-a-pdf
 
 ## Step 8: Add PDF url to manuscripts.json
 
