@@ -35,41 +35,16 @@ Thanks
 Who can help: @fred-atherden, @nlisgo, @scottaubrey
 
 - [ ] Manuscript is available for preview (https://prod--epp.elifesciences.org/preview/%%doi-prefix%%/%%doi-suffix%%)
+    - [ ] Trigger import for staging: https://prod--epp.elifesciences.org/import
+    - [ ] Sync data folder with s3://prod-elife-epp-data/data
+    - [ ] Trigger import for staging: https://staging--epp.elifesciences.org/import
+    - [ ] Sync data folder with s3://staging-elife-epp-data/data
     - [ ] Pull request created to [enhanced-preprint-data](https://github.com/elifesciences/enhanced-preprints-data/pulls)
     - [ ] Post link to pull request below
 
 Pull request: [PLACE LINK TO PULL REQUEST HERE]
 
-<details>
-<summary>Instructions</summary>
-
-```
-$ git clone git@github.com:elifesciences/enhanced-preprints-data.git
-$ cd enhanced-preprints-data
-$ git checkout -b import-%%doi-suffix%% origin/master
-$ ./scripts/fetch_meca_archive.sh %%doi-suffix%% incoming/
-$ ./scripts/extract_mecas.sh incoming/ data/
-$ rm -rf incoming/
-$ git add .
-$ git commit -m 'import-%%doi-suffix%%'
-$ git push -u origin import-%%doi-suffix%%
-```
-
-Create pull request: https://github.com/elifesciences/enhanced-preprints-data/compare/master...import-%%doi-suffix%%
-
-Merge in after CI passes and reviewing changes.
-
-Manuscript should be available for preview shortly afterwards.
-
-an example with multiple:
-
-```
-$ for doi in 2022.06.17.496451 2022.10.29.514266; do ./scripts/fetch_meca_archive.sh $doi incoming/; done
-$ ./scripts/extract_mecas.sh incoming/ data/
-$ rm -rf incoming/
-$ for doi in 2022.06.17.496451 2022.10.29.514266; do git checkout --no-track -b "import-$doi" origin/master; git add data/10.1101/$doi/.; git commit -m "import-$doi"; git push origin "import-$doi"; done; git checkout master;
-```
-</details>
+Detailed instructions: https://github.com/elifesciences/enhanced-preprints-data#add-a-manuscript
 
 ## Step 3: Awaiting public reviews
 
@@ -168,18 +143,11 @@ Post the following to the [#enhanced-preprint](https://elifesciences.slack.com/a
 @Ryan Dix-Peek please can you generate a PDF for https://elifesciences.org/reviewed-preprints/%%msid%%
 ```
 
-## Step 7: Upload PDF to git repo
+## Step 7: Introduce PDF to data folder and git repo
 
 - [ ] PDF is avaliable at https://github.com/elifesciences/enhanced-preprints-data/raw/master/data/%%doi-prefix%%/%%doi-suffix%%/%%doi-suffix%%.pdf
 
-<details>
-<summary>Instructions to upload pdf to git repo</summary>
-
-Download the PDF and rename to `%%doi-suffix%%.pdf`
-Goto: https://github.com/elifesciences/enhanced-preprints-data/upload/master/data/%%doi-prefix%%/%%doi-suffix%%
-Upload the file `%%doi-suffix%%.pdf` and commit directly to the master branch
-
-</details>
+Detailed instructions: https://github.com/elifesciences/enhanced-preprints-data#add-a-pdf
 
 ## Step 8: Add PDF url to manuscripts.json
 
