@@ -21,7 +21,8 @@ type BiorxivMecaMetadataResponse = {
   results: BiorxivMecaMetadata[],
 };
 
-const fetchBiorxivMecaMetadata = async (doi: string) => axios.get<BiorxivMecaMetadataResponse>(`https://api.biorxiv.org/meca_index/elife/all/${doi}`).then(async (response) => response.data);
+// TODO: make URL a config (and make it https)
+const fetchBiorxivMecaMetadata = async (doi: string) => axios.get<BiorxivMecaMetadataResponse>(`http://api.biorxiv.org/meca_index/elife/all/${doi}`).then(async (response) => response.data);
 
 export const identifyBiorxivPreprintLocation = async (doi: string): Promise<PreprintMecaLocation> => {
   const [publisherId, articleId] = doi.split('/');
@@ -50,13 +51,14 @@ type CopyBiorxivPreprintToEPPOutput = {
   path: S3File,
 };
 
+// TODO: remove console.logs
 export const copyBiorxivPreprintToEPP = async (sourcePath: string, version: VersionedReviewedPreprint): Promise<CopyBiorxivPreprintToEPPOutput> => {
   const S3Connection = getS3Client();
 
   console.log('SOURCE PATH', sourcePath);
 
   // override in dev environment
-  const sourceUri = (false) ? 's3://biorxiv/6b7b2bfb-6c3e-1014-b4a7-d4f626fa4849.meca' : sourcePath;
+  const sourceUri = (true) ? 's3://biorxiv/meca/dummy1.zip' : sourcePath;
   // extract bucket and Path for Minio client
   const bucketAndPath = sourceUri.startsWith('s3://') ? sourceUri.substring(4) : sourceUri;
 
@@ -64,8 +66,12 @@ export const copyBiorxivPreprintToEPP = async (sourcePath: string, version: Vers
 
   // copy MECA
   const s3FilePath = constructEPPS3FilePath('content.meca', version);
+  console.log('S3 FILE PATH', s3FilePath);
   const conditions = new CopyConditions();
+  console.log('CONDITIONS', conditions);
+  // const fileInfo = await S3Connection.copyObject(s3FilePath.Bucket, s3FilePath.Key, bucketAndPath, conditions);
   const fileInfo = await S3Connection.copyObject(s3FilePath.Bucket, s3FilePath.Key, bucketAndPath, conditions);
+  console.log('FILE INFO', fileInfo);
 
   return {
     result: fileInfo,

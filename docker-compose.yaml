@@ -43,9 +43,10 @@ services:
       TEMPORAL_SERVER: temporalite:7233
       AWS_ACCESS_KEY_ID: minio
       AWS_SECRET_ACCESS_KEY: miniotest
-      EPP_SERVER_URI: http://nginx:3001
+      EPP_SERVER_URI: http://api:3000
     links:
-      - datahub-mock:data-hub-api.elifesciences.org
+      - nginx-mock:data-hub-api.elifesciences.org
+      - nginx-mock:api.biorxiv.org
     restart: on-failure:5
     command:
       - yarn
@@ -128,7 +129,7 @@ services:
       - 3000:3000
 
   # mock datahub via proxy
-  datahub-mock:
+  nginx-mock:
     image: nginx:latest
     ports:
       - 3002:3002
