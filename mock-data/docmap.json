@@ -1,7 +1,7 @@
 {
   "@context": "https://w3id.org/docmaps/context.jsonld",
   "type": "docmap",
-  "id": "https://data-hub-api.elifesciences.org/enhanced-preprints/docmaps/v1/by-publisher/elife/get-by-doi?preprint_doi=10.1101%2F2023.02.01.525891",
+  "id": "http://data-hub-api.elifesciences.org/enhanced-preprints/docmaps/v1/by-publisher/elife/get-by-doi?preprint_doi=10.1101%2F2023.02.01.525891",
   "created": "2023-02-17T11:39:55+00:00",
   "updated": "2023-02-17T11:39:55+00:00",
   "publisher": {
@@ -27,7 +27,7 @@
               "url": "https://www.biorxiv.org/content/10.1101/2023.02.01.525891v1",
               "published": "2023-02-01",
               "versionIdentifier": "1",
-              "_tdmPath": "s3://biorxiv/dummy.meca"
+              "_tdmPath": "s3://biorxiv/2200020-meca.zip"
             }
           ]
         }
