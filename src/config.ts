@@ -27,5 +27,5 @@ export const config: Config = {
   },
   eppBucketName: env.BUCKET_NAME ?? 'epp',
   eppServerUri: env.EPP_SERVER_URI,
-  biorxivURI: env.BIORXIV_URI ?? 'http://api.biorxiv.org',
+  biorxivURI: env.BIORXIV_URI ?? 'https://api.biorxiv.org',
 };
