@@ -5,6 +5,7 @@ type Config = {
   s3: ClientOptions,
   eppBucketName: string,
   eppServerUri: string,
+  biorxivURI: string,
 };
 
 if (!env.AWS_ACCESS_KEY_ID || !env.AWS_SECRET_ACCESS_KEY) {
@@ -26,4 +27,5 @@ export const config: Config = {
   },
   eppBucketName: env.BUCKET_NAME ?? 'epp',
   eppServerUri: env.EPP_SERVER_URI,
+  biorxivURI: env.BIORXIV_URI ?? 'http://api.biorxiv.org',
 };

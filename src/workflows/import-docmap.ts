@@ -19,9 +19,9 @@ export async function importDocmap(url: string): Promise<DocMapImportOutput> {
   const result = await parseDocMap(docMap);
 
   await Promise.all(
-    result.versions.map(async (version) => executeChild('importContent', {
+    result.versions.map(async (version, index) => executeChild('importContent', {
       args: [version],
-      workflowId: 'import-content',
+      workflowId: `import-content-${version.doi}-${index}`,
     })),
   );
 

@@ -1,0 +1,49 @@
+{
+  "@context": "https://w3id.org/docmaps/context.jsonld",
+  "type": "docmap",
+  "id": "http://data-hub-api.elifesciences.org/enhanced-preprints/docmaps/v1/by-publisher/elife/get-by-doi/10.1101%2F000003",
+  "created": "2023-02-14T04:52:40+00:00",
+  "updated": "2023-02-14T04:52:40+00:00",
+  "publisher": {
+    "account": {
+      "id": "https://sciety.org/groups/elife",
+      "service": "https://sciety.org"
+    },
+    "homepage": "https://elifesciences.org/",
+    "id": "https://elifesciences.org/",
+    "logo": "https://sciety.org/static/groups/elife--b560187e-f2fb-4ff9-a861-a204f3fc0fb0.png",
+    "name": "eLife"
+  },
+  "first-step": "_:b0",
+  "steps": {
+    "_:b0": {
+      "actions": [
+        {
+          "participants": [],
+          "outputs": [
+            {
+              "type": "preprint",
+              "doi": "10.1101/000003",
+              "url": "https://www.biorxiv.org/content/10.1101/000003v1",
+              "published": "2023-03-24",
+              "versionIdentifier": "1",
+              "_tdmPath": "s3://biorxiv/meca/dummy-3.zip"
+            }
+          ]
+        }
+      ],
+      "assertions": [
+        {
+          "item": {
+            "type": "preprint",
+            "doi": "10.1101/000003",
+            "versionIdentifier": "1"
+          },
+          "status": "manuscript-published"
+        }
+      ],
+      "inputs": [],
+      "next-step": "_:b1"
+    }
+  }
+}
