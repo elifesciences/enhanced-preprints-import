@@ -1,19 +1,10 @@
 services:
-  # ensure createbucket is healthy
-  createbucket:
-    healthcheck:
-      test: [ "CMD-SHELL", "/usr/bin/mc ls myminio/biorxiv" ]
-      interval: 5s
-      timeout: 5s
-      retries: 10
-      start_period: 2s
-
   # mount mock-data/meca, copy .meca and .zip to minio biorxiv s3
   loadbucket:
     image: minio/mc:RELEASE.2022-12-24T15-21-38Z
     depends_on:
-      - minio
-      - createbucket
+      createbucket:
+        condition: service_completed_successfully
     entrypoint: >
       /bin/sh -c "
       /usr/bin/mc config host add myminio http://minio:9000 minio miniotest;
