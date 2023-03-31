@@ -15,24 +15,13 @@ The monitoring and scheduling of the import workflows are handled by a [temporal
 Ensure you have docker and docker-compose (v2 tested). Also install [`tctl`](https://github.com/temporalio/tctl) to start and control jobs
 
 - clone the repo
-- run `docker-compose up` to start temporalite and the worker in "watch" mode
+- run `yarn`
+- run `docker compose up` to start temporalite and the worker in "watch" mode
 - run `tctl n desc` to list namespaces, you should see default namespace listed, and not any other error.
 
-# Development
+The `docker compose` workflow above will restart the worker when your mounted filesystem changes.
 
-The `docker-compose` workflow above will restart the worker when your mounted filesystem changes, but you may find it helpful if developing locally to install the dependencies by running:
-
-```shell
-yarn install
-```
-
-Alternatively, to run mock instances of data hub and bioRxiv api:
-
-```shell
-docker-compose -f docker-compose.yaml -f docker-compose.mock-services.yaml up
-```
-
-# Run an import workflow
+## Run an import workflow
 
 To run an import workflow, run:
 
@@ -42,7 +31,15 @@ tctl wf run -tq epp -wt importDocmaps --input '["http://data-hub-api.elifescienc
 
 This will kick of a full import for a docmap index from eLife's API.
 
-If you are running the mock services then run the following instead:
+## Run a mocked service for Data Hub and bioRxiv
+
+Alternatively, run `docker compose` with mock instances of Data Hub and bioRxiv api:
+
+```shell
+docker compose -f docker-compose.yaml -f docker-compose.mock-services.yaml up
+```
+
+Then run the following tctl command instead:
 
 ```shell
 tctl wf run -tq epp -wt importDocmaps --input '["http://mock-datahub/enhanced-preprints/docmaps/v1/index"]'
