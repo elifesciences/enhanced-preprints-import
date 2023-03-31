@@ -2,7 +2,7 @@
 
 This is a repository for the temporal worker docker image for EPP.
 
-This project facilitates asyncronous importing of content identified from a [docmap](https://docmaps.knowledgefutures.org/pub/sgkf1pqa) provider. We are using the docmaps to provide a feed of preprints that have been reviewed by a particular publisher. The data in the docmap provides the history and location of content, which we parse and retreive.
+This project facilitates asynchronous importing of content identified from a [docmap](https://docmaps.knowledgefutures.org/pub/sgkf1pqa) provider. We are using the docmaps to provide a feed of preprints that have been reviewed by a particular publisher. The data in the docmap provides the history and location of content, which we parse and retreive.
 
 We then push the parsed content into an EPP server endpoint.
 
@@ -20,18 +20,30 @@ Ensure you have docker and docker-compose (v2 tested). Also install [`tctl`](htt
 
 # Development
 
-The `docker-compose` workflow above will restart the worker when your mounted filesystem changes, but you may find it helpful if developing locally to install the depenedancies by running:
+The `docker-compose` workflow above will restart the worker when your mounted filesystem changes, but you may find it helpful if developing locally to install the dependencies by running:
 
-```
+```shell
 yarn install
+```
+
+Alternatively, to run mock instances of data hub and bioRxiv api:
+
+```shell
+docker-compose -f docker-compose.yaml -f docker-compose.mock-services.yaml up
 ```
 
 # Run an import workflow
 
 To run an import workflow, run:
 
-```
+```shell
 tctl wf run -tq epp -wt importDocmaps --input '["http://data-hub-api.elifesciences.org/enhanced-preprints/docmaps/v1/index"]'
 ```
 
 This will kick of a full import for a docmap index from eLife's API.
+
+If you are running the mock services then run the following instead:
+
+```shell
+tctl wf run -tq epp -wt importDocmaps --input '["http://mock-datahub/enhanced-preprints/docmaps/v1/index"]'
+```
