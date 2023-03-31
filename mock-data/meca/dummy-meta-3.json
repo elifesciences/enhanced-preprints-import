@@ -7,7 +7,7 @@
   ],
   "results": [
     {
-      "tdm_path": "s3://biorxiv/meca/dummy-3.zip"
+      "tdm_path": "s3://biorxiv/dummy-3.zip"
     }
   ]
 }

@@ -54,15 +54,12 @@ type CopyBiorxivPreprintToEPPOutput = {
 export const copyBiorxivPreprintToEPP = async (sourcePath: string, version: VersionedReviewedPreprint): Promise<CopyBiorxivPreprintToEPPOutput> => {
   const S3Connection = getS3Client();
 
-  // override in dev environment
-  const sourceUri = (false) ? 's3://biorxiv/meca/dummy-1.meca' : sourcePath;
   // extract bucket and Path for Minio client
-  const bucketAndPath = sourceUri.startsWith('s3://') ? sourceUri.substring(4) : sourceUri;
+  const bucketAndPath = sourcePath.replace('s3://', '');
 
   // copy MECA
   const s3FilePath = constructEPPS3FilePath('content.meca', version);
   const conditions = new CopyConditions();
-  // const fileInfo = await S3Connection.copyObject(s3FilePath.Bucket, s3FilePath.Key, bucketAndPath, conditions);
   const fileInfo = await S3Connection.copyObject(s3FilePath.Bucket, s3FilePath.Key, bucketAndPath, conditions);
 
   return {
