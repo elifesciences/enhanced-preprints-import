@@ -124,24 +124,6 @@ services:
     ports:
       - 3000:3000
 
-  # mock datahub via proxy
-  mock-datahub:
-    image: nginx:latest
-    ports:
-      - 3002:80
-    volumes:
-      - ./.docker/nginx-datahub-mock.conf:/etc/nginx/conf.d/default.conf
-      - ./mock-data/docmaps:/www/test-data/
-
-  # mock biorxiv via proxy
-  mock-biorxiv:
-    image: nginx:latest
-    ports:
-      - 3003:80
-    volumes:
-      - ./.docker/nginx-biorxiv-mock.conf:/etc/nginx/conf.d/default.conf
-      - ./mock-data/meca:/www/test-data/
-
 volumes:
   minio_storage: {}
   mongodb_data: {}
