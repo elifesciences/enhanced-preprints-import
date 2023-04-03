@@ -6,8 +6,9 @@
   "author": "Scott Aubrey <scott@aubrey.org.uk>",
   "license": "MIT",
   "dependencies": {
-    "@elifesciences/docmap-ts": "https://github.com/elifesciences/docmap-ts#tag=v0.0.12",
+    "@elifesciences/docmap-ts": "https://github.com/elifesciences/docmap-ts#tag=v0.0.16",
     "@stencila/encoda": "^0.121.0",
+    "@stencila/schema": "^1.18.0",
     "@temporalio/activity": "^1.4.4",
     "@temporalio/client": "^1.4.4",
     "@temporalio/common": "^1.4.4",
