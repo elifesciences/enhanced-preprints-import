@@ -2,14 +2,15 @@ services:
   minio:
     image: minio/minio:RELEASE.2023-01-02T09-40-09Z
     ports:
-      - "9000:9000"
-      - "9001:9001"
+      - 9000:9000
+      - 9001:9001
     volumes:
       - minio_storage:/data
     environment:
       MINIO_ROOT_USER: minio
       MINIO_ROOT_PASSWORD: miniotest
     command: server --console-address ":9001" /data
+
   createbucket:
     image: minio/mc:RELEASE.2022-12-24T15-21-38Z
     depends_on:
@@ -21,6 +22,7 @@ services:
       /usr/bin/mc mb myminio/biorxiv;
       exit 0;
       "
+
   temporalite:
     build:
       context: .
@@ -28,6 +30,7 @@ services:
     ports:
       - 7233:7233
       - 8233:8233
+
   worker:
     build:
       context: .
@@ -48,13 +51,12 @@ services:
     volumes:
       - ./src:/app/src
 
-
   # Downstream services for EPP
   ## Image Server
   image-server:
     image: ghcr.io/elifesciences/epp-image-server:master-e98296e1-20230316.0421
     ports:
-    - "8182:8182"
+    - 8182:8182
     environment:
       LOG_APPLICATION_LEVEL: debug
       SOURCE_STATIC: S3Source
@@ -85,7 +87,7 @@ services:
       retries: 10
       start_period: 2s
 
-  ## Database (MongoDB) GUI
+  ## Database (MongoDB) GUI
   mongo-express:
     image: mongo-express
     environment:

@@ -1,6 +1,7 @@
 import { VersionedReviewedPreprint } from '@elifesciences/docmap-ts';
 import axios from 'axios';
 import { CopyConditions, BucketItemCopy } from 'minio';
+import { config } from '../config';
 import { constructEPPS3FilePath, getS3Client, S3File } from '../S3Bucket';
 
 type PreprintMecaLocation = string;
@@ -21,7 +22,7 @@ type BiorxivMecaMetadataResponse = {
   results: BiorxivMecaMetadata[],
 };
 
-const fetchBiorxivMecaMetadata = async (doi: string) => axios.get<BiorxivMecaMetadataResponse>(`https://api.biorxiv.org/meca_index/elife/all/${doi}`).then(async (response) => response.data);
+const fetchBiorxivMecaMetadata = async (doi: string) => axios.get<BiorxivMecaMetadataResponse>(`${config.biorxivURI}/meca_index/elife/all/${doi}`).then(async (response) => response.data);
 
 export const identifyBiorxivPreprintLocation = async (doi: string): Promise<PreprintMecaLocation> => {
   const [publisherId, articleId] = doi.split('/');
@@ -54,7 +55,7 @@ export const copyBiorxivPreprintToEPP = async (sourcePath: string, version: Vers
   const S3Connection = getS3Client();
 
   // extract bucket and Path for Minio client
-  const bucketAndPath = sourcePath.startsWith('s3://') ? sourcePath.substring(4) : sourcePath;
+  const bucketAndPath = sourcePath.replace('s3://', '');
 
   // copy MECA
   const s3FilePath = constructEPPS3FilePath('content.meca', version);
