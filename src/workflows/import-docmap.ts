@@ -14,14 +14,14 @@ type DocMapImportOutput = {
   mecaLocation?: string,
 };
 
-export async function importDocmap(url: string): Promise<DocMapImportOutput> {
+export async function importDocmap(url: string, workflowIndex: number = 0): Promise<DocMapImportOutput> {
   const docMap = await fetchDocMap(url);
   const result = await parseDocMap(docMap);
 
   await Promise.all(
     result.versions.map(async (version, index) => executeChild('importContent', {
       args: [version],
-      workflowId: `import-content-${version.doi}-${index}`,
+      workflowId: `import-content-${workflowIndex}-${index}`,
     })),
   );
 

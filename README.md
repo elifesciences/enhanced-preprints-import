@@ -33,7 +33,7 @@ This will kick of a full import for a docmap index from eLife's API.
 
 ## Run a mocked service for Data Hub and bioRxiv
 
-Alternatively, run `docker compose` with mock instances of Data Hub and bioRxiv api:
+Alternatively, run the following `docker compose` with mock instances of Data Hub and bioRxiv api:
 
 ```shell
 docker compose -f docker-compose.yaml -f docker-compose.mock-services.yaml up
@@ -43,4 +43,10 @@ Then run the following tctl command instead:
 
 ```shell
 tctl wf run -tq epp -wt importDocmaps --input '["http://mock-datahub/enhanced-preprints/docmaps/v1/index"]'
+```
+
+To re-run the whole process, you will first need to remove the containers referenced by both compose files **and** volumes:
+
+```shell
+docker compose -f docker-compose.yaml -f docker-compose.mock-services.yaml down --volumes
 ```
