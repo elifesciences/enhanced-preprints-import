@@ -20,8 +20,11 @@ services:
       /usr/bin/mc config host add myminio http://minio:9000 minio miniotest;
       /usr/bin/mc mb myminio/epp;
       /usr/bin/mc mb myminio/biorxiv;
+      /usr/bin/mc cp --recursive /mock-meca/*.meca /mock-meca/*.zip myminio/biorxiv/;
       exit 0;
       "
+    volumes:
+      - ./mock-data/meca:/mock-meca
 
   temporalite:
     build:
@@ -44,6 +47,7 @@ services:
       TEMPORAL_SERVER: temporalite:7233
       AWS_ACCESS_KEY_ID: minio
       AWS_SECRET_ACCESS_KEY: miniotest
+      BIORXIV_URI: http://mock-biorxiv
     restart: on-failure:5
     command:
       - yarn
@@ -123,6 +127,24 @@ services:
       REPO_PASSWORD: testtest
     ports:
       - 3000:3000
+
+  # mock datahub docmaps api
+  mock-datahub:
+    image: nginx:latest
+    ports:
+      - 3002:80
+    volumes:
+      - ./.docker/nginx-datahub-mock.conf:/etc/nginx/conf.d/default.conf
+      - ./mock-data/docmaps:/www/test-data/
+
+  # mock biorxiv api
+  mock-biorxiv:
+    image: nginx:latest
+    ports:
+      - 3003:80
+    volumes:
+      - ./.docker/nginx-biorxiv-mock.conf:/etc/nginx/conf.d/default.conf
+      - ./mock-data/meca:/www/test-data/
 
 volumes:
   minio_storage: {}
