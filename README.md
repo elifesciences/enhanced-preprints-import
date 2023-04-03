@@ -2,7 +2,7 @@
 
 This is a repository for the temporal worker docker image for EPP.
 
-This project facilitates asyncronous importing of content identified from a [docmap](https://docmaps.knowledgefutures.org/pub/sgkf1pqa) provider. We are using the docmaps to provide a feed of preprints that have been reviewed by a particular publisher. The data in the docmap provides the history and location of content, which we parse and retreive.
+This project facilitates asynchronous importing of content identified from a [docmap](https://docmaps.knowledgefutures.org/pub/sgkf1pqa) provider. We are using the docmaps to provide a feed of preprints that have been reviewed by a particular publisher. The data in the docmap provides the history and location of content, which we parse and retreive.
 
 We then push the parsed content into an EPP server endpoint.
 
@@ -15,23 +15,38 @@ The monitoring and scheduling of the import workflows are handled by a [temporal
 Ensure you have docker and docker-compose (v2 tested). Also install [`tctl`](https://github.com/temporalio/tctl) to start and control jobs
 
 - clone the repo
-- run `docker-compose up` to start temporalite and the worker in "watch" mode
+- run `yarn`
+- run `docker compose up` to start temporalite and the worker in "watch" mode
 - run `tctl n desc` to list namespaces, you should see default namespace listed, and not any other error.
 
-# Development
+The `docker compose` workflow above will restart the worker when your mounted filesystem changes.
 
-The `docker-compose` workflow above will restart the worker when your mounted filesystem changes, but you may find it helpful if developing locally to install the depenedancies by running:
-
-```
-yarn install
-```
-
-# Run an import workflow
+## Run an import workflow
 
 To run an import workflow, run:
 
-```
-tctl wf run -tq epp -wt importDocmaps --input '["http://data-hub-api.elifesciences.org/enhanced-preprints/docmaps/v1/index"]'
+```shell
+tctl wf run -tq epp -wt importDocmaps --input '["http://mock-datahub/enhanced-preprints/docmaps/v1/index"]'
 ```
 
 This will kick of a full import for a docmap index from eLife's API.
+
+To re-run the whole process, you will first need to remove the containers **and** volumes:
+
+```shell
+docker compose down --volumes
+```
+
+## Run without mocked services
+
+Alternatively, run the following `docker compose` to avoid the overriding mocked services.
+
+```shell
+docker compose -f docker-compose.yaml -f up
+```
+
+Then you can use the following tctl command instead:
+
+```shell
+tctl wf run -tq epp -wt importDocmaps --input '["http://data-hub-api.elifesciences.org/enhanced-preprints/docmaps/v1/index"]'
+```
