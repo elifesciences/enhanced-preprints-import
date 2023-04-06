@@ -3,6 +3,7 @@ import { Client } from 'minio';
 import { config } from './config';
 
 export const getS3Client = (): Client => new Client(config.s3);
+export const getS3MecaClient = (): Client => new Client(config.s3Meca);
 
 export const parseS3Path = (s3Path: string): S3File => {
   const url = new URL(s3Path);

@@ -3,12 +3,13 @@ import { env } from 'process';
 
 type Config = {
   s3: ClientOptions,
+  s3Meca: ClientOptions,
   eppBucketName: string,
   eppServerUri: string,
   biorxivURI: string,
 };
 
-if (!env.AWS_ACCESS_KEY_ID || !env.AWS_SECRET_ACCESS_KEY) {
+if (!env.AWS_ACCESS_KEY_ID || !env.AWS_SECRET_ACCESS_KEY || !env.MECA_AWS_ACCESS_KEY_ID || !env.MECA_AWS_SECRET_ACCESS_KEY) {
   throw Error('Environment variables `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY` are required');
 }
 
@@ -21,7 +22,15 @@ export const config: Config = {
     accessKey: env.AWS_ACCESS_KEY_ID,
     secretKey: env.AWS_SECRET_ACCESS_KEY,
     region: 'us-east-1',
-    endPoint: 'minio',
+    endPoint: env.S3_ENDPOINT ?? 's3.amazonaws.com',
+    port: 9000,
+    useSSL: false,
+  },
+  s3Meca: {
+    accessKey: env.MECA_AWS_ACCESS_KEY_ID,
+    secretKey: env.MECA_AWS_SECRET_ACCESS_KEY,
+    region: 'us-east-1',
+    endPoint: env.MECA_S3_ENDPOINT ?? 's3.amazonaws.com',
     port: 9000,
     useSSL: false,
   },

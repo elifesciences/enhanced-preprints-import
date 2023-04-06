@@ -3,12 +3,12 @@ services:
   loadbucket:
     image: minio/mc:RELEASE.2022-12-24T15-21-38Z
     depends_on:
-      createbucket:
+      createbucketmeca:
         condition: service_completed_successfully
     entrypoint: >
       /bin/sh -c "
-      /usr/bin/mc config host add myminio http://minio:9000 minio miniotest;
-      /usr/bin/mc cp --recursive /mock-meca/*.meca /mock-meca/*.zip myminio/biorxiv/;
+      /usr/bin/mc config host add myminiomeca http://miniomeca:9000 miniomeca miniomecatest;
+      /usr/bin/mc cp --recursive /mock-meca/*.meca /mock-meca/*.zip myminiomeca/biorxiv/;
       exit 0;
       "
     volumes:

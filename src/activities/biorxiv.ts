@@ -1,8 +1,16 @@
 import { VersionedReviewedPreprint } from '@elifesciences/docmap-ts';
 import axios from 'axios';
-import { CopyConditions, BucketItemCopy } from 'minio';
+import { UploadedObjectInfo } from 'minio';
+import { mkdtemp } from 'fs/promises';
+import { tmpdir } from 'os';
 import { config } from '../config';
-import { constructEPPS3FilePath, getS3Client, S3File } from '../S3Bucket';
+import {
+  constructEPPS3FilePath,
+  getS3Client,
+  getS3MecaClient,
+  parseS3Path,
+  S3File,
+} from '../S3Bucket';
 
 type PreprintMecaLocation = string;
 type BiorxivMecaMetadataStatus = {
@@ -47,20 +55,23 @@ export const identifyBiorxivPreprintLocation = async (doi: string): Promise<Prep
 };
 
 type CopyBiorxivPreprintToEPPOutput = {
-  result: BucketItemCopy,
+  result: UploadedObjectInfo,
   path: S3File,
 };
 
 export const copyBiorxivPreprintToEPP = async (sourcePath: string, version: VersionedReviewedPreprint): Promise<CopyBiorxivPreprintToEPPOutput> => {
+  const S3MecaConnection = getS3MecaClient();
   const S3Connection = getS3Client();
 
-  // extract bucket and Path for Minio client
-  const bucketAndPath = sourcePath.replace('s3://', '');
+  // download MECA
+  const tmpDirectory = await mkdtemp(`${tmpdir()}/epp_meca`);
+  const localMecaFilePath = `${tmpDirectory}/meca.zip`;
+  const { Bucket: SourceBucket, Key: SourceKey } = parseS3Path(sourcePath);
+  await S3MecaConnection.fGetObject(SourceBucket, SourceKey, localMecaFilePath);
 
-  // copy MECA
+  // upload MECA
   const s3FilePath = constructEPPS3FilePath('content.meca', version);
-  const conditions = new CopyConditions();
-  const fileInfo = await S3Connection.copyObject(s3FilePath.Bucket, s3FilePath.Key, bucketAndPath, conditions);
+  const fileInfo = await S3Connection.fPutObject(s3FilePath.Bucket, s3FilePath.Key, localMecaFilePath);
 
   return {
     result: fileInfo,
