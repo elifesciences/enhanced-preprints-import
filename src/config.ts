@@ -1,8 +1,12 @@
 import { env } from 'process';
-import { S3ClientConfig } from '@aws-sdk/client-s3';
 
 type Config = {
-  s3: S3ClientConfig,
+  s3: {
+    accessKey?: string,
+    secretKey?: string,
+    region: string,
+    endPoint: string,
+  },
   awsAssumeRole: {
     webIdentityTokenFile?: string,
     roleArn?: string,
@@ -12,27 +16,20 @@ type Config = {
   biorxivURI: string,
 };
 
-if (!env.AWS_ACCESS_KEY_ID || !env.AWS_SECRET_ACCESS_KEY) {
-  throw Error('Environment variables `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY` are required');
-}
-
 if (!env.EPP_SERVER_URI) {
   throw Error('Environment variable `EPP_SERVER_URI` is required');
 }
 
 export const config: Config = {
   s3: {
-    credentials: {
-      accessKeyId: env.AWS_ACCESS_KEY_ID,
-      secretAccessKey: env.AWS_SECRET_ACCESS_KEY,
-    },
+    accessKey: env.AWS_ACCESS_KEY_ID ?? undefined,
+    secretKey: env.AWS_SECRET_ACCESS_KEY ?? undefined,
     region: 'us-east-1',
-    endpoint: env.S3_ENDPOINT ?? 'https://s3.amazonaws.com',
-    forcePathStyle: true,
+    endPoint: env.S3_ENDPOINT ?? 'https://s3.amazonaws.com',
   },
   awsAssumeRole: {
-    webIdentityTokenFile: process.env.AWS_WEB_IDENTITY_TOKEN_FILE ?? undefined,
-    roleArn: process.env.AWS_ROLE_ARN ?? undefined,
+    webIdentityTokenFile: env.AWS_WEB_IDENTITY_TOKEN_FILE ?? undefined,
+    roleArn: env.AWS_ROLE_ARN ?? undefined,
   },
   eppBucketName: env.BUCKET_NAME ?? 'epp',
   eppServerUri: env.EPP_SERVER_URI,

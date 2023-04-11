@@ -15,15 +15,18 @@ export const getS3Client = () => {
         },
         webIdentityToken,
       }),
-      endpoint: config.s3.endpoint,
+      endpoint: config.s3.endPoint,
       forcePathStyle: true,
       region: config.s3.region,
     });
   }
 
   return new S3Client({
-    credentials: config.s3.credentials,
-    endpoint: config.s3.endpoint,
+    credentials: {
+      accessKeyId: config.s3.accessKey ?? '',
+      secretAccessKey: config.s3.secretKey ?? '',
+    },
+    endpoint: config.s3.endPoint,
     forcePathStyle: true,
     region: config.s3.region,
   });
