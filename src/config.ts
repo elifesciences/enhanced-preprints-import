@@ -1,9 +1,12 @@
 import { env } from 'process';
 import { S3ClientConfig } from '@aws-sdk/client-s3';
-import { fromWebToken } from '@aws-sdk/credential-providers';
 
 type Config = {
   s3: S3ClientConfig,
+  awsAssumeRole: {
+    webIdentityTokenFile?: string,
+    roleArn?: string,
+  }
   eppBucketName: string,
   eppServerUri: string,
   biorxivURI: string,
@@ -19,19 +22,17 @@ if (!env.EPP_SERVER_URI) {
 
 export const config: Config = {
   s3: {
-    credentials: process.env.AWS_WEB_IDENTITY_TOKEN_FILE && process.env.AWS_ROLE_ARN ? fromWebToken({
-      roleArn: process.env.AWS_ROLE_ARN,
-      clientConfig: {
-        region: process.env.S3_REGION ?? 'us-east-1',
-      },
-      webIdentityToken: process.env.AWS_WEB_IDENTITY_TOKEN_FILE,
-    }) : {
+    credentials: {
       accessKeyId: env.AWS_ACCESS_KEY_ID,
       secretAccessKey: env.AWS_SECRET_ACCESS_KEY,
     },
     region: 'us-east-1',
     endpoint: env.S3_ENDPOINT ?? 'https://s3.amazonaws.com',
     forcePathStyle: true,
+  },
+  awsAssumeRole: {
+    webIdentityTokenFile: process.env.AWS_WEB_IDENTITY_TOKEN_FILE ?? undefined,
+    roleArn: process.env.AWS_ROLE_ARN ?? undefined,
   },
   eppBucketName: env.BUCKET_NAME ?? 'epp',
   eppServerUri: env.EPP_SERVER_URI,
