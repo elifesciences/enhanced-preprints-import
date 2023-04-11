@@ -6,6 +6,8 @@
   "author": "Scott Aubrey <scott@aubrey.org.uk>",
   "license": "MIT",
   "dependencies": {
+    "@aws-sdk/client-s3": "^3.310.0",
+    "@aws-sdk/credential-providers": "^3.310.0",
     "@elifesciences/docmap-ts": "https://github.com/elifesciences/docmap-ts#tag=v0.0.16",
     "@stencila/encoda": "^0.121.0",
     "@stencila/schema": "^1.18.0",
