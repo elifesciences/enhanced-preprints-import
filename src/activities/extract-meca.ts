@@ -5,7 +5,8 @@ import { mkdtemp } from 'fs/promises';
 import JSZip from 'jszip';
 import { tmpdir } from 'os';
 import path, { dirname } from 'path';
-import { GetObjectCommand, GetObjectCommandInput, PutObjectCommand, PutObjectCommandInput } from '@aws-sdk/client-s3';
+import { GetObjectCommand, GetObjectCommandInput, PutObjectCommand } from '@aws-sdk/client-s3';
+import * as fs from 'fs';
 import { constructEPPS3FilePath, getS3Client } from '../S3Bucket';
 
 export type MecaFile = {
@@ -155,16 +156,14 @@ export const extractMeca = async (version: VersionedReviewedPreprint): Promise<M
   }
 
   // define a closure that simplifies uploading a file to the correct location
-  const uploadItem = (localFile: LocalMecaFile, remoteFileName: string) => {
+  const uploadItem = async (localFile: LocalMecaFile, remoteFileName: string) => {
     const s3Path = constructEPPS3FilePath(remoteFileName, version);
-    const putObjectCommandInput: PutObjectCommandInput = {
+    const fileStream = fs.createReadStream(localFile.localPath);
+    await s3.send(new PutObjectCommand({
       Bucket: s3Path.Bucket,
       Key: s3Path.Key,
-      // TO-DO: Replace local file with buffer
-      Body: 
-    }
-    await s3.send(new PutObjectCommand({}))
-    s3.fPutObject(s3Path.Bucket, s3Path.Key, localFile.localPath);
+      Body: fileStream,
+    }));
   };
 
   const articleUploadPromise = uploadItem(article, 'article.xml');
