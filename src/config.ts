@@ -10,7 +10,7 @@ type Config = {
   awsAssumeRole: {
     webIdentityTokenFile?: string,
     roleArn?: string,
-  }
+  },
   eppBucketName: string,
   eppServerUri: string,
   biorxivURI: string,
