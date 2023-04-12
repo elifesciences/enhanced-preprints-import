@@ -3890,15 +3890,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/adm-zip@npm:^0.5.0":
-  version: 0.5.0
-  resolution: "@types/adm-zip@npm:0.5.0"
-  dependencies:
-    "@types/node": "*"
-  checksum: 11dd013584e47d431bdf7c115b73cd3162c1a1eca0fbb911f691c9734e904cfe4a01ac1d2d3cbf76d0a952e01fcce8a01fd6fb1c150675a29d740a7fb15325b2
-  languageName: node
-  linkType: hard
-
 "@types/babel__core@npm:^7.1.14":
   version: 7.1.20
   resolution: "@types/babel__core@npm:7.1.20"
@@ -7061,7 +7052,6 @@ __metadata:
     "@temporalio/worker": ^1.4.4
     "@temporalio/workflow": ^1.4.4
     "@tsconfig/node18": ^1.0.1
-    "@types/adm-zip": ^0.5.0
     "@types/eslint": 8.37.0
     "@types/jest": ^29.2.5
     "@types/node": ^18.11.9
