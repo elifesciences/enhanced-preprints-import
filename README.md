@@ -42,7 +42,7 @@ docker compose down --volumes
 Alternatively, run the following `docker compose` to avoid the overriding mocked services.
 
 ```shell
-docker compose -f docker-compose.yaml -f up
+docker compose -f docker-compose.yaml up
 ```
 
 Then you can use the following tctl command instead:
@@ -50,3 +50,13 @@ Then you can use the following tctl command instead:
 ```shell
 tctl wf run -tq epp -wt importDocmaps --input '["http://data-hub-api.elifesciences.org/enhanced-preprints/docmaps/v1/index"]'
 ```
+
+## Run with a local instance of the API
+
+```shell
+SERVER_DIR="../your-directory-here" docker compose -f docker-compose.yaml -f docker-compose.override.yaml -f docker-compose.localserver.yaml up
+```
+
+To start the application with a local version of the [`EPP API server`](https://github.com/elifesciences/enhanced-preprints-server), so you can run the application and test local changes of the API, you need to define an environment variable `SERVER_DIR` with the location of your EPP API server project, i.e. `SERVER_DIR="../enhanced-preprints-server"`, then run the above command to invoke the `.localserver` overrides. This will work with the first import workflow command.
+
+To run with the local API but **without** the mocked services, omit `-f docker-compose.override.yaml` from the compose command.
