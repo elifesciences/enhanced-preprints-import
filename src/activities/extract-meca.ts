@@ -1,10 +1,12 @@
 import { VersionedReviewedPreprint } from '@elifesciences/docmap-ts';
 import { XMLParser } from 'fast-xml-parser';
-import { mkdirSync, readFileSync, writeFileSync } from 'fs';
+import { mkdirSync, writeFileSync } from 'fs';
 import { mkdtemp } from 'fs/promises';
 import JSZip from 'jszip';
 import { tmpdir } from 'os';
 import path, { dirname } from 'path';
+import { GetObjectCommand, GetObjectCommandInput, PutObjectCommand } from '@aws-sdk/client-s3';
+import * as fs from 'fs';
 import { constructEPPS3FilePath, getS3Client } from '../S3Bucket';
 
 export type MecaFile = {
@@ -62,15 +64,25 @@ const extractFileContents = async (zip: JSZip, item: MecaFile, toDir: string): P
 
 export const extractMeca = async (version: VersionedReviewedPreprint): Promise<MecaFiles> => {
   const tmpDirectory = await mkdtemp(`${tmpdir()}/epp_content`);
-  const localMecaFilePath = `${tmpDirectory}/meca.zip`;
 
   const s3 = getS3Client();
   const source = constructEPPS3FilePath('content.meca', version);
-  await s3.fGetObject(source.Bucket, source.Key, localMecaFilePath);
 
-  const zip = await JSZip.loadAsync(readFileSync(localMecaFilePath));
+  const getObjectCommandInput: GetObjectCommandInput = {
+    Bucket: source.Bucket,
+    Key: source.Key,
+  };
 
-  const manifestXml = await zip.file('manifest.xml')?.async('nodebuffer');
+  const buffer = await s3.send(new GetObjectCommand(getObjectCommandInput))
+    .then((obj) => obj.Body?.transformToByteArray());
+
+  if (buffer === undefined) {
+    throw new Error('Could not retrieve object from S3');
+  }
+
+  const zip = await JSZip.loadAsync(buffer);
+
+  const manifestXml = await zip?.file('manifest.xml')?.async('nodebuffer');
   if (manifestXml === undefined) {
     throw new Error('Cannot find manifest.xml in meca file');
   }
@@ -141,9 +153,14 @@ export const extractMeca = async (version: VersionedReviewedPreprint): Promise<M
   }
 
   // define a closure that simplifies uploading a file to the correct location
-  const uploadItem = (localFile: LocalMecaFile, remoteFileName: string) => {
+  const uploadItem = async (localFile: LocalMecaFile, remoteFileName: string) => {
     const s3Path = constructEPPS3FilePath(remoteFileName, version);
-    s3.fPutObject(s3Path.Bucket, s3Path.Key, localFile.localPath);
+    const fileStream = fs.createReadStream(localFile.localPath);
+    await s3.send(new PutObjectCommand({
+      Bucket: s3Path.Bucket,
+      Key: s3Path.Key,
+      Body: fileStream,
+    }));
   };
 
   const articleUploadPromise = uploadItem(article, 'article.xml');

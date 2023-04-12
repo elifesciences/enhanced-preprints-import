@@ -1,15 +1,37 @@
 import { VersionedReviewedPreprint } from '@elifesciences/docmap-ts';
 import { convert } from '@stencila/encoda';
 import { mkdtemp } from 'fs/promises';
-import { UploadedObjectInfo } from 'minio';
 import { tmpdir } from 'os';
 import { dirname } from 'path';
+import * as fs from 'fs';
+import {
+  GetObjectCommand,
+  GetObjectCommandOutput,
+  PutObjectCommand,
+  PutObjectCommandOutput,
+} from '@aws-sdk/client-s3';
+import { Readable } from 'stream';
 import { constructEPPS3FilePath, getS3Client, S3File } from '../S3Bucket';
 
 type ConvertXmlToJsonOutput = {
-  result: UploadedObjectInfo,
+  result: PutObjectCommandOutput,
   path: S3File
 };
+
+async function saveObjectToFile(object: GetObjectCommandOutput, filePath: string): Promise<void> {
+  const fileStream = fs.createWriteStream(filePath);
+
+  (object.Body as Readable).pipe(fileStream);
+
+  return new Promise((resolve, reject) => {
+    fileStream.on('finish', () => {
+      resolve();
+    });
+    fileStream.on('error', (error) => {
+      reject(error);
+    });
+  });
+}
 
 export const convertXmlToJson = async (version: VersionedReviewedPreprint): Promise<ConvertXmlToJsonOutput> => {
   const tmpDirectory = await mkdtemp(`${tmpdir()}/epp_json`);
@@ -17,7 +39,8 @@ export const convertXmlToJson = async (version: VersionedReviewedPreprint): Prom
 
   const s3 = getS3Client();
   const source = constructEPPS3FilePath('article.xml', version);
-  await s3.fGetObject(source.Bucket, source.Key, localXmlFilePath);
+  const object = await s3.send(new GetObjectCommand(source));
+  await saveObjectToFile(object, localXmlFilePath);
 
   const converted = await convert(
     localXmlFilePath,
@@ -43,7 +66,11 @@ export const convertXmlToJson = async (version: VersionedReviewedPreprint): Prom
   const corrected = converted.replaceAll(tmpDirectory, `${s3Path}/figures`);
 
   // Upload
-  const result = await s3.putObject(destination.Bucket, destination.Key, corrected);
+  const result = await s3.send(new PutObjectCommand({
+    Bucket: destination.Bucket,
+    Key: destination.Key,
+    Body: corrected,
+  }));
 
   return {
     result,

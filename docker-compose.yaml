@@ -44,6 +44,7 @@ services:
       TEMPORAL_SERVER: temporalite:7233
       AWS_ACCESS_KEY_ID: minio
       AWS_SECRET_ACCESS_KEY: miniotest
+      S3_ENDPOINT: http://minio:9000
     restart: on-failure:5
     command:
       - yarn

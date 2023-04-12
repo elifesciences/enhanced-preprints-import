@@ -1,6 +1,6 @@
 import { VersionedReviewedPreprint } from '@elifesciences/docmap-ts';
 import axios from 'axios';
-import { CopyConditions, BucketItemCopy } from 'minio';
+import { CopyObjectCommand, CopyObjectCommandInput, CopyObjectCommandOutput } from '@aws-sdk/client-s3';
 import { config } from '../config';
 import { constructEPPS3FilePath, getS3Client, S3File } from '../S3Bucket';
 
@@ -47,20 +47,26 @@ export const identifyBiorxivPreprintLocation = async (doi: string): Promise<Prep
 };
 
 type CopyBiorxivPreprintToEPPOutput = {
-  result: BucketItemCopy,
+  result: CopyObjectCommandOutput,
   path: S3File,
 };
 
 export const copyBiorxivPreprintToEPP = async (sourcePath: string, version: VersionedReviewedPreprint): Promise<CopyBiorxivPreprintToEPPOutput> => {
   const S3Connection = getS3Client();
 
-  // extract bucket and Path for Minio client
+  // extract bucket and Path for S3 client
   const bucketAndPath = sourcePath.replace('s3://', '');
 
   // copy MECA
   const s3FilePath = constructEPPS3FilePath('content.meca', version);
-  const conditions = new CopyConditions();
-  const fileInfo = await S3Connection.copyObject(s3FilePath.Bucket, s3FilePath.Key, bucketAndPath, conditions);
+
+  const copyCommand: CopyObjectCommandInput = {
+    Bucket: s3FilePath.Bucket,
+    Key: s3FilePath.Key,
+    CopySource: bucketAndPath,
+  };
+
+  const fileInfo = await S3Connection.send(new CopyObjectCommand(copyCommand));
 
   return {
     result: fileInfo,
