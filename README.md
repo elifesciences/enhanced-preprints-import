@@ -42,7 +42,7 @@ docker compose down --volumes
 Alternatively, run the following `docker compose` to avoid the overriding mocked services.
 
 ```shell
-docker compose -f docker-compose.yaml -f up
+docker compose -f docker-compose.yaml up
 ```
 
 Then you can use the following tctl command instead:

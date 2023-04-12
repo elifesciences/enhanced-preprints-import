@@ -40,7 +40,7 @@ export const convertXmlToJson = async (version: VersionedReviewedPreprint): Prom
   const s3 = getS3Client();
   const source = constructEPPS3FilePath('article.xml', version);
   const object = await s3.send(new GetObjectCommand(source));
-  await saveObjectToFile(object, localXmlFilePath)
+  await saveObjectToFile(object, localXmlFilePath);
 
   const converted = await convert(
     localXmlFilePath,

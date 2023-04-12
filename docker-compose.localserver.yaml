@@ -1,0 +1,9 @@
+services:
+  api:
+    image: api-local
+    build:
+      context: ${SERVER_DIR}
+      dockerfile: Dockerfile
+      target: prod
+    volumes:
+      - ${SERVER_DIR}/src:/opt/epp/src
