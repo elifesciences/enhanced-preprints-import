@@ -64,16 +64,13 @@ const extractFileContents = async (zip: JSZip, item: MecaFile, toDir: string): P
 
 export const extractMeca = async (version: VersionedReviewedPreprint): Promise<MecaFiles> => {
   const tmpDirectory = await mkdtemp(`${tmpdir()}/epp_content`);
-  // const localMecaFilePath = `${tmpDirectory}/meca.zip`;
 
   const s3 = getS3Client();
   const source = constructEPPS3FilePath('content.meca', version);
-  // await s3.GetObject(source.Bucket, source.Key, localMecaFilePath);
 
   const getObjectCommandInput: GetObjectCommandInput = {
     Bucket: source.Bucket,
     Key: source.Key,
-
   };
 
   const buffer = await s3.send(new GetObjectCommand(getObjectCommandInput))
