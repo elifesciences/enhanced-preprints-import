@@ -6,6 +6,10 @@ on:
       msid:
         description: "Manuscript ID (e.g. 84855)"
         required: true
+      versionManuscript:
+        description: "Manuscript version (default: 1)"
+        default: "1"
+        required: true
       doi-prefix:
         description: "DOI prefix (default: 10.1101)"
         default: "10.1101"
@@ -44,6 +48,7 @@ jobs:
         doi-suffix: "${{ github.event.inputs.doi-suffix }}"
         doi-suffix2: "${{ github.event.inputs.doi-suffix2 }}"
         msid: "${{ github.event.inputs.msid }}"
+        version: "${{ github.event.inputs.versionManuscript }}"
 
     - uses: bluwy/substitute-string-action@v2
       id: body
@@ -54,10 +59,11 @@ jobs:
         doi-suffix: "${{ github.event.inputs.doi-suffix }}"
         doi-suffix2: "${{ github.event.inputs.doi-suffix2 }}"
         msid: "${{ github.event.inputs.msid }}"
+        version: "${{ github.event.inputs.versionManuscript }}"
         repo: "${{ github.repository }}"
         issue-id: "${{ env.ISSUE_NUMBER }}"
 
-    - name: "Create issue: Publish manuscript ${{ github.event.inputs.doi }}"
+    - name: "Create issue: Publish manuscript ${{ github.event.inputs.versionManuscript }}v${{ github.event.inputs.versionManuscript }}"
       uses: imjohnbo/issue-bot@v3
       with:
         assignees: ${{ steps.extract.outputs.assignees }}
