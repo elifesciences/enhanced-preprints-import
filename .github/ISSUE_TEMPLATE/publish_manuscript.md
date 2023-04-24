@@ -1,7 +1,7 @@
 ---
 name: Publish manuscript
 about: Use this template for tracking publication of manuscripts.
-title: "MSID: %%msid%% DOI: %%doi-suffix%%"
+title: "MSID: %%msid%% Version: %%version%% DOI: %%doi-suffix%%"
 labels: 
 assignees: 
 ---
@@ -34,7 +34,7 @@ Thanks
 
 Who can help: @fred-atherden, @nlisgo, @scottaubrey
 
-- [ ] Manuscript is available for preview (https://prod--epp.elifesciences.org/preview/%%doi-prefix%%/%%doi-suffix%%)
+- [ ] Manuscript is available for preview (https://prod--epp.elifesciences.org/preview/%%msid%%/v%%version%%)
     - [ ] Trigger import for staging: https://prod--epp.elifesciences.org/import
     - [ ] Sync data folder with s3://prod-elife-epp-data/data
     - [ ] Trigger import for staging: https://staging--epp.elifesciences.org/import
@@ -145,7 +145,7 @@ Post the following to the [#enhanced-preprint](https://elifesciences.slack.com/a
 
 ## Step 7: Introduce PDF to data folder and git repo
 
-- [ ] PDF is avaliable at https://github.com/elifesciences/enhanced-preprints-data/raw/master/data/%%doi-prefix%%/%%doi-suffix%%/%%doi-suffix%%.pdf
+- [ ] PDF is avaliable at https://github.com/elifesciences/enhanced-preprints-data/raw/master/data/%%msid%%/v%%version%%/%%msid%%-v%%version%%.pdf
 
 Detailed instructions: https://github.com/elifesciences/enhanced-preprints-data#add-a-pdf
 
