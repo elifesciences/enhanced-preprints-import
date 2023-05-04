@@ -55,7 +55,7 @@ services:
   # Downstream services for EPP
   ## Image Server
   image-server:
-    image: ghcr.io/elifesciences/epp-image-server:master-e98296e1-20230316.0421
+    image: ghcr.io/elifesciences/epp-image-server:master-9338bdbe-20230504.0202
     ports:
     - 8182:8182
     environment:
