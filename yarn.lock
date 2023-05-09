@@ -4130,6 +4130,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/object-hash@npm:^3.0.2":
+  version: 3.0.2
+  resolution: "@types/object-hash@npm:3.0.2"
+  checksum: 0332e59074e7df2e74c093a7419c05c1e1c5ae1e12d3779f3240b3031835ff045b4ac591362be0b411ace24d3b5e760386b434761c33af25904f7a3645cb3785
+  languageName: node
+  linkType: hard
+
 "@types/prettier@npm:^2.1.5":
   version: 2.7.1
   resolution: "@types/prettier@npm:2.7.1"
@@ -7055,6 +7062,7 @@ __metadata:
     "@types/eslint": 8.37.0
     "@types/jest": ^29.2.5
     "@types/node": ^18.11.9
+    "@types/object-hash": ^3.0.2
     "@typescript-eslint/eslint-plugin": 5.57.1
     "@typescript-eslint/parser": ^5.43.0
     axios: ^1.2.2
@@ -7070,6 +7078,7 @@ __metadata:
     jest-mock: ^29.3.1
     jszip: ^3.10.1
     nodemon: ^2.0.20
+    object-hash: ^3.0.0
     ts-jest: 29.1.0
     ts-node: 10.9.1
     typescript: 4.9.5
@@ -11653,6 +11662,13 @@ __metadata:
   version: 4.1.1
   resolution: "object-assign@npm:4.1.1"
   checksum: fcc6e4ea8c7fe48abfbb552578b1c53e0d194086e2e6bbbf59e0a536381a292f39943c6e9628af05b5528aa5e3318bb30d6b2e53cadaf5b8fe9e12c4b69af23f
+  languageName: node
+  linkType: hard
+
+"object-hash@npm:^3.0.0":
+  version: 3.0.0
+  resolution: "object-hash@npm:3.0.0"
+  checksum: 80b4904bb3857c52cc1bfd0b52c0352532ca12ed3b8a6ff06a90cd209dfda1b95cee059a7625eb9da29537027f68ac4619363491eedb2f5d3dddbba97494fd6c
   languageName: node
   linkType: hard
 
