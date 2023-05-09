@@ -28,15 +28,15 @@ export async function importDocmaps(docMapIndexUrl: string): Promise<DocMapImpor
     };
   }
 
-  await Promise.all(docmaps.map(async (docmap, index) => {
+  await Promise.all(docmaps.map(async ({ docmap, hash }) => {
     await startChild('importDocmap', {
-      args: [docmap.id, index], // id contains the canonical URL of the docmap
-      workflowId: `import-docmap-${new Date().getTime()}-${index}`,
+      args: [docmap.id, hash], // id contains the canonical URL of the docmap
+      workflowId: `import-docmap-${new Date().getTime()}-${hash}`,
       parentClosePolicy: ParentClosePolicy.PARENT_CLOSE_POLICY_ABANDON,
     });
   }));
 
-  const docmapIds = docmaps.map((docmap) => docmap.id);
+  const docmapIds = docmaps.map(({ docmap }) => docmap.id);
 
   return {
     docMapIndexUrl,
