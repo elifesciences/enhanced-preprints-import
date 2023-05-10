@@ -1,42 +1,40 @@
 import axios from 'axios';
 import { DocMap } from '@elifesciences/docmap-ts';
-import hash from 'object-hash';
-import { config } from '../config';
+import { MD5 } from 'object-hash';
 
 type DocMapIndex = {
   docmaps: DocMap[],
 };
 
-type DocMapWithHash = {
-  docmap: DocMap,
-  hash: string,
+type FindAllDocMapsResult = {
+  docMaps: DocMap[],
+  hashes: string[],
 };
 
-type IndexedHashes = { id: string, hash?: string }[];
-
 // TO-DO: Replace this with find changed docmaps
-export const findAllDocmaps = async (docMapIndex: string): Promise<DocMapWithHash[] | undefined> => {
-  const { data: docmapData, status: docmapStatus } = await axios.get<DocMapIndex>(docMapIndex);
+export const findAllDocmaps = async (hashes: string[], docMapIndex: string): Promise<FindAllDocMapsResult | undefined> => {
+  const docMapRes = await axios.get<DocMapIndex>(docMapIndex)
+    .catch((error) => {
+      console.error(error.toJSON());
+    });
 
-  // Get hashes from epp server
-  const hashesUri = `${config.eppServerUri}/preprints/hashes`;
-  const { data: hashData, status: hashStatus } = await axios.get<IndexedHashes>(hashesUri);
-
-  console.log('number of results', hashData.length);
-
-  // Hash docmap index (declaring as a variable so we don't need to rehash over again)
-  // And filter if the stored hash DOESN'T match a calculated hash
-  const filteredDocmapHashes: IndexedHashes = docmapData.docmaps.map((docMap) => ({ id: docMap.id, hash: hash(docMap) }))
-    .filter((docmapHash) => !hashData.some((eppHash) => docmapHash.id === eppHash.id && docmapHash.hash === eppHash.hash));
-
-  console.log(filteredDocmapHashes);
-
-  // Filter docmaps with NO matching hashes
-  const filteredDocmaps: DocMapWithHash[] = docmapData.docmaps.filter((docmap) => filteredDocmapHashes.some((filtered) => docmap.id === filtered.id)).map<DocMapWithHash>((docmap) => ({ docmap, hash: hash(docmap) }));
-
-  if (docmapStatus === 200 && hashStatus === 200) {
-    return filteredDocmaps;
+  if (typeof docMapRes !== 'object' || docMapRes.status !== 200) {
+    console.error('Docmap response is not an object');
+    return undefined;
   }
 
-  return undefined;
+  const { data } = docMapRes;
+  const newHashes: string[] = [];
+
+  // Filter docmaps with NO matching hashes
+  const filteredDocMaps: DocMap[] = data.docmaps
+    .filter((docmap) => {
+      const docMapHash = MD5(docmap);
+      newHashes.push(docMapHash);
+      return !hashes.some((hash) => hash === docMapHash);
+    });
+
+  console.log('filtered documents', filteredDocMaps);
+
+  return { docMaps: filteredDocMaps, hashes };
 };

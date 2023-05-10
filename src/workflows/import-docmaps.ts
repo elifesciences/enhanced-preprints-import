@@ -1,5 +1,6 @@
 import {
   ParentClosePolicy,
+  condition,
   proxyActivities,
   startChild,
 } from '@temporalio/workflow';
@@ -17,10 +18,13 @@ type DocMapImportOutput = {
   docmapIds: string[],
 };
 
-export async function importDocmaps(docMapIndexUrl: string): Promise<DocMapImportOutput> {
-  const docmaps = await findAllDocmaps(docMapIndexUrl);
+let hashes: string[] = [];
 
-  if (docmaps === undefined) {
+export async function importDocmaps(docMapIndexUrl: string): Promise<DocMapImportOutput> {
+  await condition(() => false, '1 hour');
+  const result = await findAllDocmaps(hashes, docMapIndexUrl);
+
+  if (result === undefined) {
     return {
       docMapIndexUrl,
       count: 0,
@@ -28,19 +32,23 @@ export async function importDocmaps(docMapIndexUrl: string): Promise<DocMapImpor
     };
   }
 
-  await Promise.all(docmaps.map(async ({ docmap, hash }) => {
+  const { docMaps, hashes: newHashes } = result;
+
+  hashes = newHashes;
+
+  await Promise.all(docMaps.map(async (docmap, index) => {
     await startChild('importDocmap', {
-      args: [docmap.id, hash], // id contains the canonical URL of the docmap
-      workflowId: `import-docmap-${new Date().getTime()}-${hash}`,
+      args: [docmap.id, index], // id contains the canonical URL of the docmap
+      workflowId: `import-docmap-${new Date().getTime()}-${index}`,
       parentClosePolicy: ParentClosePolicy.PARENT_CLOSE_POLICY_ABANDON,
     });
   }));
 
-  const docmapIds = docmaps.map(({ docmap }) => docmap.id);
+  const docmapIds = docMaps.map((docmap) => docmap.id);
 
   return {
     docMapIndexUrl,
-    count: docmaps.length,
+    count: docMaps.length,
     docmapIds,
   };
 }
