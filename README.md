@@ -21,7 +21,7 @@ Ensure you have docker and docker-compose (v2 tested). Also install [`tctl`](htt
 
 The `docker compose` workflow above will restart the worker when your mounted filesystem changes.
 
-## Run an import workflow
+## Run a single import workflow
 
 To run an import workflow, run:
 
@@ -36,6 +36,16 @@ To re-run the whole process, you will first need to remove the containers **and*
 ```shell
 docker compose down --volumes
 ```
+
+## Run a looped import workflow
+
+To run a looped import workflow, run:
+
+```shell
+tctl wf run -tq epp -wt loopTimer --input '["http://mock-datahub/enhanced-preprints/docmaps/v1/index"]'
+```
+
+This will kick of a full import for a docmap index from eLife's API, then loop itself, skipping docmaps that have no changes.
 
 ## Run without mocked services
 
