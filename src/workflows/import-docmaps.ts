@@ -12,7 +12,7 @@ const {
   startToCloseTimeout: '1 minute',
 });
 
-export type ImportDocmapsOutput = {
+type ImportDocmapsOutput = {
   status: 'SUCCESS' | 'SKIPPED' | 'ERROR';
   message: string;
   hashes: string[]
