@@ -1,8 +1,9 @@
 import {
   ParentClosePolicy,
-  condition,
+  sleep,
   proxyActivities,
   startChild,
+  continueAsNew,
 } from '@temporalio/workflow';
 import type * as activities from '../activities/index';
 
@@ -18,18 +19,13 @@ type DocMapImportOutput = {
   docmapIds: string[],
 };
 
-let hashes: string[] = [];
-
-export async function importDocmaps(docMapIndexUrl: string): Promise<DocMapImportOutput> {
-  await condition(() => false, '1 hour');
+export async function importDocmaps(docMapIndexUrl: string, hashes: string[] = []): Promise<void> {
   const result = await findAllDocmaps(hashes, docMapIndexUrl);
 
   if (result === undefined) {
-    return {
-      docMapIndexUrl,
-      count: 0,
-      docmapIds: [],
-    };
+    await sleep('2 minutes');
+    await continueAsNew<typeof importDocmaps>(docMapIndexUrl, hashes);
+    return;
   }
 
   const { docMaps, hashes: newHashes } = result;
@@ -44,11 +40,6 @@ export async function importDocmaps(docMapIndexUrl: string): Promise<DocMapImpor
     });
   }));
 
-  const docmapIds = docMaps.map((docmap) => docmap.id);
-
-  return {
-    docMapIndexUrl,
-    count: docMaps.length,
-    docmapIds,
-  };
+  await sleep('2 minutes');
+  await continueAsNew<typeof importDocmaps>(docMapIndexUrl, hashes);
 }
