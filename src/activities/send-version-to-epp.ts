@@ -45,11 +45,8 @@ type EPPImportResponse = {
 export const sendVersionToEpp = async (versionJSON: EnhancedArticle): Promise<boolean> => {
   const versionImportUri = `${config.eppServerUri}/preprints`;
 
-  // Add hash to the version
-  const versionJSONWithHash = { ...versionJSON };
-
   try {
-    const { result, message } = await axios.post<EPPImportResponse>(versionImportUri, versionJSONWithHash).then(async (response) => response.data);
+    const { result, message } = await axios.post<EPPImportResponse>(versionImportUri, versionJSON).then(async (response) => response.data);
     if (!result) {
       throw new Error(`Failed to import version to EPP: ${message}`);
     }

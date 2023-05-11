@@ -11,8 +11,7 @@ type FindAllDocMapsResult = {
   hashes: string[],
 };
 
-// TO-DO: Replace this with find changed docmaps
-export const findAllDocmaps = async (hashes: string[], docMapIndex: string): Promise<FindAllDocMapsResult | undefined> => {
+export const filterDocmapIndex = async (hashes: string[], docMapIndex: string): Promise<FindAllDocMapsResult | undefined> => {
   const docMapRes = await axios.get<DocMapIndex>(docMapIndex);
 
   if (typeof docMapRes !== 'object' || docMapRes.status !== 200) {

@@ -7,7 +7,7 @@ import type * as activities from '../activities/index';
 import { importDocmap } from './import-docmap';
 
 const {
-  findAllDocmaps,
+  filterDocmapIndex,
 } = proxyActivities<typeof activities>({
   startToCloseTimeout: '1 minute',
 });
@@ -19,12 +19,12 @@ type ImportDocmapsOutput = {
 };
 
 export async function importDocmaps(date: number, docMapIndexUrl: string, hashes: string[] = []): Promise<ImportDocmapsOutput> {
-  const result = await findAllDocmaps(hashes, docMapIndexUrl);
+  const result = await filterDocmapIndex(hashes, docMapIndexUrl);
 
   if (result === undefined) {
     return {
       status: 'ERROR',
-      message: 'Docmap reult is undefined',
+      message: 'Docmap result is undefined',
       hashes,
     };
   } if (result.hashes.length === 0) {
