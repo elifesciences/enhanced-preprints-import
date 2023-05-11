@@ -36,5 +36,5 @@ export const findAllDocmaps = async (hashes: string[], docMapIndex: string): Pro
 
   console.log('filtered documents', filteredDocMaps);
 
-  return { docMaps: filteredDocMaps, hashes };
+  return { docMaps: filteredDocMaps, hashes: newHashes };
 };
