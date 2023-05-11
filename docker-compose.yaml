@@ -23,10 +23,10 @@ services:
       exit 0;
       "
 
-  temporalite:
+  temporal:
     build:
       context: .
-      dockerfile: Dockerfile.temporalite
+      dockerfile: Dockerfile.temporal
     ports:
       - 7233:7233
       - 8233:8233
@@ -38,10 +38,10 @@ services:
       target: worker
     depends_on:
       - createbucket
-      - temporalite
+      - temporal
     environment:
       EPP_SERVER_URI: http://api:3000
-      TEMPORAL_SERVER: temporalite:7233
+      TEMPORAL_SERVER: temporal:7233
       AWS_ACCESS_KEY_ID: minio
       AWS_SECRET_ACCESS_KEY: miniotest
       S3_ENDPOINT: http://minio:9000

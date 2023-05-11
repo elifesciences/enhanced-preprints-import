@@ -1,0 +1,9 @@
+FROM debian:11.7-slim as build
+ARG TARGETARCH
+
+ADD https://temporal.download/cli/archive/latest?platform=linux&arch=$TARGETARCH /temporal.tar.gz
+RUN tar -xf temporal.tar.gz
+
+FROM debian:11.7-slim as run
+COPY --from=build /temporal /
+CMD ["/temporal", "server", "start-dev", "--namespace", "default", "--ip", "0.0.0.0"]
