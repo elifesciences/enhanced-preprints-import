@@ -13,12 +13,6 @@ const {
   startToCloseTimeout: '1 minute',
 });
 
-type DocMapImportOutput = {
-  docMapIndexUrl: string,
-  count: number,
-  docmapIds: string[],
-};
-
 export async function importDocmaps(docMapIndexUrl: string, hashes: string[] = []): Promise<void> {
   const result = await findAllDocmaps(hashes, docMapIndexUrl);
 
@@ -30,8 +24,6 @@ export async function importDocmaps(docMapIndexUrl: string, hashes: string[] = [
 
   const { docMaps, hashes: newHashes } = result;
 
-  hashes = newHashes;
-
   await Promise.all(docMaps.map(async (docmap, index) => {
     await startChild('importDocmap', {
       args: [docmap.id, index], // id contains the canonical URL of the docmap
@@ -41,5 +33,5 @@ export async function importDocmaps(docMapIndexUrl: string, hashes: string[] = [
   }));
 
   await sleep('2 minutes');
-  await continueAsNew<typeof importDocmaps>(docMapIndexUrl, hashes);
+  await continueAsNew<typeof importDocmaps>(docMapIndexUrl, newHashes);
 }
