@@ -47,7 +47,7 @@ tctl wf run -tq epp -wt loopTimer -wid loop-timer -i '"http://mock-datahub/enhan
 
 This will kick of a full import for a docmap index from eLife's API, then loop itself every hour (see next command to change this), skipping docmaps that have no changes.
 
-To change the sleep time, add a semantic time parameter to the `--input`, for example `1 minute` or `5 minutes`:
+To change the sleep time, add a semantic time parameter to the `-i` inputs, for example `1 minute` or `5 minutes`:
 
 ```shell
 tctl wf run -tq epp -wt loopTimer -wid loop-timer -i '"http://mock-datahub/enhanced-preprints/docmaps/v1/index"' -i '"1 minute"' 
