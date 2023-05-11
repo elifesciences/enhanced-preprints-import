@@ -7,9 +7,10 @@ import {
 import { importDocmaps } from './import-docmaps';
 
 export async function loopTimer(docMapIndexUrl: string, hashes: string[] = []): Promise<void> {
+  const date = new Date().getTime();
   const importWf = await startChild(importDocmaps, {
-    args: [docMapIndexUrl, hashes],
-    workflowId: `import-docmaps-${new Date().getTime()}`,
+    args: [date, docMapIndexUrl, hashes],
+    workflowId: `docmap-index-poll-${new Date().getTime()}`,
     parentClosePolicy: ParentClosePolicy.PARENT_CLOSE_POLICY_ABANDON,
   });
 

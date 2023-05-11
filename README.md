@@ -42,7 +42,7 @@ docker compose down --volumes
 To run a looped import workflow, run:
 
 ```shell
-tctl wf run -tq epp -wt loopTimer --input '["http://mock-datahub/enhanced-preprints/docmaps/v1/index"]'
+tctl wf run -tq epp -wt loopTimer --input '["http://mock-datahub/enhanced-preprints/docmaps/v1/index"]' -wid loop-timer
 ```
 
 This will kick of a full import for a docmap index from eLife's API, then loop itself, skipping docmaps that have no changes.
