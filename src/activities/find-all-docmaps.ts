@@ -13,13 +13,9 @@ type FindAllDocMapsResult = {
 
 // TO-DO: Replace this with find changed docmaps
 export const findAllDocmaps = async (hashes: string[], docMapIndex: string): Promise<FindAllDocMapsResult | undefined> => {
-  const docMapRes = await axios.get<DocMapIndex>(docMapIndex)
-    .catch((error) => {
-      console.error(error.toJSON());
-    });
+  const docMapRes = await axios.get<DocMapIndex>(docMapIndex);
 
   if (typeof docMapRes !== 'object' || docMapRes.status !== 200) {
-    console.error('Docmap response is not an object');
     return undefined;
   }
 
@@ -33,8 +29,6 @@ export const findAllDocmaps = async (hashes: string[], docMapIndex: string): Pro
       newHashes.push(docMapHash);
       return !hashes.some((hash) => hash === docMapHash);
     });
-
-  console.log('filtered documents', filteredDocMaps);
 
   return { docMaps: filteredDocMaps, hashes: newHashes };
 };
