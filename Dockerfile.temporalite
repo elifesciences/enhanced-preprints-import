@@ -1,6 +1,0 @@
-FROM debian:11.7-slim as base
-ARG TARGETARCH
-
-ADD https://github.com/temporalio/temporalite/releases/download/v0.2.0/temporalite_0.2.0_linux_$TARGETARCH.tar.gz /
-RUN tar -xf temporalite_0.2.0_linux_$TARGETARCH.tar.gz
-CMD ["/temporalite", "start", "--namespace", "default", "--ip", "0.0.0.0"]
