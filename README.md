@@ -26,7 +26,7 @@ The `docker compose` workflow above will restart the worker when your mounted fi
 To run an import workflow, run:
 
 ```shell
-tctl wf run -tq epp -wt importDocmaps --input '["http://mock-datahub/enhanced-preprints/docmaps/v1/index"]'
+tctl wf run -tq epp -wt importDocmaps --input '["http://mock-datahub/enhanced-preprints/docmaps/v1/index"]' -wid docmap-index-poll
 ```
 
 This will kick of a full import for a docmap index from eLife's API.
@@ -58,7 +58,7 @@ docker compose -f docker-compose.yaml up
 Then you can use the following tctl command instead:
 
 ```shell
-tctl wf run -tq epp -wt importDocmaps --input '["http://data-hub-api.elifesciences.org/enhanced-preprints/docmaps/v1/index"]'
+tctl wf run -tq epp -wt importDocmaps --input '["http://data-hub-api.elifesciences.org/enhanced-preprints/docmaps/v1/index"]' -wid docmap-index-poll
 ```
 
 ## Run with a local instance of the API
