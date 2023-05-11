@@ -6,7 +6,7 @@ import {
 } from '@temporalio/workflow';
 import { importDocmaps } from './import-docmaps';
 
-export async function loopTimer(docMapIndexUrl: string, hashes: string[] = []): Promise<void> {
+export async function loopTimer(docMapIndexUrl: string, sleepTime: string = '1 hour', hashes: string[] = []): Promise<void> {
   const date = new Date().getTime();
   const importWf = await startChild(importDocmaps, {
     args: [date, docMapIndexUrl, hashes],
@@ -16,6 +16,6 @@ export async function loopTimer(docMapIndexUrl: string, hashes: string[] = []): 
 
   const { hashes: newHashes } = await importWf.result();
 
-  await sleep('1 minute');
-  await continueAsNew<typeof loopTimer>(docMapIndexUrl, newHashes);
+  await sleep(sleepTime);
+  await continueAsNew<typeof loopTimer>(docMapIndexUrl, sleepTime, newHashes);
 }

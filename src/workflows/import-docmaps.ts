@@ -19,6 +19,7 @@ type ImportDocmapsOutput = {
 };
 
 export async function importDocmaps(date: number, docMapIndexUrl: string, hashes: string[] = []): Promise<ImportDocmapsOutput> {
+  console.log('URL: ', docMapIndexUrl);
   const result = await findAllDocmaps(hashes, docMapIndexUrl);
 
   if (result === undefined) {
