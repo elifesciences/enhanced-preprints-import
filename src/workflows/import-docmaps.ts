@@ -1,9 +1,7 @@
 import {
   ParentClosePolicy,
-  sleep,
   proxyActivities,
   startChild,
-  continueAsNew,
 } from '@temporalio/workflow';
 import type * as activities from '../activities/index';
 
@@ -13,13 +11,27 @@ const {
   startToCloseTimeout: '1 minute',
 });
 
-export async function importDocmaps(docMapIndexUrl: string, hashes: string[] = []): Promise<void> {
+export type ImportDocmapsOutput = {
+  status: 'SUCCESS' | 'SKIPPED' | 'ERROR';
+  message: string;
+  hashes: string[]
+};
+
+export async function importDocmaps(docMapIndexUrl: string, hashes: string[] = []): Promise<ImportDocmapsOutput> {
   const result = await findAllDocmaps(hashes, docMapIndexUrl);
 
   if (result === undefined) {
-    await sleep('2 minutes');
-    await continueAsNew<typeof importDocmaps>(docMapIndexUrl, hashes);
-    return;
+    return {
+      status: 'ERROR',
+      message: 'Docmap reult is undefined',
+      hashes,
+    };
+  } if (result.hashes.length === 0) {
+    return {
+      status: 'SKIPPED',
+      message: 'No new docmaps to import',
+      hashes,
+    };
   }
 
   const { docMaps, hashes: newHashes } = result;
@@ -32,6 +44,9 @@ export async function importDocmaps(docMapIndexUrl: string, hashes: string[] = [
     });
   }));
 
-  await sleep('2 minutes');
-  await continueAsNew<typeof importDocmaps>(docMapIndexUrl, newHashes);
+  return {
+    status: 'SUCCESS',
+    message: `Imported ${docMaps.length} docmaps`,
+    hashes: newHashes,
+  };
 }

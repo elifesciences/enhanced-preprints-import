@@ -14,7 +14,6 @@ export type Heading = {
 
 export type EnhancedArticle = {
   id: string,
-  hash?: string,
   msid: string,
   doi: string,
   versionIdentifier: string,
@@ -43,11 +42,11 @@ type EPPImportResponse = {
   message: string,
 };
 
-export const sendVersionToEpp = async (versionJSON: EnhancedArticle, hash: string): Promise<boolean> => {
+export const sendVersionToEpp = async (versionJSON: EnhancedArticle): Promise<boolean> => {
   const versionImportUri = `${config.eppServerUri}/preprints`;
 
   // Add hash to the version
-  const versionJSONWithHash = { ...versionJSON, hash };
+  const versionJSONWithHash = { ...versionJSON };
 
   try {
     const { result, message } = await axios.post<EPPImportResponse>(versionImportUri, versionJSONWithHash).then(async (response) => response.data);

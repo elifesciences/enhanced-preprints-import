@@ -10,18 +10,13 @@ describe('parse-docmap-activity', () => {
     const mockedGet = mocked(axios.get);
 
     // @ts-ignore
-    mockedGet.mockImplementation((url) => {
-      switch (url) {
-        default: Promise.resolve({
-          data: { docmaps: [] },
-          status: 200,
-        });
-          break;
-      }
-    });
+    mockedGet.mockImplementation(() => Promise.resolve({
+      data: { docmaps: [] },
+      status: 200,
+    }));
 
     const result = await findAllDocmaps([], 'http://somewhere.not.real/docmap/index');
-    expect(result).toStrictEqual([]);
+    expect(result?.docMaps).toStrictEqual([]);
   });
 
   it('returns docmaps found in index', async () => {
@@ -40,6 +35,6 @@ describe('parse-docmap-activity', () => {
     // Assert
     expect(result).toBeDefined();
     expect(result?.docMaps.length).toStrictEqual(1);
-    expect(result?.docMaps[0]).toMatchObject({ '@id': 'fake-docmap' });
+    expect(result?.docMaps?.[0]).toMatchObject({ '@id': 'fake-docmap' });
   });
 });

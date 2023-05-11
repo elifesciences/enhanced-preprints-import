@@ -17,16 +17,16 @@ type DocMapImportOutput = {
   mecaLocation?: string,
 };
 
-export async function importDocmap(url: string, hash: string): Promise<DocMapImportOutput> {
+export async function importDocmap(url: string, parentIndex: number): Promise<DocMapImportOutput> {
   const docMap = await fetchDocMap(url);
   const result = await parseDocMap(docMap);
 
   await Promise.all(
     result.versions.map(async (version, index) => executeChild('importContent', {
       args: [version],
-      workflowId: `import-content-${hash}-${index}`,
+      workflowId: `import-content-${parentIndex}-${index}`,
     }).then(async (importContentResult) => generateVersionJson({ importContentResult, msid: result.id, version }))
-      .then(async (versionJson: EnhancedArticle) => sendVersionToEpp(versionJson, hash))),
+      .then(async (versionJson: EnhancedArticle) => sendVersionToEpp(versionJson))),
   );
 
   return {
