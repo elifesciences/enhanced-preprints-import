@@ -7,10 +7,9 @@ import {
 import { importDocmaps } from './import-docmaps';
 
 export async function pollDocMapIndex(docMapIndexUrl: string, sleepTime: string = '1 hour', hashes: string[] = []): Promise<void> {
-  const date = new Date().getTime();
   const importWf = await startChild(importDocmaps, {
-    args: [date, docMapIndexUrl, hashes],
-    workflowId: `docmap-index-poll-${new Date().getTime()}`,
+    args: [docMapIndexUrl, hashes],
+    workflowId: `docmap-index-poll/${new Date().getTime()}`,
     parentClosePolicy: ParentClosePolicy.PARENT_CLOSE_POLICY_ABANDON,
   });
 

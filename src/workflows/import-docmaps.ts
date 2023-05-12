@@ -2,6 +2,7 @@ import {
   ParentClosePolicy,
   proxyActivities,
   startChild,
+  workflowInfo,
 } from '@temporalio/workflow';
 import type * as activities from '../activities/index';
 import { importDocmap } from './import-docmap';
@@ -18,7 +19,7 @@ type ImportDocmapsOutput = {
   hashes: string[]
 };
 
-export async function importDocmaps(date: number, docMapIndexUrl: string, hashes: string[] = []): Promise<ImportDocmapsOutput> {
+export async function importDocmaps(docMapIndexUrl: string, hashes: string[] = []): Promise<ImportDocmapsOutput> {
   const result = await filterDocmapIndex(hashes, docMapIndexUrl);
 
   if (result === undefined) {
@@ -39,8 +40,8 @@ export async function importDocmaps(date: number, docMapIndexUrl: string, hashes
 
   await Promise.all(docMaps.map(async (docmap, index) => {
     await startChild(importDocmap, {
-      args: [date, docmap.id, index], // id contains the canonical URL of the docmap
-      workflowId: `import-docmap-${date}-${index}`,
+      args: [docmap.id], // id contains the canonical URL of the docmap
+      workflowId: `${workflowInfo().workflowId}/docmap-${index}`,
       parentClosePolicy: ParentClosePolicy.PARENT_CLOSE_POLICY_ABANDON,
     });
   }));

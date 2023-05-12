@@ -26,7 +26,7 @@ The `docker compose` workflow above will restart the worker when your mounted fi
 To run an import workflow, run:
 
 ```shell
-tctl wf run -tq epp -wt importDocmaps -wid doc-map-index-import -i '"http://mock-datahub/enhanced-preprints/docmaps/v1/index"' 
+tctl wf run -tq epp -wt importDocmaps -wid docmap-index-import -i '"http://mock-datahub/enhanced-preprints/docmaps/v1/index"' 
 ```
 
 This will kick of a full import for a docmap index from eLife's API.
@@ -42,7 +42,7 @@ docker compose down --volumes
 To run a looped import workflow, run:
 
 ```shell
-tctl wf run -tq epp -wt loopTimer -wid doc-map-index-poll -i '"http://mock-datahub/enhanced-preprints/docmaps/v1/index"' 
+tctl wf run -tq epp -wt pollDocMapIndex -wid docmap-index-poll -i '"http://mock-datahub/enhanced-preprints/docmaps/v1/index"' 
 ```
 
 This will kick of a full import for a docmap index from eLife's API, then loop itself every hour (see next command to change this), skipping docmaps that have no changes.
@@ -50,7 +50,7 @@ This will kick of a full import for a docmap index from eLife's API, then loop i
 To change the sleep time, add a semantic time parameter to the `-i` inputs, for example `1 minute` or `5 minutes`:
 
 ```shell
-tctl wf run -tq epp -wt loopTimer -wid doc-map-index-poll -i '"http://mock-datahub/enhanced-preprints/docmaps/v1/index"' -i '"1 minute"' 
+tctl wf run -tq epp -wt pollDocMapIndex -wid doc-map-index-poll -i '"http://mock-datahub/enhanced-preprints/docmaps/v1/index"' -i '"1 minute"' 
 ```
 
 ## Run without mocked services
@@ -64,7 +64,7 @@ docker compose -f docker-compose.yaml up
 Then you can use the following tctl command instead:
 
 ```shell
-tctl wf run -tq epp -wt importDocmaps -wid doc-map-index-import -i '"http://data-hub-api.elifesciences.org/enhanced-preprints/docmaps/v1/index"' 
+tctl wf run -tq epp -wt importDocmaps -wid docmap-index-import -i '"http://data-hub-api.elifesciences.org/enhanced-preprints/docmaps/v1/index"' 
 ```
 
 ## Run with a local instance of the API
