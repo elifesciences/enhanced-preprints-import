@@ -2,45 +2,53 @@ import {
   ParentClosePolicy,
   proxyActivities,
   startChild,
+  workflowInfo,
 } from '@temporalio/workflow';
 import type * as activities from '../activities/index';
+import { importDocmap } from './import-docmap';
 
 const {
-  findAllDocmaps,
+  filterDocmapIndex,
 } = proxyActivities<typeof activities>({
   startToCloseTimeout: '1 minute',
 });
 
-type DocMapImportOutput = {
-  docMapIndexUrl: string,
-  count: number,
-  docmapIds: string[],
+type ImportDocmapsOutput = {
+  status: 'SUCCESS' | 'SKIPPED' | 'ERROR';
+  message: string;
+  hashes: string[]
 };
 
-export async function importDocmaps(docMapIndexUrl: string): Promise<DocMapImportOutput> {
-  const docmaps = await findAllDocmaps(docMapIndexUrl);
+export async function importDocmaps(docMapIndexUrl: string, hashes: string[] = []): Promise<ImportDocmapsOutput> {
+  const result = await filterDocmapIndex(hashes, docMapIndexUrl);
 
-  if (docmaps === undefined) {
+  if (result === undefined) {
     return {
-      docMapIndexUrl,
-      count: 0,
-      docmapIds: [],
+      status: 'ERROR',
+      message: 'Docmap result is undefined',
+      hashes,
+    };
+  } if (result.hashes.length === 0) {
+    return {
+      status: 'SKIPPED',
+      message: 'No new docmaps to import',
+      hashes,
     };
   }
 
-  await Promise.all(docmaps.map(async (docmap, index) => {
-    await startChild('importDocmap', {
-      args: [docmap.id, index], // id contains the canonical URL of the docmap
-      workflowId: `import-docmap-${new Date().getTime()}-${index}`,
+  const { docMaps, hashes: newHashes } = result;
+
+  await Promise.all(docMaps.map(async (docmap, index) => {
+    await startChild(importDocmap, {
+      args: [docmap.id], // id contains the canonical URL of the docmap
+      workflowId: `${workflowInfo().workflowId}/docmap-${index}`,
       parentClosePolicy: ParentClosePolicy.PARENT_CLOSE_POLICY_ABANDON,
     });
   }));
 
-  const docmapIds = docmaps.map((docmap) => docmap.id);
-
   return {
-    docMapIndexUrl,
-    count: docmaps.length,
-    docmapIds,
+    status: 'SUCCESS',
+    message: `Imported ${docMaps.length} docmaps`,
+    hashes: newHashes,
   };
 }

@@ -21,12 +21,12 @@ Ensure you have docker and docker-compose (v2 tested). Also install [`tctl`](htt
 
 The `docker compose` workflow above will restart the worker when your mounted filesystem changes.
 
-## Run an import workflow
+## Run a single import workflow
 
 To run an import workflow, run:
 
 ```shell
-tctl wf run -tq epp -wt importDocmaps --input '["http://mock-datahub/enhanced-preprints/docmaps/v1/index"]' -wid docmap-index-poll
+tctl wf run -tq epp -wt importDocmaps -wid docmap-index-import -i '"http://mock-datahub/enhanced-preprints/docmaps/v1/index"' 
 ```
 
 This will kick of a full import for a docmap index from eLife's API.
@@ -35,6 +35,22 @@ To re-run the whole process, you will first need to remove the containers **and*
 
 ```shell
 docker compose down --volumes
+```
+
+## Run a looped import workflow
+
+To run a looped import workflow, run:
+
+```shell
+tctl wf run -tq epp -wt pollDocMapIndex -wid docmap-index-poll -i '"http://mock-datahub/enhanced-preprints/docmaps/v1/index"' 
+```
+
+This will kick of a full import for a docmap index from eLife's API, then loop itself every hour (see next command to change this), skipping docmaps that have no changes.
+
+To change the sleep time, add a semantic time parameter to the `-i` inputs, for example `1 minute` or `5 minutes`:
+
+```shell
+tctl wf run -tq epp -wt pollDocMapIndex -wid doc-map-index-poll -i '"http://mock-datahub/enhanced-preprints/docmaps/v1/index"' -i '"1 minute"' 
 ```
 
 ## Run without mocked services
@@ -48,7 +64,7 @@ docker compose -f docker-compose.yaml up
 Then you can use the following tctl command instead:
 
 ```shell
-tctl wf run -tq epp -wt importDocmaps --input '["http://data-hub-api.elifesciences.org/enhanced-preprints/docmaps/v1/index"]' -wid docmap-index-poll
+tctl wf run -tq epp -wt importDocmaps -wid docmap-index-import -i '"http://data-hub-api.elifesciences.org/enhanced-preprints/docmaps/v1/index"' 
 ```
 
 ## Run with a local instance of the API
