@@ -52,6 +52,7 @@ Who can help: Editorial team
 
 - [ ] Public reviews available on sciety (https://sciety.org/articles/activity/%%doi-prefix%%/%%doi-suffix%%)
 - [ ] Manuscript and editor details at the top of this issue (Supplied by Editorial team)
+- [ ] Reviews returned by EPP - https://prod--epp.elifesciences.org/api/reviewed-preprints/%%msid%%/v%%version%%/reviews
 
 <details>
 <summary>Example</summary>
