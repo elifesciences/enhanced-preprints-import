@@ -1,4 +1,4 @@
-export { copySourcePreprintToEPP } from './biorxiv';
+export { copySourcePreprintToEPP } from './copy-source-meca';
 export { convertXmlToJson } from './convert-xml-to-json';
 export { extractMeca } from './extract-meca';
 export { fetchDocMap } from './fetch-docmap';
