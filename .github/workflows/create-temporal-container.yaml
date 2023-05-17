@@ -1,12 +1,6 @@
 name: Create a Temporal CLI image
 
-on:
-  pull_request:
-  push:
-    branches:
-      - master
-    tags:
-      - '*'
+on: workflow_dispatch
 
 jobs:
   build-and-push:
