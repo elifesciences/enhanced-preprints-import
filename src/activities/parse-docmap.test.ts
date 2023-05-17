@@ -1,4 +1,3 @@
-import * as fs from 'fs';
 import { parseDocMap } from './parse-docmap';
 
 const simpleDocmap = `{
@@ -56,7 +55,7 @@ const fullDocmap = `{
 }`;
 
 describe('parse-docmap-activity', () => {
-  it('parses docmap passed as param', async () => {
+  it('fails to parse a docmap that does not contain a tdmPath', async () => {
     expect(async () => {
       await parseDocMap(simpleDocmap);
     }).rejects.toThrowError('Could not parse docmap');
@@ -65,6 +64,6 @@ describe('parse-docmap-activity', () => {
   it('parses a full docmap', async () => {
     const manuscriptData = await parseDocMap(fullDocmap);
 
-    expect(manuscriptData.versions[0].preprint.content).toEqual('s3://biorxiv/dummy-1.meca');
+    expect(manuscriptData.versions[0].preprint.content).toStrictEqual('s3://biorxiv/dummy-1.meca');
   });
 });
