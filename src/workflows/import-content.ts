@@ -1,15 +1,12 @@
 import { proxyActivities } from '@temporalio/workflow';
-import {
-  VersionedReviewedPreprint,
-} from '@elifesciences/docmap-ts';
-import { MecaFiles } from '../activities/extract-meca';
-import type * as activities from '../activities/index';
+import { VersionedReviewedPreprint } from '@elifesciences/docmap-ts';
 import { S3File } from '../S3Bucket';
+import { MecaFiles } from '../activities/extract-meca';
 import { EPPPeerReview } from '../activities/fetch-review-content';
+import type * as activities from '../activities/index';
 
 const {
-  identifyBiorxivPreprintLocation,
-  copyBiorxivPreprintToEPP,
+  copySourcePreprintToEPP,
   extractMeca,
   convertXmlToJson,
   fetchReviewContent,
@@ -18,7 +15,7 @@ const {
 });
 
 export type ImportContentOutput = {
-  preprintPath: string,
+  preprintPath?: string,
   mecaPath: S3File,
   mecaFiles: MecaFiles,
   jsonContentFile: S3File,
@@ -31,9 +28,7 @@ export async function importContent(version: VersionedReviewedPreprint): Promise
     throw Error('Cannot find a supported content file');
   }
 
-  const preprintPath = await identifyBiorxivPreprintLocation(version.preprint.doi);
-
-  const { path: mecaPath } = await copyBiorxivPreprintToEPP(preprintPath, version);
+  const { path: mecaPath } = await copySourcePreprintToEPP(version);
 
   // Extract Meca
   const mecaFiles = await extractMeca(version);
@@ -44,7 +39,7 @@ export async function importContent(version: VersionedReviewedPreprint): Promise
   const reviewData = await fetchReviewContent(version);
 
   return {
-    preprintPath,
+    preprintPath: version.preprint.content,
     mecaPath,
     mecaFiles,
     jsonContentFile,
