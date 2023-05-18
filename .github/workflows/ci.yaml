@@ -41,7 +41,7 @@ jobs:
         run: docker run ${{ env.IMPORT_WORKER_IMAGE_REPO }}:test-${{ github.sha }} yarn lint
   build-and-push:
     needs: [test]
-    runs-on: ubuntu-18.04
+    runs-on: ubuntu-latest
     if: github.ref == 'refs/heads/master'
     env:
       IMPORT_WORKER_IMAGE_REPO: ghcr.io/elifesciences/enhanced-preprints-import-worker
