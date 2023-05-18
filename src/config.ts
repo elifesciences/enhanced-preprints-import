@@ -28,7 +28,7 @@ export const config: Config = {
     endPoint: env.S3_ENDPOINT ?? 'https://s3.amazonaws.com',
   },
   awsAssumeRole: {
-    webIdentityTokenFile: env.AWS_WEB_IDENTITY_TOKEN_FILE ?? undefined,
+    webIdentityTokenFile: env.AWS_WEB_IDENTITY_TOKEN_FILE ?? '~/.aws/config',
     roleArn: env.AWS_ROLE_ARN ?? undefined,
   },
   eppBucketName: env.BUCKET_NAME ?? 'epp',

@@ -50,15 +50,15 @@ This will kick of a full import for a docmap index from eLife's API, then loop i
 To change the sleep time, add a semantic time parameter to the `-i` inputs, for example `1 minute` or `5 minutes`:
 
 ```shell
-tctl wf run -tq epp -wt pollDocMapIndex -wid doc-map-index-poll -i '"http://mock-datahub/enhanced-preprints/docmaps/v1/index"' -i '"1 minute"' 
+tctl wf run -tq epp -wt pollDocMapIndex -wid docmap-index-poll -i '"http://mock-datahub/enhanced-preprints/docmaps/v1/index"' -i '"1 minute"' 
 ```
 
 ## Run without mocked services
 
-Alternatively, run the following `docker compose` to avoid the overriding mocked services.
+Alternatively, run the following `docker compose` to avoid the overriding mocked services. You will also need to input your AWS role ARN as an environment variable. This will be found in your config file in `~/.aws/config` file.
 
 ```shell
-docker compose -f docker-compose.yaml up
+AWS_ROLE_ARN="yout-arn-here" docker compose -f docker-compose.yaml up
 ```
 
 Then you can use the following tctl command instead:
