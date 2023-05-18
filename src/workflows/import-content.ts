@@ -15,7 +15,6 @@ const {
 });
 
 export type ImportContentOutput = {
-  preprintPath?: string,
   mecaPath: S3File,
   mecaFiles: MecaFiles,
   jsonContentFile: S3File,
@@ -39,7 +38,6 @@ export async function importContent(version: VersionedReviewedPreprint): Promise
   const reviewData = await fetchReviewContent(version);
 
   return {
-    preprintPath: version.preprint.content,
     mecaPath,
     mecaFiles,
     jsonContentFile,
