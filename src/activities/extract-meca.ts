@@ -8,6 +8,7 @@ import path, { dirname } from 'path';
 import { GetObjectCommand, GetObjectCommandInput, PutObjectCommand } from '@aws-sdk/client-s3';
 import * as fs from 'fs';
 import { constructEPPS3FilePath, getS3Client } from '../S3Bucket';
+import { NonRetryableError } from '../errors';
 
 export type MecaFile = {
   id: string,
@@ -82,9 +83,9 @@ export const extractMeca = async (version: VersionedReviewedPreprint): Promise<M
 
   const zip = await JSZip.loadAsync(buffer);
 
-  const manifestXml = await zip?.file('manifest.xml')?.async('nodebuffer');
+  const manifestXml = await zip.file('manifest.xml')?.async('nodebuffer');
   if (manifestXml === undefined) {
-    throw new Error('Cannot find manifest.xml in meca file');
+    throw new NonRetryableError('Cannot find manifest.xml in meca file');
   }
 
   // define where the arrays should be

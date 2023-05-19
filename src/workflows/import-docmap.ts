@@ -5,12 +5,25 @@ import { EnhancedArticle } from '../activities/send-version-to-epp';
 import { importContent } from './import-content';
 
 const {
-  fetchDocMap,
   parseDocMap,
+} = proxyActivities<typeof activities>({
+  startToCloseTimeout: '1 minute',
+  retry: {
+    maximumAttempts: 1,
+  },
+});
+
+const {
   generateVersionJson,
+  fetchDocMap,
   sendVersionToEpp,
 } = proxyActivities<typeof activities>({
   startToCloseTimeout: '1 minute',
+  retry: {
+    initialInterval: '1 minute',
+    backoffCoefficient: 2,
+    maximumInterval: '15 minutes',
+  },
 });
 
 type DocMapImportOutput = {
@@ -19,8 +32,7 @@ type DocMapImportOutput = {
 };
 
 export async function importDocmap(url: string): Promise<DocMapImportOutput> {
-  const docMap = await fetchDocMap(url);
-  const result = await parseDocMap(docMap);
+  const result = await fetchDocMap(url).then((docMap) => parseDocMap(docMap));
 
   await Promise.all(
     result.versions.map(async (version, index) => executeChild(importContent, {

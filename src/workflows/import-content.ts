@@ -12,6 +12,12 @@ const {
   fetchReviewContent,
 } = proxyActivities<typeof activities>({
   startToCloseTimeout: '1 minute',
+  retry: {
+    initialInterval: '1 minute',
+    backoffCoefficient: 2,
+    maximumInterval: '15 minutes',
+    nonRetryableErrorTypes: ['NonRetryableError'],
+  },
 });
 
 export type ImportContentOutput = {
