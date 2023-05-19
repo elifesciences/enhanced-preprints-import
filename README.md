@@ -55,10 +55,10 @@ tctl wf run -tq epp -wt pollDocMapIndex -wid docmap-index-poll -i '"http://mock-
 
 ## Run without mocked services
 
-Alternatively, run the following `docker compose` to avoid the overriding mocked services. You will also need to input your AWS role ARN as an environment variable. This will be found in your config file in `~/.aws/config` file.
+Alternatively, run the following `docker compose` to avoid the overriding mocked services.
 
 ```shell
-AWS_ROLE_ARN="yout-arn-here" docker compose -f docker-compose.yaml up
+docker compose -f docker-compose.yaml up
 ```
 
 Then you can use the following tctl command instead:
