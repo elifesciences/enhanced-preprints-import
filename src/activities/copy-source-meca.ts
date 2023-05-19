@@ -20,6 +20,10 @@ export const copySourcePreprintToEPP = async (version: VersionedReviewedPreprint
     Bucket: s3FilePath.Bucket,
     Key: s3FilePath.Key,
     CopySource: bucketAndPath,
+<<<<<<< HEAD
+=======
+    RequestPayer: 'requester',
+>>>>>>> c887d095910248fc7cead90bc55183c490198467
   };
 
   const fileInfo = await S3Connection.send(new CopyObjectCommand(copyCommand));
