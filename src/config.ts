@@ -37,5 +37,5 @@ export const config: Config = {
   eppServerUri: env.EPP_SERVER_URI,
   biorxivURI: env.BIORXIV_URI ?? 'https://api.biorxiv.org',
   prometheusBindAddress: env.PROMETHEUS_BIND_ADDRESS ?? '0.0.0.0:9464',
-  temporalServer: process.env.TEMPORAL_SERVER ?? 'localhost',
+  temporalServer: env.TEMPORAL_SERVER ?? 'localhost',
 };
