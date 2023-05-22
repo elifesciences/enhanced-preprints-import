@@ -6,29 +6,27 @@ import {
 } from '@temporalio/workflow';
 import type * as activities from '../activities/index';
 import { importDocmap } from './import-docmap';
+import { ImportMessage } from '../types';
 
 const {
   filterDocmapIndex,
 } = proxyActivities<typeof activities>({
   startToCloseTimeout: '1 minute',
+  retry: {
+    initialInterval: '1 minute',
+    backoffCoefficient: 2,
+    maximumInterval: '15 minutes',
+  },
 });
 
-type ImportDocmapsOutput = {
-  status: 'SUCCESS' | 'SKIPPED' | 'ERROR';
-  message: string;
+type ImportDocmapsOutput = ImportMessage & {
   hashes: string[]
 };
 
 export async function importDocmaps(docMapIndexUrl: string, hashes: string[] = []): Promise<ImportDocmapsOutput> {
   const result = await filterDocmapIndex(hashes, docMapIndexUrl);
 
-  if (result === undefined) {
-    return {
-      status: 'ERROR',
-      message: 'Docmap result is undefined',
-      hashes,
-    };
-  } if (result.hashes.length === 0) {
+  if (result.hashes.length === 0) {
     return {
       status: 'SKIPPED',
       message: 'No new docmaps to import',

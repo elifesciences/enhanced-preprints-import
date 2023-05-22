@@ -11,12 +11,8 @@ type FindAllDocMapsResult = {
   hashes: string[],
 };
 
-export const filterDocmapIndex = async (hashes: string[], docMapIndex: string): Promise<FindAllDocMapsResult | undefined> => {
+export const filterDocmapIndex = async (hashes: string[], docMapIndex: string): Promise<FindAllDocMapsResult> => {
   const docMapRes = await axios.get<DocMapIndex>(docMapIndex);
-
-  if (typeof docMapRes !== 'object' || docMapRes.status !== 200) {
-    return undefined;
-  }
 
   const { data } = docMapRes;
   const newHashes: string[] = [];
