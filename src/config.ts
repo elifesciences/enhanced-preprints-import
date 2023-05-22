@@ -14,6 +14,8 @@ type Config = {
   eppBucketName: string,
   eppServerUri: string,
   biorxivURI: string,
+  temporalServer: string,
+  prometheusBindAddress: string,
 };
 
 if (!env.EPP_SERVER_URI) {
@@ -34,4 +36,6 @@ export const config: Config = {
   eppBucketName: env.BUCKET_NAME ?? 'epp',
   eppServerUri: env.EPP_SERVER_URI,
   biorxivURI: env.BIORXIV_URI ?? 'https://api.biorxiv.org',
+  prometheusBindAddress: env.PROMETHEUS_BIND_ADDRESS ?? '0.0.0.0:9464',
+  temporalServer: env.TEMPORAL_SERVER ?? 'localhost',
 };

@@ -2,6 +2,7 @@ import {
   NativeConnection, Worker, Runtime, DefaultLogger,
 } from '@temporalio/worker';
 import * as activities from './activities/index';
+import { config } from './config';
 
 async function run() {
   // setup logging
@@ -9,14 +10,18 @@ async function run() {
     // eslint-disable-next-line no-console
     console.log(`Custom logger: ${level} — ${message}`);
   });
-  Runtime.install({ logger });
+  Runtime.install({
+    logger,
+    telemetryOptions: {
+      metrics: {
+        prometheus: { bindAddress: config.prometheusBindAddress },
+      },
+    },
+  });
 
-  const address = process.env.TEMPORAL_SERVER ?? 'localhost';
-
-  const connectionOptions = {
-    address,
-  };
-  const connection = await NativeConnection.connect(connectionOptions);
+  const connection = await NativeConnection.connect({
+    address: config.temporalServer,
+  });
 
   const worker = await Worker.create({
     connection,
