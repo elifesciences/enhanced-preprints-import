@@ -9,7 +9,14 @@ async function run() {
     // eslint-disable-next-line no-console
     console.log(`Custom logger: ${level} — ${message}`);
   });
-  Runtime.install({ logger });
+  Runtime.install({
+    logger,
+    telemetryOptions: {
+      metrics: {
+        prometheus: { bindAddress: '0.0.0.0:9464' },
+      },
+    },
+  });
 
   const address = process.env.TEMPORAL_SERVER ?? 'localhost';
 
