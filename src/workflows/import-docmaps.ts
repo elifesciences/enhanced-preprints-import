@@ -40,7 +40,7 @@ export async function importDocmaps(docMapIndexUrl: string, hashes: Hash[]): Pro
     if (hashes.some(({ idHash }) => docMapWithIdHash.idHash === idHash)) {
       // If the workflow exists, send a signal
       const handle = getExternalWorkflowHandle(`docmap-${docMapWithIdHash.idHash}`);
-      handle.signal(store.signal, true);
+      await handle.signal(store.signal, true);
     } else {
       // If the workflow doesn't exist, start the workflow
       await startChild(importDocmap, {
