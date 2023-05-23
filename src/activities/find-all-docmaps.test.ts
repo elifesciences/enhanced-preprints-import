@@ -17,17 +17,18 @@ describe('parse-docmap-activity', () => {
     }));
 
     const result = await filterDocmapIndex([], 'http://somewhere.not.real/docmap/index');
-    expect(result?.docMaps).toStrictEqual([]);
+    expect(result).toStrictEqual([]);
   });
 
   it('returns docmaps found in index', async () => {
     // Arrange
     const mockedGet = mocked(axios.get);
-    const mockedHash = MD5({ '@id': 'fake-docmap' });
+    const mockedHash = MD5({ id: 'fake-docmap' });
+    const mockedIdHash = MD5('fake-docmap');
 
     // @ts-ignore
     mockedGet.mockImplementation(() => Promise.resolve({
-      data: { docmaps: [{ '@id': 'fake-docmap' }] },
+      data: { docmaps: [{ id: 'fake-docmap' }] },
       status: 200,
     }));
 
@@ -36,30 +37,31 @@ describe('parse-docmap-activity', () => {
 
     // Assert
     expect(result).toBeDefined();
-    expect(result?.docMaps.length).toStrictEqual(1);
-    expect(result?.docMaps?.[0]).toMatchObject({ '@id': 'fake-docmap' });
-    expect(result?.hashes?.length).toStrictEqual(1);
-    expect(result?.hashes?.[0]).toStrictEqual(mockedHash);
+    expect(result?.length).toStrictEqual(1);
+    expect(result?.[0].docMap).toMatchObject({ id: 'fake-docmap' });
+    expect(result?.length).toStrictEqual(1);
+    expect(result?.[0].docMapHash).toStrictEqual(mockedHash);
+    expect(result?.[0].idHash).toStrictEqual(mockedIdHash);
   });
 
   it('skips existing docmaps (that are hashed from the last import)', async () => {
     // Arrange
     const mockedGet = mocked(axios.get);
-    const mockedHash = MD5({ '@id': 'fake-docmap' });
+    const mockedHash = MD5({ id: 'fake-docmap' });
+    const mockedIdHash = MD5('fake-docmap');
 
     // @ts-ignore
     mockedGet.mockImplementation(() => Promise.resolve({
-      data: { docmaps: [{ '@id': 'fake-docmap' }] },
+      data: { docmaps: [{ id: 'fake-docmap' }] },
       status: 200,
     }));
 
     // Act
-    const result = await filterDocmapIndex([mockedHash], 'http://somewhere.not.real/docmap/index');
+    const result = await filterDocmapIndex([{ hash: mockedHash, idHash: mockedIdHash }], 'http://somewhere.not.real/docmap/index');
 
     // Assert
     expect(result).toBeDefined();
-    expect(result?.docMaps).toStrictEqual([]);
-    expect(result?.hashes?.length).toStrictEqual(1);
-    expect(result?.hashes?.[0]).toStrictEqual(mockedHash);
+    expect(result).toStrictEqual([]);
+    expect(result?.length).toStrictEqual(0);
   });
 });
