@@ -1,8 +1,12 @@
-import { ManuscriptData } from '@elifesciences/docmap-ts';
-import { executeChild, proxyActivities, workflowInfo } from '@temporalio/workflow';
+import {
+  condition,
+  continueAsNew,
+  executeChild, proxyActivities, setHandler, workflowInfo,
+} from '@temporalio/workflow';
 import type * as activities from '../activities/index';
 import { EnhancedArticle } from '../activities/send-version-to-epp';
 import { importContent } from './import-content';
+import { useWorkflowState } from '../hooks/useWorkflowState';
 
 const {
   parseDocMap,
@@ -26,12 +30,14 @@ const {
   },
 });
 
-type DocMapImportOutput = {
-  result: ManuscriptData,
-  mecaLocation?: string,
-};
+export const store = useWorkflowState(workflowInfo().workflowId, true);
 
-export async function importDocmap(url: string): Promise<DocMapImportOutput> {
+export async function importDocmap(url: string): Promise<void> {
+  setHandler(store.signal, (newValue: boolean) => {
+    store.value = newValue;
+  });
+  setHandler(store.query, () => store.value);
+
   const result = await fetchDocMap(url).then((docMap) => parseDocMap(docMap));
 
   await Promise.all(
@@ -42,7 +48,8 @@ export async function importDocmap(url: string): Promise<DocMapImportOutput> {
       .then(async (versionJson: EnhancedArticle) => sendVersionToEpp(versionJson))),
   );
 
-  return {
-    result,
-  };
+  store.value = false;
+
+  await condition(() => store.value);
+  await continueAsNew<typeof importDocmap>(url);
 }

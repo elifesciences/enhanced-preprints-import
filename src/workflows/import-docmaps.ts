@@ -1,11 +1,11 @@
 import {
   ParentClosePolicy,
+  getExternalWorkflowHandle,
   proxyActivities,
   startChild,
-  workflowInfo,
 } from '@temporalio/workflow';
 import type * as activities from '../activities/index';
-import { importDocmap } from './import-docmap';
+import { importDocmap, store } from './import-docmap';
 import { ImportMessage } from '../types';
 
 const {
@@ -20,13 +20,15 @@ const {
 });
 
 type ImportDocmapsOutput = ImportMessage & {
-  hashes: string[]
+  hashes: Hash[]
 };
 
-export async function importDocmaps(docMapIndexUrl: string, hashes: string[] = []): Promise<ImportDocmapsOutput> {
-  const result = await filterDocmapIndex(hashes, docMapIndexUrl);
+export type Hash = { hash: string, idHash: string };
 
-  if (result.hashes.length === 0) {
+export async function importDocmaps(docMapIndexUrl: string, hashes: Hash[]): Promise<ImportDocmapsOutput> {
+  const docMapsWithIdHash = await filterDocmapIndex(hashes, docMapIndexUrl);
+
+  if (docMapsWithIdHash.length === 0) {
     return {
       status: 'SKIPPED',
       message: 'No new docmaps to import',
@@ -34,19 +36,24 @@ export async function importDocmaps(docMapIndexUrl: string, hashes: string[] = [
     };
   }
 
-  const { docMaps, hashes: newHashes } = result;
-
-  await Promise.all(docMaps.map(async (docmap, index) => {
-    await startChild(importDocmap, {
-      args: [docmap.id], // id contains the canonical URL of the docmap
-      workflowId: `${workflowInfo().workflowId}/docmap-${index}`,
-      parentClosePolicy: ParentClosePolicy.PARENT_CLOSE_POLICY_ABANDON,
-    });
+  await Promise.all(docMapsWithIdHash.map(async (docMapWithIdHash) => {
+    if (hashes.some(({ idHash }) => docMapWithIdHash.idHash === idHash)) {
+      // If the workflow exists, send a signal
+      const handle = getExternalWorkflowHandle(`docmap-${docMapWithIdHash.idHash}`);
+      handle.signal(store.signal, true);
+    } else {
+      // If the workflow doesn't exist, start the workflow
+      await startChild(importDocmap, {
+        args: [docMapWithIdHash.docMap.id], // id contains the canonical URL of the docmap
+        workflowId: `docmap-${docMapWithIdHash.idHash}`,
+        parentClosePolicy: ParentClosePolicy.PARENT_CLOSE_POLICY_ABANDON,
+      });
+    }
   }));
 
   return {
     status: 'SUCCESS',
-    message: `Imported ${docMaps.length} docmaps`,
-    hashes: newHashes,
+    message: `Importing ${docMapsWithIdHash.length} docmaps`,
+    hashes: docMapsWithIdHash.map<Hash>(({ docMapHash, idHash }) => ({ hash: docMapHash, idHash })),
   };
 }

@@ -53,7 +53,7 @@ services:
       - ./src:/app/src
 
   # Downstream services for EPP
-  ## Image Server
+  # Image Server
   image-server:
     image: ghcr.io/elifesciences/epp-image-server:master-9338bdbe-20230504.0202
     ports:
