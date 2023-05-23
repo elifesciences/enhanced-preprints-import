@@ -53,26 +53,6 @@ services:
       - ./src:/app/src
 
   # Downstream services for EPP
-  ## Image Server
-  image-server:
-    image: ghcr.io/elifesciences/epp-image-server:master-9338bdbe-20230504.0202
-    ports:
-    - 8182:8182
-    environment:
-      LOG_APPLICATION_LEVEL: debug
-      SOURCE_STATIC: S3Source
-      S3SOURCE_ENDPOINT: http://minio:9000/
-      S3SOURCE_BASICLOOKUPSTRATEGY_PATH_PREFIX: articles/
-      S3SOURCE_BASICLOOKUPSTRATEGY_BUCKET_NAME: epp
-      AWS_ACCESS_KEY_ID: minio
-      AWS_SECRET_ACCESS_KEY: miniotest
-    healthcheck:
-      test: curl http://image-server:8182/
-      interval: 5s
-      timeout: 5s
-      retries: 10
-      start_period: 2s
-
   ## Database (MongoDB) server
   mongodb:
     image: mongo
@@ -114,8 +94,6 @@ services:
       start_period: 2s
     depends_on:
       mongodb:
-        condition: service_healthy
-      image-server:
         condition: service_healthy
     environment:
       REPO_TYPE: MongoDB
