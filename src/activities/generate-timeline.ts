@@ -24,7 +24,7 @@ export const generateTimeline = async (manuscriptData: ManuscriptData): Promise<
         date: version.sentForReviewDate,
       });
     }
-    // Add (eLife) publish date
+    // Add eLife publish date
     if (version.publishedDate !== undefined) {
       timelineEvents.push({
         name: 'VERSION_PUBLISHED',
