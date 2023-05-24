@@ -4,6 +4,7 @@ import {
 } from '@stencila/schema';
 import { config } from '../config';
 import { EPPPeerReview } from './fetch-review-content';
+import { TimelineEvent } from './generate-timeline';
 
 export type Content = Array<Node> | Node;
 
@@ -35,6 +36,7 @@ export type EnhancedArticle = {
   sentForReview?: Date,
   peerReview?: EPPPeerReview,
   published?: Date,
+  timeline?: TimelineEvent[],
 };
 
 type EPPImportResponse = {
