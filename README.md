@@ -76,3 +76,9 @@ SERVER_DIR="../your-directory-here" docker compose -f docker-compose.yaml -f doc
 To start the application with a local version of the [`EPP API server`](https://github.com/elifesciences/enhanced-preprints-server), so you can run the application and test local changes of the API, you need to define an environment variable `SERVER_DIR` with the location of your EPP API server project, i.e. `SERVER_DIR="../enhanced-preprints-server"`, then run the above command to invoke the `.localserver` overrides. This will work with the first import workflow command.
 
 To run with the local API but **without** the mocked services, omit `-f docker-compose.override.yaml` from the compose command.
+
+## Run with a local instance of the API and App
+
+```shell
+SERVER_DIR="../enhanced-preprints-server" APP_DIR="../enhanced-preprints-client" docker compose -f docker-compose.yaml -f docker-compose.override.yaml -f docker-compose.localserver.yaml -f docker-compose.localapp.yaml up
+```
