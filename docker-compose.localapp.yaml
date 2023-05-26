@@ -43,7 +43,7 @@ services:
     ports:
       - 3001:3000
     volumes:
-      - ./:/opt/epp-client/
+      - ${APP_DIR}/:/opt/epp-client/
     
   # Expose API and client via proxy
   nginx:
