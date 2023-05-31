@@ -1,6 +1,7 @@
 import { Heading as HeadingContent } from '@stencila/schema/dist/src/types';
 import { Article } from '@stencila/schema';
 import { GetObjectCommand, GetObjectCommandInput } from '@aws-sdk/client-s3';
+import { VersionedReviewedPreprint } from '@elifesciences/docmap-ts';
 import { getS3Client } from '../S3Bucket';
 import { Content, EnhancedArticle, Heading } from './send-version-to-epp';
 import { ImportContentOutput } from '../workflows/import-content';
@@ -41,10 +42,10 @@ const parseJsonContentToProcessedArticle = (content: string) => {
 };
 
 type GenerateVersionJson = (
-  { importContentResult, msid, version }: { importContentResult: ImportContentOutput, msid: string, version: any }
+  { importContentResult, version }: { importContentResult: ImportContentOutput, version: VersionedReviewedPreprint }
 ) => Promise<EnhancedArticle>;
 
-export const generateVersionJson: GenerateVersionJson = async ({ importContentResult, msid, version }) => {
+export const generateVersionJson: GenerateVersionJson = async ({ importContentResult, version }) => {
   const s3 = getS3Client();
 
   const getObjectCommandInput: GetObjectCommandInput = {
@@ -56,6 +57,7 @@ export const generateVersionJson: GenerateVersionJson = async ({ importContentRe
     .then((obj) => obj.Body?.transformToString() ?? '');
 
   const articleStruct = parseJsonContentToProcessedArticle(json);
+  const msid = `${version.doi.split('/').pop()}v${version.versionIdentifier}`;
   const versionJSON: EnhancedArticle = {
     msid,
     doi: version.doi,
@@ -64,8 +66,8 @@ export const generateVersionJson: GenerateVersionJson = async ({ importContentRe
     versionDoi: version.doi,
     article: articleStruct,
     preprintDoi: version.preprint.doi,
-    preprintUrl: version.preprint.content,
-    preprintPosted: version.preprint.publishedDate,
+    preprintUrl: version.preprint.content ?? '',
+    preprintPosted: version.preprint.publishedDate ?? new Date(),
     sentForReview: version.sentForReviewDate,
     peerReview: importContentResult.reviewData ?? version.peerReview,
     published: version.publishedDate,

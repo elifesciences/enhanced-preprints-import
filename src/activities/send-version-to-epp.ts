@@ -2,6 +2,7 @@ import axios from 'axios';
 import {
   BlockContent, CreativeWorkTypes, InlineContent, Node, Organization, Person,
 } from '@stencila/schema';
+import { PeerReview } from '@elifesciences/docmap-ts/dist/docmap-parser';
 import { config } from '../config';
 import { EPPPeerReview } from './fetch-review-content';
 import { TimelineEvent } from './generate-timeline';
@@ -34,7 +35,7 @@ export type EnhancedArticle = {
   preprintUrl: string,
   preprintPosted: Date,
   sentForReview?: Date,
-  peerReview?: EPPPeerReview,
+  peerReview?: EPPPeerReview | PeerReview,
   published?: Date,
   timeline?: TimelineEvent[],
 };

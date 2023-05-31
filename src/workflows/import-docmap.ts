@@ -47,7 +47,7 @@ export async function importDocmap(url: string): Promise<void> {
     result.versions.map(async (version, index) => executeChild(importContent, {
       args: [version],
       workflowId: `${workflowInfo().workflowId}/version-${index}/content`,
-    }).then(async (importContentResult) => generateVersionJson({ importContentResult, msid: result.id, version }))
+    }).then(async (importContentResult) => generateVersionJson({ importContentResult, version }))
       .then((versionJson) => ({ ...versionJson, timeline }))
       .then(async (versionJson: EnhancedArticle) => sendVersionToEpp(versionJson))),
   );
