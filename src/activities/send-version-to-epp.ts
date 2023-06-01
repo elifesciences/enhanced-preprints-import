@@ -28,7 +28,6 @@ export type EnhancedArticle = {
     abstract: string | BlockContent[] | InlineContent[] | undefined,
     licenses: (string | CreativeWorkTypes)[] | undefined,
     content: (string & BlockContent[]) | (Node[] & BlockContent[]) | undefined,
-    headings: Heading[],
     references: (string | CreativeWorkTypes)[] | undefined,
   },
   preprintDoi: string,
