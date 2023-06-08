@@ -3,12 +3,12 @@ services:
   image-server:
     image: ghcr.io/elifesciences/epp-image-server:master-9338bdbe-20230504.0202
     environment:
-      - SOURCE_STATIC=S3Source
-      - S3SOURCE_ENDPOINT=http://minio:9000/
-      - S3SOURCE_ACCESS_KEY_ID=minio
-      - S3SOURCE_SECRET_KEY=miniotest
-      - S3SOURCE_BASICLOOKUPSTRATEGY_PATH_PREFIX=data/
-      - S3SOURCE_BASICLOOKUPSTRATEGY_BUCKET_NAME=eppdata
+      SOURCE_STATIC: S3Source
+      S3SOURCE_ENDPOINT: http://minio:9000/
+      S3SOURCE_ACCESS_KEY_ID: minio
+      S3SOURCE_SECRET_KEY: miniotest
+      S3SOURCE_BASICLOOKUPSTRATEGY_PATH_PREFIX: /
+      S3SOURCE_BASICLOOKUPSTRATEGY_BUCKET_NAME: epp
     ports:
       - "8182:8182"
     volumes:

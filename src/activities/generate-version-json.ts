@@ -1,9 +1,32 @@
+import { Heading as HeadingContent } from '@stencila/schema/dist/src/types';
 import { Article } from '@stencila/schema';
 import { GetObjectCommand, GetObjectCommandInput } from '@aws-sdk/client-s3';
 import { VersionedReviewedPreprint } from '@elifesciences/docmap-ts';
 import { getS3Client } from '../S3Bucket';
-import { EnhancedArticle } from './send-version-to-epp';
+import { Content, EnhancedArticle, Heading } from './send-version-to-epp';
 import { ImportContentOutput } from '../workflows/import-content';
+
+const isHeadingContent = (content: Content): content is HeadingContent => !Array.isArray(content) && typeof content === 'object' && content?.type === 'Heading';
+
+const extractHeadingContentPart = (contentPart: Content): HeadingContent[] => {
+  if (isHeadingContent(contentPart)) {
+    return [contentPart];
+  }
+
+  if (Array.isArray(contentPart)) {
+    return contentPart.flatMap(extractHeadingContentPart);
+  }
+
+  return [];
+};
+const extractHeadings = (content: Content): Heading[] => {
+  const headingContentParts = extractHeadingContentPart(content);
+
+  return headingContentParts.map((heading, index) => ({
+    id: (!heading.id || heading.id === '') ? `gen_header_${index}` : heading.id,
+    text: heading.content,
+  }));
+};
 
 const parseJsonContentToProcessedArticle = (content: string) => {
   const contentStruct = JSON.parse(content) as Article;
@@ -13,6 +36,7 @@ const parseJsonContentToProcessedArticle = (content: string) => {
     abstract: contentStruct.description,
     licenses: contentStruct.licenses,
     content: contentStruct.content,
+    headings: contentStruct.content ? extractHeadings(contentStruct.content) : [],
     references: contentStruct.references,
   };
 };
