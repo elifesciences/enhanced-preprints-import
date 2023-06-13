@@ -8,10 +8,7 @@ import { EnhancedArticle } from '../activities/send-version-to-epp';
 import { importContent } from './import-content';
 import { useWorkflowState } from '../hooks/useWorkflowState';
 
-const {
-  parseDocMap,
-  generateTimeline,
-} = proxyActivities<typeof activities>({
+const { parseDocMap } = proxyActivities<typeof activities>({
   startToCloseTimeout: '1 minute',
   retry: {
     maximumAttempts: 1,
@@ -41,14 +38,11 @@ export async function importDocmap(url: string): Promise<void> {
 
   const result = await fetchDocMap(url).then((docMap) => parseDocMap(docMap));
 
-  const timeline = await generateTimeline(result);
-
   await Promise.all(
     result.versions.map(async (version, index) => executeChild(importContent, {
       args: [version],
       workflowId: `${workflowInfo().workflowId}/version-${index}/content`,
     }).then(async (importContentResult) => generateVersionJson({ importContentResult, msid: result.id, version }))
-      .then((versionJson) => ({ ...versionJson, timeline }))
       .then(async (versionJson: EnhancedArticle) => sendVersionToEpp(versionJson))),
   );
 
