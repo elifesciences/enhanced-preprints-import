@@ -8,11 +8,6 @@ import { TimelineEvent } from './generate-timeline';
 
 export type Content = Array<Node> | Node;
 
-export type Heading = {
-  id: string,
-  text: Content,
-};
-
 export type EnhancedArticle = {
   id: string,
   msid: string,
@@ -27,7 +22,6 @@ export type EnhancedArticle = {
     abstract: string | BlockContent[] | InlineContent[] | undefined,
     licenses: (string | CreativeWorkTypes)[] | undefined,
     content: (string & BlockContent[]) | (Node[] & BlockContent[]) | undefined,
-    headings: Heading[],
     references: (string | CreativeWorkTypes)[] | undefined,
   },
   preprintDoi: string,
