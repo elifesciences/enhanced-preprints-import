@@ -20,7 +20,7 @@ services:
       retries: 10
       start_period: 2s
 
-  yarn-app:
+  yarn:
     build:
       context: ${APP_DIR}
       target: dev
@@ -48,7 +48,7 @@ services:
     depends_on:
       api:
         condition: service_healthy
-      yarn-app:
+      yarn:
         condition: service_completed_successfully
     ports:
       - 3001:3000
