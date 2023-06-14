@@ -20,12 +20,20 @@ services:
       retries: 10
       start_period: 2s
 
+  yarn-app:
+    build:
+      context: ${APP_DIR}
+      target: dev
+    command: yarn
+    volumes:
+      - ${APP_DIR}/:/opt/epp-client/
+      - node_modules:/opt/epp-client/node_modules
   app:
     image: app-local
     build:
       context: ${APP_DIR}
       dockerfile: Dockerfile
-      target: prod
+      target: dev
     healthcheck:
       test: ["CMD-SHELL", "sh -c 'apk add curl; curl -X POST http://app:3000/'"]
       interval: 5s
@@ -40,6 +48,8 @@ services:
     depends_on:
       api:
         condition: service_healthy
+      yarn-app:
+        condition: service_completed_successfully
     ports:
       - 3001:3000
     volumes:
@@ -57,3 +67,6 @@ services:
       - 8080:80
     volumes:
       - ${APP_DIR}/.docker/nginx.conf:/etc/nginx/conf.d/default.conf
+
+volumes:
+  node_modules:
