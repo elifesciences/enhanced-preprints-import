@@ -1,0 +1,59 @@
+services:
+  ## Image Server
+  image-server:
+    image: ghcr.io/elifesciences/epp-image-server:master-9338bdbe-20230504.0202
+    environment:
+      SOURCE_STATIC: S3Source
+      S3SOURCE_ENDPOINT: http://minio:9000/
+      S3SOURCE_ACCESS_KEY_ID: minio
+      S3SOURCE_SECRET_KEY: miniotest
+      S3SOURCE_BASICLOOKUPSTRATEGY_PATH_PREFIX: /
+      S3SOURCE_BASICLOOKUPSTRATEGY_BUCKET_NAME: epp
+    ports:
+      - "8182:8182"
+    volumes:
+      - ./data:/opt/epp/data
+    healthcheck:
+      test: curl http://image-server:8182/
+      interval: 5s
+      timeout: 5s
+      retries: 10
+      start_period: 2s
+
+  app:
+    image: app-local
+    build:
+      context: ${APP_DIR}
+      dockerfile: Dockerfile
+      target: prod
+    healthcheck:
+      test: ["CMD-SHELL", "sh -c 'apk add curl; curl -X POST http://app:3000/'"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
+    environment:
+      API_SERVER: http://api:3000
+      NEXT_PUBLIC_IMAGE_SERVER: /iiif
+      MANUSCRIPT_CONFIG_FILE: /opt/epp-client/data/manuscripts.json
+      IS_AUTOMATED: true
+    depends_on:
+      api:
+        condition: service_healthy
+    ports:
+      - 3001:3000
+    volumes:
+      - ${APP_DIR}/:/opt/epp-client/
+    
+  # Expose API and client via proxy
+  nginx:
+    image: nginx:latest
+    depends_on:
+      api:
+        condition: service_healthy
+      app:
+        condition: service_healthy
+    ports:
+      - 8080:80
+    volumes:
+      - ${APP_DIR}/.docker/nginx.conf:/etc/nginx/conf.d/default.conf
