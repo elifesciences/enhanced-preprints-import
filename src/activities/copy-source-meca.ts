@@ -34,6 +34,7 @@ export const copySourcePreprintToEPP = async (version: VersionedReviewedPreprint
     const downloadCommand = new GetObjectCommand({
       Bucket: bucketAndPath?.split('/')[0],
       Key: bucketAndPath?.split('/').slice(1).join('/'),
+      RequestPayer: 'requester',
     });
 
     const downloadData = await mecaS3Connection.send(downloadCommand);
@@ -41,6 +42,7 @@ export const copySourcePreprintToEPP = async (version: VersionedReviewedPreprint
       Bucket: s3FilePath.Bucket,
       Key: s3FilePath.Key,
       Body: downloadData.Body,
+      ContentLength: downloadData.ContentLength,
     });
 
     const fileInfo = await s3Connection.send(uploadCommand);
