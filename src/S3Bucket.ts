@@ -2,35 +2,39 @@ import { VersionedReviewedPreprint } from '@elifesciences/docmap-ts';
 import { readFileSync } from 'fs';
 import { S3Client } from '@aws-sdk/client-s3';
 import { fromWebToken } from '@aws-sdk/credential-providers';
-import { config } from './config';
+import { AwsAssumeRole, S3, config } from './config';
 
-export const getS3Client = () => {
-  if (config.awsAssumeRole.webIdentityTokenFile !== undefined && config.awsAssumeRole.roleArn !== undefined) {
-    const webIdentityToken = readFileSync(config.awsAssumeRole.webIdentityTokenFile, 'utf-8');
+const preprareS3Client = (awsAssumeRole: AwsAssumeRole, s3: S3, ) => {
+  if (awsAssumeRole.webIdentityTokenFile !== undefined && awsAssumeRole.roleArn !== undefined) {
+    const webIdentityToken = readFileSync(awsAssumeRole.webIdentityTokenFile, 'utf-8');
     return new S3Client({
       credentials: fromWebToken({
-        roleArn: config.awsAssumeRole.roleArn,
+        roleArn: awsAssumeRole.roleArn,
         clientConfig: {
-          region: config.s3.region,
+          region: s3.region,
         },
         webIdentityToken,
       }),
-      endpoint: config.s3.endPoint,
+      endpoint: s3.endPoint,
       forcePathStyle: true,
-      region: config.s3.region,
+      region: s3.region,
     });
   }
 
   return new S3Client({
     credentials: {
-      accessKeyId: config.s3.accessKey ?? '',
-      secretAccessKey: config.s3.secretKey ?? '',
+      accessKeyId: s3.accessKey ?? '',
+      secretAccessKey: s3.secretKey ?? '',
     },
-    endpoint: config.s3.endPoint,
+    endpoint: s3.endPoint,
     forcePathStyle: true,
-    region: config.s3.region,
+    region: s3.region,
   });
 };
+
+export const getS3Client = () => preprareS3Client(config.awsAssumeRole, config.s3);
+export const getMecaS3Client = () => preprareS3Client(config.mecaAwsAssumeRole, config.mecaS3);
+export const sharedS3 = (): boolean => (config.s3.endPoint === config.mecaS3.endPoint);
 
 export const parseS3Path = (s3Path: string): S3File => {
   const url = new URL(s3Path);
