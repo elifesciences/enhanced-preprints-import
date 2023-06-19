@@ -49,6 +49,7 @@ services:
       BUCKET_NAME: ${BUCKET_NAME:-epp}
       MECA_AWS_ACCESS_KEY_ID: ${MECA_AWS_ACCESS_KEY_ID:-minio}
       MECA_AWS_SECRET_ACCESS_KEY: ${MECA_AWS_SECRET_ACCESS_KEY:-miniotest}
+      MECA_AWS_ROLE_ARN: ${MECA_AWS_ROLE_ARN}
       MECA_S3_ENDPOINT: ${MECA_S3_ENDPOINT:-http://minio:9000}
     restart: on-failure:5
     command:
