@@ -11,6 +11,7 @@ export type S3Config = {
 
 export type Config = {
   s3: S3Config,
+  mecaS3: S3Config,
   eppBucketName: string,
   eppServerUri: string,
   biorxivURI: string,
@@ -30,6 +31,14 @@ export const config: Config = {
     endPoint: env.S3_ENDPOINT || 'https://s3.amazonaws.com',
     webIdentityTokenFile: env.AWS_WEB_IDENTITY_TOKEN_FILE || undefined,
     awsAssumeRoleArn: env.AWS_ROLE_ARN || undefined,
+  },
+  mecaS3: {
+    accessKey: env.MECA_AWS_ACCESS_KEY_ID || undefined,
+    secretKey: env.MECA_AWS_SECRET_ACCESS_KEY || undefined,
+    region: env.MECA_S3_REGION || 'us-east-1',
+    endPoint: env.MECA_S3_ENDPOINT || 'https://s3.amazonaws.com',
+    webIdentityTokenFile: env.MECA_AWS_WEB_IDENTITY_TOKEN_FILE || undefined,
+    awsAssumeRoleArn: env.MECA_AWS_ROLE_ARN || undefined,
   },
   eppBucketName: env.BUCKET_NAME || 'epp',
   eppServerUri: env.EPP_SERVER_URI,

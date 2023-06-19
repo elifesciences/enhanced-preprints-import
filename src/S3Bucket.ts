@@ -44,6 +44,9 @@ export const getS3Client = (s3config: S3Config) => new S3Client({
 });
 
 export const getEPPS3Client = () => getS3Client(config.s3);
+export const getMecaS3Client = () => getS3Client(config.mecaS3);
+
+export const sharedS3 = (): boolean => (config.s3.endPoint === config.mecaS3.endPoint);
 
 export const parseS3Path = (s3Path: string): S3File => {
   const url = new URL(s3Path);

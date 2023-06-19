@@ -6,11 +6,22 @@ import { EPPPeerReview } from '../activities/fetch-review-content';
 import type * as activities from '../activities/index';
 
 const {
-  copySourcePreprintToEPP,
   convertXmlToJson,
   fetchReviewContent,
 } = proxyActivities<typeof activities>({
   startToCloseTimeout: '1 minute',
+  retry: {
+    initialInterval: '1 minute',
+    backoffCoefficient: 2,
+    maximumInterval: '15 minutes',
+    nonRetryableErrorTypes: ['NonRetryableError'],
+  },
+});
+
+const {
+  copySourcePreprintToEPP,
+} = proxyActivities<typeof activities>({
+  startToCloseTimeout: '10 minutes',
   retry: {
     initialInterval: '1 minute',
     backoffCoefficient: 2,
