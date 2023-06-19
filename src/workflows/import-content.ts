@@ -21,7 +21,7 @@ const {
 const {
   copySourcePreprintToEPP,
 } = proxyActivities<typeof activities>({
-  startToCloseTimeout: sharedS3() ? '1 minute' : '10 minutes',
+  startToCloseTimeout: '10 minutes',
   retry: {
     initialInterval: '1 minute',
     backoffCoefficient: 2,

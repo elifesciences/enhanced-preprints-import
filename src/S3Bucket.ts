@@ -5,7 +5,7 @@ import { fromWebToken, fromTemporaryCredentials } from '@aws-sdk/credential-prov
 import { AwsAssumeRole, S3, config } from './config';
 
 const getAWSCredentials = (awsAssumeRole: AwsAssumeRole, s3: S3) => {
-  if (awsAssumeRole.webIdentityTokenFile !== undefined && awsAssumeRole.roleArn !== undefined) {
+  if (awsAssumeRole.webIdentityTokenFile !== undefined && awsAssumeRole.roleArn) {
     const webIdentityToken = readFileSync(awsAssumeRole.webIdentityTokenFile, 'utf-8');
     return fromWebToken({
       roleArn: awsAssumeRole.roleArn,
@@ -15,7 +15,7 @@ const getAWSCredentials = (awsAssumeRole: AwsAssumeRole, s3: S3) => {
       webIdentityToken,
     });
   }
-  if (config.awsAssumeRole.roleArn !== undefined) {
+  if (config.awsAssumeRole.roleArn) {
     return fromTemporaryCredentials({
       params: {
         RoleArn: awsAssumeRole.roleArn,

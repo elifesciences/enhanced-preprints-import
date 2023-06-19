@@ -46,7 +46,7 @@ export const config: Config = {
     endPoint: env.MECA_S3_ENDPOINT ?? env.S3_ENDPOINT ?? 'https://s3.amazonaws.com',
   },
   mecaAwsAssumeRole: {
-    webIdentityTokenFile: env.MECA_AWS_WEB_IDENTITY_TOKEN_FILE ?? env.AWS_WEB_IDENTITY_TOKEN_FILE ?? '~/.aws/config',
+    webIdentityTokenFile: env.MECA_AWS_WEB_IDENTITY_TOKEN_FILE ?? env.AWS_WEB_IDENTITY_TOKEN_FILE ?? undefined,
     roleArn: env.MECA_AWS_ROLE_ARN ?? env.AWS_ROLE_ARN ?? undefined,
   },
   eppBucketName: env.BUCKET_NAME ?? 'epp',
