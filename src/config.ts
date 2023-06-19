@@ -36,7 +36,7 @@ export const config: Config = {
     endPoint: env.S3_ENDPOINT ?? 'https://s3.amazonaws.com',
   },
   awsAssumeRole: {
-    webIdentityTokenFile: env.AWS_WEB_IDENTITY_TOKEN_FILE ?? '~/.aws/config',
+    webIdentityTokenFile: env.AWS_WEB_IDENTITY_TOKEN_FILE ?? undefined,
     roleArn: env.AWS_ROLE_ARN ?? undefined,
   },
   mecaS3: {
