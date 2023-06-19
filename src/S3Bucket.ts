@@ -4,7 +4,7 @@ import { S3Client } from '@aws-sdk/client-s3';
 import { fromWebToken } from '@aws-sdk/credential-providers';
 import { AwsAssumeRole, S3, config } from './config';
 
-const preprareS3Client = (awsAssumeRole: AwsAssumeRole, s3: S3, ) => {
+const preprareS3Client = (awsAssumeRole: AwsAssumeRole, s3: S3) => {
   if (awsAssumeRole.webIdentityTokenFile !== undefined && awsAssumeRole.roleArn !== undefined) {
     const webIdentityToken = readFileSync(awsAssumeRole.webIdentityTokenFile, 'utf-8');
     return new S3Client({
