@@ -42,8 +42,10 @@ services:
     environment:
       EPP_SERVER_URI: http://api:3000
       TEMPORAL_SERVER: temporal:7233
-      AWS_ACCESS_KEY_ID: minio
-      AWS_SECRET_ACCESS_KEY: miniotest
+      AWS_ACCESS_KEY_ID: ${AWS_ACCESS_KEY_ID}
+      AWS_SECRET_ACCESS_KEY: ${AWS_SECRET_ACCESS_KEY}
+      AWS_ROLE_ARN: ${AWS_ROLE_ARN}
+      BUCKET_NAME: ${BUCKET_NAME}
       S3_ENDPOINT: http://minio:9000
     restart: on-failure:5
     command:
