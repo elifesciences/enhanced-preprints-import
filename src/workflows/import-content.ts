@@ -1,16 +1,27 @@
 import { proxyActivities } from '@temporalio/workflow';
 import { VersionedReviewedPreprint } from '@elifesciences/docmap-ts';
-import { S3File } from '../S3Bucket';
+import { S3File, sharedS3 } from '../S3Bucket';
 import { MecaFiles } from '../activities/extract-meca';
 import { EPPPeerReview } from '../activities/fetch-review-content';
 import type * as activities from '../activities/index';
 
 const {
-  copySourcePreprintToEPP,
   convertXmlToJson,
   fetchReviewContent,
 } = proxyActivities<typeof activities>({
   startToCloseTimeout: '1 minute',
+  retry: {
+    initialInterval: '1 minute',
+    backoffCoefficient: 2,
+    maximumInterval: '15 minutes',
+    nonRetryableErrorTypes: ['NonRetryableError'],
+  },
+});
+
+const {
+  copySourcePreprintToEPP,
+} = proxyActivities<typeof activities>({
+  startToCloseTimeout: sharedS3() ? '1 minute' : '10 minutes',
   retry: {
     initialInterval: '1 minute',
     backoffCoefficient: 2,
