@@ -17,15 +17,15 @@ const getAWSCredentials = (awsAssumeRole: AwsAssumeRole, s3: S3) => {
   }
   if (awsAssumeRole.roleArn) {
     return fromTemporaryCredentials({
-      masterCredentials: {
-        accessKeyId: s3.accessKey ?? '',
-        secretAccessKey: s3.secretKey ?? '',
-      },
       params: {
         RoleArn: awsAssumeRole.roleArn,
         DurationSeconds: 900,
       },
       clientConfig: {
+        credentials: {
+          accessKeyId: s3.accessKey ?? '',
+          secretAccessKey: s3.secretKey ?? '',
+        },
         region: s3.region,
       },
     });
