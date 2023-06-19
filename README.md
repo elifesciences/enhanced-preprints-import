@@ -26,7 +26,7 @@ The `docker compose` workflow above will restart the worker when your mounted fi
 To run an import workflow, run:
 
 ```shell
-tctl wf run -tq epp -wt importDocmaps -wid docmap-index-import -i '"http://mock-datahub/enhanced-preprints/docmaps/v1/index"' 
+tctl wf run -tq epp -wt importDocmaps -wid docmap-index-import -i '"http://mock-datahub/enhanced-preprints/docmaps/v1/index"'
 ```
 
 This will kick of a full import for a docmap index from eLife's API.
@@ -42,7 +42,7 @@ docker compose down --volumes
 To run a looped import workflow, run:
 
 ```shell
-tctl wf run -tq epp -wt pollDocMapIndex -wid docmap-index-poll -i '"http://mock-datahub/enhanced-preprints/docmaps/v1/index"' 
+tctl wf run -tq epp -wt pollDocMapIndex -wid docmap-index-poll -i '"http://mock-datahub/enhanced-preprints/docmaps/v1/index"'
 ```
 
 This will kick of a full import for a docmap index from eLife's API, then loop itself every hour (see next command to change this), skipping docmaps that have no changes.
@@ -50,7 +50,7 @@ This will kick of a full import for a docmap index from eLife's API, then loop i
 To change the sleep time, add a semantic time parameter to the `-i` inputs, for example `1 minute` or `5 minutes`:
 
 ```shell
-tctl wf run -tq epp -wt pollDocMapIndex -wid docmap-index-poll -i '"http://mock-datahub/enhanced-preprints/docmaps/v1/index"' -i '"1 minute"' 
+tctl wf run -tq epp -wt pollDocMapIndex -wid docmap-index-poll -i '"http://mock-datahub/enhanced-preprints/docmaps/v1/index"' -i '"1 minute"'
 ```
 
 ## Run without mocked services
@@ -64,7 +64,7 @@ docker compose -f docker-compose.yaml up
 Then you can use the following tctl command instead:
 
 ```shell
-tctl wf run -tq epp -wt importDocmaps -wid docmap-index-import -i '"http://data-hub-api.elifesciences.org/enhanced-preprints/docmaps/v1/index"' 
+tctl wf run -tq epp -wt importDocmaps -wid docmap-index-import -i '"http://data-hub-api.elifesciences.org/enhanced-preprints/docmaps/v1/index"'
 ```
 
 ## Run with a local instance of the API
@@ -81,4 +81,21 @@ To run with the local API but **without** the mocked services, omit `-f docker-c
 
 ```shell
 SERVER_DIR="../enhanced-preprints-server" APP_DIR="../enhanced-preprints-client" docker compose -f docker-compose.yaml -f docker-compose.override.yaml -f docker-compose.localserver.yaml -f docker-compose.localapp.yaml up
+```
+
+## Run with "real" S3
+
+NOTE: this will alter the real resources in S3, and should only be used for testing
+
+Define a .env file with these variables:
+```bash
+AWS_ACCESS_KEY_ID=your access key
+AWS_SECRET_ACCESS_KEY=your secret key
+BUCKET_NAME=the S3 bucket to write to
+AWS_ROLE_ARN=a role to assume to have permission to source and destination # optional
+```
+
+then run docker-compose with the base, override and s3 configs, like below:
+```
+docker-compose  -f docker-compose.yaml -f docker-compose.override.yaml -f docker-compose.s3.yaml  up
 ```
