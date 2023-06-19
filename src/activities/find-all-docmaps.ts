@@ -21,8 +21,6 @@ export const filterDocmapIndex = async (hashes: Hash[], docMapIndex: string): Pr
 
   // Filter docmaps with NO matching hashes
   const filteredDocMapsWithHash: DocMapWithIdHash[] = data.docmaps
-    // Filter out docmaps that don't have _tdmPath in the json
-    .filter((docmap) => JSON.stringify(docmap).indexOf('_tdmPath') >= 0)
     .filter((docmap) => {
       const docMapHash = MD5(docmap);
       newHashes.push(docMapHash);
