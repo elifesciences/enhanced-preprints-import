@@ -37,5 +37,3 @@ export const config: Config = {
   prometheusBindAddress: env.PROMETHEUS_BIND_ADDRESS || '0.0.0.0:9464',
   temporalServer: env.TEMPORAL_SERVER || 'localhost',
 };
-
-console.log(config);
