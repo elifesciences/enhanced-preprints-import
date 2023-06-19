@@ -1,6 +1,6 @@
 import { CopyObjectCommand, CopyObjectCommandInput, CopyObjectCommandOutput } from '@aws-sdk/client-s3';
 import { VersionedReviewedPreprint } from '@elifesciences/docmap-ts';
-import { S3File, constructEPPS3FilePath, getS3Client } from '../S3Bucket';
+import { S3File, constructEPPS3FilePath, getEPPS3Client } from '../S3Bucket';
 
 type CopySourcePreprintToEPPOutput = {
   result: CopyObjectCommandOutput,
@@ -8,7 +8,7 @@ type CopySourcePreprintToEPPOutput = {
 };
 
 export const copySourcePreprintToEPP = async (version: VersionedReviewedPreprint): Promise<CopySourcePreprintToEPPOutput> => {
-  const S3Connection = getS3Client();
+  const S3Connection = getEPPS3Client();
 
   // extract bucket and Path for S3 client
   const bucketAndPath = version.preprint.content?.replace('s3://', '');

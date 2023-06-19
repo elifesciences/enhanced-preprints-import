@@ -2,46 +2,48 @@ import { VersionedReviewedPreprint } from '@elifesciences/docmap-ts';
 import { readFileSync } from 'fs';
 import { S3Client } from '@aws-sdk/client-s3';
 import { fromWebToken, fromTemporaryCredentials } from '@aws-sdk/credential-providers';
-import { config } from './config';
+import { S3Config, config } from './config';
 
-const getAWSCredentials = () => {
-  if (config.awsAssumeRole.webIdentityTokenFile !== undefined && config.awsAssumeRole.roleArn !== undefined) {
-    const webIdentityToken = readFileSync(config.awsAssumeRole.webIdentityTokenFile, 'utf-8');
+const getAWSCredentials = (s3config: S3Config) => {
+  if (s3config.webIdentityTokenFile !== undefined && s3config.awsAssumeRoleArn !== undefined) {
+    const webIdentityToken = readFileSync(s3config.webIdentityTokenFile, 'utf-8');
     return fromWebToken({
-      roleArn: config.awsAssumeRole.roleArn,
+      roleArn: s3config.awsAssumeRoleArn,
       clientConfig: {
-        region: config.s3.region,
+        region: s3config.region,
       },
       webIdentityToken,
     });
   }
-  if (config.awsAssumeRole.roleArn !== undefined) {
+  if (s3config.awsAssumeRoleArn !== undefined) {
     return fromTemporaryCredentials({
       params: {
-        RoleArn: config.awsAssumeRole.roleArn,
+        RoleArn: s3config.awsAssumeRoleArn,
         DurationSeconds: 900,
       },
       clientConfig: {
         credentials: {
-          accessKeyId: config.s3.accessKey ?? '',
-          secretAccessKey: config.s3.secretKey ?? '',
+          accessKeyId: s3config.accessKey ?? '',
+          secretAccessKey: s3config.secretKey ?? '',
         },
-        region: config.s3.region,
+        region: s3config.region,
       },
     });
   }
   return {
-    accessKeyId: config.s3.accessKey ?? '',
-    secretAccessKey: config.s3.secretKey ?? '',
+    accessKeyId: s3config.accessKey ?? '',
+    secretAccessKey: s3config.secretKey ?? '',
   };
 };
 
-export const getS3Client = () => new S3Client({
-  credentials: getAWSCredentials(),
-  endpoint: config.s3.endPoint,
+export const getS3Client = (s3config: S3Config) => new S3Client({
+  credentials: getAWSCredentials(s3config),
+  endpoint: s3config.endPoint,
   forcePathStyle: true,
-  region: config.s3.region,
+  region: s3config.region,
 });
+
+export const getEPPS3Client = () => new S3Client(config.s3);
 
 export const parseS3Path = (s3Path: string): S3File => {
   const url = new URL(s3Path);

@@ -1,16 +1,16 @@
 import { env } from 'process';
 
-type Config = {
-  s3: {
-    accessKey?: string,
-    secretKey?: string,
-    region: string,
-    endPoint: string,
-  },
-  awsAssumeRole: {
-    webIdentityTokenFile?: string,
-    roleArn?: string,
-  },
+export type S3Config = {
+  accessKey?: string,
+  secretKey?: string,
+  region: string,
+  endPoint: string,
+  webIdentityTokenFile?: string,
+  awsAssumeRoleArn?: string,
+};
+
+export type Config = {
+  s3: S3Config,
   eppBucketName: string,
   eppServerUri: string,
   biorxivURI: string,
@@ -28,10 +28,8 @@ export const config: Config = {
     secretKey: env.AWS_SECRET_ACCESS_KEY ?? undefined,
     region: 'us-east-1',
     endPoint: env.S3_ENDPOINT ?? 'https://s3.amazonaws.com',
-  },
-  awsAssumeRole: {
     webIdentityTokenFile: env.AWS_WEB_IDENTITY_TOKEN_FILE ?? undefined,
-    roleArn: env.AWS_ROLE_ARN ?? undefined,
+    awsAssumeRoleArn: env.AWS_ROLE_ARN ?? undefined,
   },
   eppBucketName: env.BUCKET_NAME ?? 'epp',
   eppServerUri: env.EPP_SERVER_URI,
