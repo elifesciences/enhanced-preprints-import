@@ -42,11 +42,10 @@ services:
     environment:
       EPP_SERVER_URI: http://api:3000
       TEMPORAL_SERVER: temporal:7233
-      AWS_ACCESS_KEY_ID: ${AWS_ACCESS_KEY_ID:-minio}
-      AWS_SECRET_ACCESS_KEY: ${AWS_SECRET_ACCESS_KEY:-miniotest}
-      AWS_ROLE_ARN: ${AWS_ROLE_ARN}
-      S3_ENDPOINT: ${S3_ENDPOINT:-http://minio:9000}
-      BUCKET_NAME: ${BUCKET_NAME:-epp}
+      AWS_ACCESS_KEY_ID: minio
+      AWS_SECRET_ACCESS_KEY: miniotest
+      S3_ENDPOINT: http://minio:9000
+      BUCKET_NAME: epp
       MECA_AWS_ACCESS_KEY_ID: ${MECA_AWS_ACCESS_KEY_ID:-minio}
       MECA_AWS_SECRET_ACCESS_KEY: ${MECA_AWS_SECRET_ACCESS_KEY:-miniotest}
       MECA_AWS_ROLE_ARN: ${MECA_AWS_ROLE_ARN}

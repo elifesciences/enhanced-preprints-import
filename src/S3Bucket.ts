@@ -10,12 +10,12 @@ const getAWSCredentials = (awsAssumeRole: AwsAssumeRole, s3: S3) => {
     return fromWebToken({
       roleArn: awsAssumeRole.roleArn,
       clientConfig: {
-        region: config.s3.region,
+        region: s3.region,
       },
       webIdentityToken,
     });
   }
-  if (config.awsAssumeRole.roleArn) {
+  if (awsAssumeRole.roleArn) {
     return fromTemporaryCredentials({
       params: {
         RoleArn: awsAssumeRole.roleArn,
@@ -31,8 +31,8 @@ const getAWSCredentials = (awsAssumeRole: AwsAssumeRole, s3: S3) => {
     });
   }
   return {
-    accessKeyId: config.s3.accessKey ?? '',
-    secretAccessKey: config.s3.secretKey ?? '',
+    accessKeyId: s3.accessKey ?? '',
+    secretAccessKey: s3.secretKey ?? '',
   };
 };
 
