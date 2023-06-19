@@ -26,7 +26,7 @@ export const config: Config = {
   s3: {
     accessKey: env.AWS_ACCESS_KEY_ID ?? undefined,
     secretKey: env.AWS_SECRET_ACCESS_KEY ?? undefined,
-    region: 'us-east-1',
+    region: env.S3_REGION ?? 'us-east-1',
     endPoint: env.S3_ENDPOINT ?? 'https://s3.amazonaws.com',
     webIdentityTokenFile: env.AWS_WEB_IDENTITY_TOKEN_FILE ?? undefined,
     awsAssumeRoleArn: env.AWS_ROLE_ARN ?? undefined,
