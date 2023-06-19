@@ -1,6 +1,6 @@
 import { proxyActivities } from '@temporalio/workflow';
 import { VersionedReviewedPreprint } from '@elifesciences/docmap-ts';
-import { S3File, sharedS3 } from '../S3Bucket';
+import { S3File } from '../S3Bucket';
 import { MecaFiles } from '../activities/extract-meca';
 import { EPPPeerReview } from '../activities/fetch-review-content';
 import type * as activities from '../activities/index';
