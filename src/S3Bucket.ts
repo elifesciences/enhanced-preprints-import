@@ -43,7 +43,7 @@ export const getS3Client = (s3config: S3Config) => new S3Client({
   region: s3config.region,
 });
 
-export const getEPPS3Client = () => getS3Client(config.s3);
+export const getEPPS3Client = () => getS3Client(config.eppS3);
 
 export const parseS3Path = (s3Path: string): S3File => {
   const url = new URL(s3Path);
