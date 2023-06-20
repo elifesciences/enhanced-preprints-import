@@ -4,7 +4,7 @@ export type S3Config = {
   accessKey?: string,
   secretKey?: string,
   region: string,
-  endPoint: string,
+  endPoint?: string,
   webIdentityTokenFile?: string,
   awsAssumeRoleArn?: string,
 };
@@ -27,7 +27,7 @@ export const config: Config = {
     accessKey: env.AWS_ACCESS_KEY_ID || undefined,
     secretKey: env.AWS_SECRET_ACCESS_KEY || undefined,
     region: env.S3_REGION || 'us-east-1',
-    endPoint: env.S3_ENDPOINT || 'https://s3.amazonaws.com',
+    endPoint: env.S3_ENDPOINT || undefined,
     webIdentityTokenFile: env.AWS_WEB_IDENTITY_TOKEN_FILE || undefined,
     awsAssumeRoleArn: env.AWS_ROLE_ARN || undefined,
   },
