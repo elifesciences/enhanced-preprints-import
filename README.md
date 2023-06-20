@@ -95,8 +95,14 @@ MECA_AWS_SECRET_ACCESS_KEY=your secret key
 MECA_AWS_ROLE_ARN=a role to assume to have permission to source S3 buckets # optional
 ```
 
-then run docker-compose with the base, override and s3 configs, like below:
+Then run docker-compose with the base, override and s3 configs, like below:
 
 ```shell
 docker-compose -f docker-compose.yaml -f docker-compose.override.yaml -f docker-compose.s3.yaml up
+```
+
+Finally, you can run the `tctl` command to extract a slice of the docmap index, where the third argument is the start index and the last argument is the end index:
+
+```shell
+tctl wf run -tq epp -wt importDocmaps -wid docmap-index-import -i '"http://data-hub-api.elifesciences.org/enhanced-preprints/docmaps/v1/index"' -i '[]' -i 5 -i 30
 ```
