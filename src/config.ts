@@ -4,7 +4,7 @@ export type S3Config = {
   accessKey?: string,
   secretKey?: string,
   region: string,
-  endPoint: string,
+  endPoint?: string,
   webIdentityTokenFile?: string,
   awsAssumeRoleArn?: string,
 };
@@ -28,7 +28,7 @@ export const config: Config = {
     accessKey: env.AWS_ACCESS_KEY_ID || undefined,
     secretKey: env.AWS_SECRET_ACCESS_KEY || undefined,
     region: env.S3_REGION || 'us-east-1',
-    endPoint: env.S3_ENDPOINT || 'https://s3.amazonaws.com',
+    endPoint: env.S3_ENDPOINT || undefined,
     webIdentityTokenFile: env.AWS_WEB_IDENTITY_TOKEN_FILE || undefined,
     awsAssumeRoleArn: env.AWS_ROLE_ARN || undefined,
   },
@@ -36,7 +36,7 @@ export const config: Config = {
     accessKey: env.MECA_AWS_ACCESS_KEY_ID || undefined,
     secretKey: env.MECA_AWS_SECRET_ACCESS_KEY || undefined,
     region: env.MECA_S3_REGION || 'us-east-1',
-    endPoint: env.MECA_S3_ENDPOINT || 'https://s3.amazonaws.com',
+    endPoint: env.MECA_S3_ENDPOINT || undefined,
     webIdentityTokenFile: env.MECA_AWS_WEB_IDENTITY_TOKEN_FILE || undefined,
     awsAssumeRoleArn: env.MECA_AWS_ROLE_ARN || undefined,
   },
@@ -46,3 +46,5 @@ export const config: Config = {
   prometheusBindAddress: env.PROMETHEUS_BIND_ADDRESS || '0.0.0.0:9464',
   temporalServer: env.TEMPORAL_SERVER || 'localhost',
 };
+
+console.log(config);
