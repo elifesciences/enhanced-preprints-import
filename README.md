@@ -88,6 +88,7 @@ SERVER_DIR="../enhanced-preprints-server" APP_DIR="../enhanced-preprints-client"
 NOTE: this will only read meca files from the real S3, so you don't need to mock them out
 
 Define a .env file with these variables:
+
 ```bash
 MECA_AWS_ACCESS_KEY_ID=your access key
 MECA_AWS_SECRET_ACCESS_KEY=your secret key
@@ -95,6 +96,7 @@ MECA_AWS_ROLE_ARN=a role to assume to have permission to source S3 buckets # opt
 ```
 
 then run docker-compose with the base, override and s3 configs, like below:
-```
-docker-compose  -f docker-compose.yaml -f docker-compose.override.yaml -f docker-compose.s3.yaml  up
+
+```shell
+docker-compose -f docker-compose.yaml -f docker-compose.override.yaml -f docker-compose.s3.yaml up
 ```
