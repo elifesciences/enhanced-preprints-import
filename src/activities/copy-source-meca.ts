@@ -23,26 +23,26 @@ export const copySourcePreprintToEPP = async (version: VersionedReviewedPreprint
   const s3Connection = getEPPS3Client();
 
   // extract bucket and Path for S3 client
-  const bucketAndPath = version.preprint.content?.replace('s3://', '');
+  const source = parseS3Path(version.preprint.content ?? '');
+  const sourceBucketAndPath = `${source.Bucket}/${source.Key}`;
 
   // copy MECA
-  const s3FilePath = constructEPPS3FilePath('content.meca', version);
+  const destination = constructEPPS3FilePath('content.meca', version);
 
   if (!sharedS3()) {
     const mecaS3Connection = getMecaS3Client();
 
     // If mecaS3Connection is a difference S3 resource then we can not use CopyObjectCommand we must download the file from mecaS3Connection and then upload to s3Connection
-    const { Bucket, Key } = parseS3Path(version.preprint.content ?? '');
     const downloadCommand = new GetObjectCommand({
-      Bucket,
-      Key,
+      Bucket: source.Bucket,
+      Key: source.Key,
       RequestPayer: 'requester',
     });
 
     const downloadData = await mecaS3Connection.send(downloadCommand);
     const uploadCommand = new PutObjectCommand({
-      Bucket: s3FilePath.Bucket,
-      Key: s3FilePath.Key,
+      Bucket: destination.Bucket,
+      Key: destination.Key,
       Body: downloadData.Body,
       ContentLength: downloadData.ContentLength,
     });
@@ -51,15 +51,15 @@ export const copySourcePreprintToEPP = async (version: VersionedReviewedPreprint
 
     return {
       result: fileInfo,
-      path: s3FilePath,
+      path: destination,
       type: 'GETANDPUT',
     };
   }
 
   const copyCommand: CopyObjectCommandInput = {
-    Bucket: s3FilePath.Bucket,
-    Key: s3FilePath.Key,
-    CopySource: bucketAndPath,
+    Bucket: destination.Bucket,
+    Key: destination.Key,
+    CopySource: sourceBucketAndPath,
     RequestPayer: 'requester',
   };
 
@@ -67,7 +67,7 @@ export const copySourcePreprintToEPP = async (version: VersionedReviewedPreprint
 
   return {
     result: fileInfo,
-    path: s3FilePath,
+    path: destination,
     type: 'COPY',
   };
 };
