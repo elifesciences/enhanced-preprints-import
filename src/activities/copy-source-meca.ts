@@ -16,6 +16,7 @@ import {
 type CopySourcePreprintToEPPOutput = {
   result: CopyObjectCommandOutput,
   path: S3File,
+  type: 'COPY' | 'GETANDPUT'
 };
 
 export const copySourcePreprintToEPP = async (version: VersionedReviewedPreprint): Promise<CopySourcePreprintToEPPOutput> => {
@@ -50,6 +51,7 @@ export const copySourcePreprintToEPP = async (version: VersionedReviewedPreprint
     return {
       result: fileInfo,
       path: s3FilePath,
+      type: 'GETANDPUT',
     };
   }
 
@@ -65,5 +67,6 @@ export const copySourcePreprintToEPP = async (version: VersionedReviewedPreprint
   return {
     result: fileInfo,
     path: s3FilePath,
+    type: 'COPY',
   };
 };
