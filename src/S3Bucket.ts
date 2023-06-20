@@ -21,11 +21,11 @@ const getAWSCredentials = (s3config: S3Config) => {
         RoleArn: s3config.awsAssumeRoleArn,
         DurationSeconds: 900,
       },
+      masterCredentials: {
+        accessKeyId: s3config.accessKey ?? '',
+        secretAccessKey: s3config.secretKey ?? '',
+      },
       clientConfig: {
-        credentials: {
-          accessKeyId: s3config.accessKey ?? '',
-          secretAccessKey: s3config.secretKey ?? '',
-        },
         region: s3config.region,
       },
     });
