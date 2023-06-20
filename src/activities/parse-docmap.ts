@@ -14,9 +14,11 @@ export const parseDocMap = async (docMapInput: string): Promise<parser.Manuscrip
       steps[key].actions.forEach((action: any) => action.outputs?.forEach((output: any) => { if (output['_tdmPath']) contentPaths.push(output['_tdmPath']); }));
     });
 
+    // where manuscriptData?.versions.length is 1 and contentPaths.length is 0, we get an error (i.e. when there is a preprint submitted without a published version)
+    if (manuscriptData && contentPaths.length === 0) return manuscriptData;
     if (contentPaths.length === manuscriptData?.versions.length) {
       manuscriptData.versions = manuscriptData.versions.map<VersionedReviewedPreprint>((version, index) => ({ ...version, preprint: { ...version.preprint, content: contentPaths[index] } }));
-    } else throw Error(`Number of versions (${manuscriptData?.versions.length}) from parser does not match the number of tdmPaths in the DocMap (${contentPaths.length})`);
+    } else throw Error(`Number of tdmPaths in the DocMap (${manuscriptData?.versions.length}) from parser does not match the number of versions (${contentPaths.length})`);
 
     return manuscriptData;
   } catch (error: any) {
