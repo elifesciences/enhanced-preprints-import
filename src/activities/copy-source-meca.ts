@@ -10,7 +10,7 @@ import {
   S3File,
   constructEPPS3FilePath,
   getEPPS3Client,
-  getMecaS3Client, sharedS3,
+  getMecaS3Client, parseS3Path, sharedS3,
 } from '../S3Bucket';
 
 type CopySourcePreprintToEPPOutput = {
@@ -32,9 +32,10 @@ export const copySourcePreprintToEPP = async (version: VersionedReviewedPreprint
     const mecaS3Connection = getMecaS3Client();
 
     // If mecaS3Connection is a difference S3 resource then we can not use CopyObjectCommand we must download the file from mecaS3Connection and then upload to s3Connection
+    const { Bucket, Key } = parseS3Path(version.preprint.content ?? '');
     const downloadCommand = new GetObjectCommand({
-      Bucket: bucketAndPath?.split('/')[0],
-      Key: bucketAndPath?.split('/').slice(1).join('/'),
+      Bucket,
+      Key,
       RequestPayer: 'requester',
     });
 
