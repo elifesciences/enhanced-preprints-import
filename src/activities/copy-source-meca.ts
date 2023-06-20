@@ -1,32 +1,73 @@
-import { CopyObjectCommand, CopyObjectCommandInput, CopyObjectCommandOutput } from '@aws-sdk/client-s3';
+import {
+  CopyObjectCommand,
+  CopyObjectCommandInput,
+  CopyObjectCommandOutput,
+  GetObjectCommand,
+  PutObjectCommand,
+} from '@aws-sdk/client-s3';
 import { VersionedReviewedPreprint } from '@elifesciences/docmap-ts';
-import { S3File, constructEPPS3FilePath, getS3Client } from '../S3Bucket';
+import {
+  S3File,
+  constructEPPS3FilePath,
+  getEPPS3Client,
+  getMecaS3Client, parseS3Path, sharedS3,
+} from '../S3Bucket';
 
 type CopySourcePreprintToEPPOutput = {
   result: CopyObjectCommandOutput,
   path: S3File,
+  type: 'COPY' | 'GETANDPUT'
 };
 
 export const copySourcePreprintToEPP = async (version: VersionedReviewedPreprint): Promise<CopySourcePreprintToEPPOutput> => {
-  const S3Connection = getS3Client();
+  const s3Connection = getEPPS3Client();
 
   // extract bucket and Path for S3 client
-  const bucketAndPath = version.preprint.content?.replace('s3://', '');
+  const source = parseS3Path(version.preprint.content ?? '');
+  const sourceBucketAndPath = `${source.Bucket}/${source.Key}`;
 
   // copy MECA
-  const s3FilePath = constructEPPS3FilePath('content.meca', version);
+  const destination = constructEPPS3FilePath('content.meca', version);
+
+  if (!sharedS3()) {
+    const mecaS3Connection = getMecaS3Client();
+
+    // If mecaS3Connection is a difference S3 resource then we can not use CopyObjectCommand we must download the file from mecaS3Connection and then upload to s3Connection
+    const downloadCommand = new GetObjectCommand({
+      Bucket: source.Bucket,
+      Key: source.Key,
+      RequestPayer: 'requester',
+    });
+
+    const downloadData = await mecaS3Connection.send(downloadCommand);
+    const uploadCommand = new PutObjectCommand({
+      Bucket: destination.Bucket,
+      Key: destination.Key,
+      Body: downloadData.Body,
+      ContentLength: downloadData.ContentLength,
+    });
+
+    const fileInfo = await s3Connection.send(uploadCommand);
+
+    return {
+      result: fileInfo,
+      path: destination,
+      type: 'GETANDPUT',
+    };
+  }
 
   const copyCommand: CopyObjectCommandInput = {
-    Bucket: s3FilePath.Bucket,
-    Key: s3FilePath.Key,
-    CopySource: bucketAndPath,
+    Bucket: destination.Bucket,
+    Key: destination.Key,
+    CopySource: sourceBucketAndPath,
     RequestPayer: 'requester',
   };
 
-  const fileInfo = await S3Connection.send(new CopyObjectCommand(copyCommand));
+  const fileInfo = await s3Connection.send(new CopyObjectCommand(copyCommand));
 
   return {
     result: fileInfo,
-    path: s3FilePath,
+    path: destination,
+    type: 'COPY',
   };
 };

@@ -11,7 +11,7 @@ import {
   PutObjectCommandOutput,
 } from '@aws-sdk/client-s3';
 import { Readable } from 'stream';
-import { constructEPPS3FilePath, getS3Client, S3File } from '../S3Bucket';
+import { constructEPPS3FilePath, getEPPS3Client, S3File } from '../S3Bucket';
 
 type ConvertXmlToJsonOutput = {
   result: PutObjectCommandOutput,
@@ -37,7 +37,7 @@ export const convertXmlToJson = async (version: VersionedReviewedPreprint): Prom
   const tmpDirectory = await mkdtemp(`${tmpdir()}/epp_json`);
   const localXmlFilePath = `${tmpDirectory}/article.xml`;
 
-  const s3 = getS3Client();
+  const s3 = getEPPS3Client();
   const source = constructEPPS3FilePath('article.xml', version);
   const object = await s3.send(new GetObjectCommand(source));
   await saveObjectToFile(object, localXmlFilePath);

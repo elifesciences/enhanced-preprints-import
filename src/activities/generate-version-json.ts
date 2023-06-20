@@ -1,6 +1,6 @@
 import { Article } from '@stencila/schema';
 import { GetObjectCommand, GetObjectCommandInput } from '@aws-sdk/client-s3';
-import { getS3Client } from '../S3Bucket';
+import { getEPPS3Client } from '../S3Bucket';
 import { EnhancedArticle } from './send-version-to-epp';
 import { ImportContentOutput } from '../workflows/import-content';
 
@@ -21,7 +21,7 @@ type GenerateVersionJson = (
 ) => Promise<EnhancedArticle>;
 
 export const generateVersionJson: GenerateVersionJson = async ({ importContentResult, msid, version }) => {
-  const s3 = getS3Client();
+  const s3 = getEPPS3Client();
 
   const getObjectCommandInput: GetObjectCommandInput = {
     Bucket: importContentResult.jsonContentFile.Bucket,
