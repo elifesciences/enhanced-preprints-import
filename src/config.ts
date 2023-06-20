@@ -10,7 +10,7 @@ export type S3Config = {
 };
 
 export type Config = {
-  s3: S3Config,
+  eppS3: S3Config,
   mecaS3: S3Config,
   eppBucketName: string,
   eppServerUri: string,
@@ -24,7 +24,7 @@ if (!env.EPP_SERVER_URI) {
 }
 
 export const config: Config = {
-  s3: {
+  eppS3: {
     accessKey: env.AWS_ACCESS_KEY_ID || undefined,
     secretKey: env.AWS_SECRET_ACCESS_KEY || undefined,
     region: env.S3_REGION || 'us-east-1',
