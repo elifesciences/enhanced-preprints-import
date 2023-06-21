@@ -1,4 +1,5 @@
 import { Evaluation, ReviewType, VersionedReviewedPreprint } from '@elifesciences/docmap-ts';
+import { Context } from '@temporalio/activity';
 import axios from 'axios';
 
 type EPPParticipant = {
@@ -36,6 +37,7 @@ export const fetchReviewContent = async (version: VersionedReviewedPreprint): Pr
     return undefined;
   }
 
+  Context.current().heartbeat('Fetching "evaluation summary"');
   if (version.peerReview.evaluationSummary) {
     evaluationSummary = {
       date: version.peerReview.evaluationSummary.date,
@@ -45,6 +47,7 @@ export const fetchReviewContent = async (version: VersionedReviewedPreprint): Pr
     };
   }
 
+  Context.current().heartbeat('Fetching "author response"');
   if (version.peerReview.authorResponse) {
     authorResponse = {
       date: version.peerReview.authorResponse.date,
@@ -54,6 +57,7 @@ export const fetchReviewContent = async (version: VersionedReviewedPreprint): Pr
     };
   }
 
+  Context.current().heartbeat('Fetching "peer reviews"');
   reviews = await Promise.all(version.peerReview.reviews.map(async (review) => ({
     date: review.date,
     participants: review.participants,
