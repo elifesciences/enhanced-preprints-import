@@ -1,11 +1,11 @@
 import {
   ParentClosePolicy,
-  getExternalWorkflowHandle,
+  WorkflowIdReusePolicy,
   proxyActivities,
   startChild,
 } from '@temporalio/workflow';
 import type * as activities from '../activities/index';
-import { importDocmap, store } from './import-docmap';
+import { importDocmap } from './import-docmap';
 import { ImportMessage } from '../types';
 
 const {
@@ -36,20 +36,14 @@ export async function importDocmaps(docMapIndexUrl: string, hashes: Hash[], star
     };
   }
 
-  await Promise.all(docMapsWithIdHash.map(async (docMapWithIdHash) => {
-    if (hashes.some(({ idHash }) => docMapWithIdHash.idHash === idHash)) {
-      // If the workflow exists, send a signal
-      const handle = getExternalWorkflowHandle(`docmap-${docMapWithIdHash.idHash}`);
-      handle.signal(store.signal, true);
-    } else {
-      // If the workflow doesn't exist, start the workflow
-      await startChild(importDocmap, {
-        args: [docMapWithIdHash.docMap.id], // id contains the canonical URL of the docmap
-        workflowId: `docmap-${docMapWithIdHash.idHash}`,
-        parentClosePolicy: ParentClosePolicy.PARENT_CLOSE_POLICY_ABANDON,
-      });
-    }
-  }));
+  await Promise.all(docMapsWithIdHash.map(async (docMapWithIdHash) => startChild(importDocmap, {
+    args: [docMapWithIdHash.docMap.id], // id contains the canonical URL of the docmap
+    workflowId: `docmap-${docMapWithIdHash.idHash}`,
+    // allows child workflows to outlive this workflow
+    parentClosePolicy: ParentClosePolicy.PARENT_CLOSE_POLICY_ABANDON,
+    // makes sure there is only one workflow running, this new one.
+    workflowIdReusePolicy: WorkflowIdReusePolicy.WORKFLOW_ID_REUSE_POLICY_TERMINATE_IF_RUNNING,
+  })));
 
   return {
     status: 'SUCCESS',

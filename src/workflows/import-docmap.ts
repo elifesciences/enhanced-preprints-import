@@ -1,8 +1,4 @@
-import {
-  condition,
-  continueAsNew,
-  executeChild, proxyActivities, setHandler, workflowInfo,
-} from '@temporalio/workflow';
+import { executeChild, proxyActivities, workflowInfo } from '@temporalio/workflow';
 import type * as activities from '../activities/index';
 import { EnhancedArticle } from '../activities/send-version-to-epp';
 import { importContent } from './import-content';
@@ -31,11 +27,6 @@ const {
 export const store = useWorkflowState(workflowInfo().workflowId, true);
 
 export async function importDocmap(url: string): Promise<void> {
-  setHandler(store.signal, (newValue: boolean) => {
-    store.value = newValue;
-  });
-  setHandler(store.query, () => store.value);
-
   const result = await fetchDocMap(url).then((docMap) => parseDocMap(docMap));
 
   await Promise.all(
@@ -45,9 +36,4 @@ export async function importDocmap(url: string): Promise<void> {
     }).then(async (importContentResult) => generateVersionJson({ importContentResult, msid: result.id, version }))
       .then(async (versionJson: EnhancedArticle) => sendVersionToEpp(versionJson))),
   );
-
-  store.value = false;
-
-  await condition(() => store.value);
-  await continueAsNew<typeof importDocmap>(url);
 }
