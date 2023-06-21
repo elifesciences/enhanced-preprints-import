@@ -2,6 +2,7 @@ import axios from 'axios';
 import {
   BlockContent, CreativeWorkTypes, InlineContent, Node, Organization, Person,
 } from '@stencila/schema';
+import { Context } from '@temporalio/activity';
 import { config } from '../config';
 import { EPPPeerReview } from './fetch-review-content';
 
@@ -40,6 +41,7 @@ export const sendVersionToEpp = async (versionJSON: EnhancedArticle): Promise<bo
   const versionImportUri = `${config.eppServerUri}/preprints`;
 
   try {
+    Context.current().heartbeat('Sending version data to EPP');
     const { result, message } = await axios.post<EPPImportResponse>(versionImportUri, versionJSON).then(async (response) => response.data);
     if (!result) {
       throw new Error(`Failed to import version to EPP: ${message}`);
