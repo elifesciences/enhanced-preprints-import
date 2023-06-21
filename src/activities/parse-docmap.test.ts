@@ -1,4 +1,6 @@
+import { MockActivityEnvironment } from '@temporalio/testing';
 import { parseDocMap } from './parse-docmap';
+import { ManuscriptData } from '@elifesciences/docmap-ts';
 
 const simpleDocmap = `{
   "id": "test",
@@ -57,12 +59,15 @@ const fullDocmap = `{
 describe('parse-docmap-activity', () => {
   it('fails to parse an invalid docmap', async () => {
     expect(async () => {
-      await parseDocMap(simpleDocmap);
+      const env = new MockActivityEnvironment();
+      await env.run(parseDocMap, simpleDocmap);
     }).rejects.toThrowError('Could not parse docmap');
   });
 
   it('parses a full docmap with content paths', async () => {
-    const manuscriptData = await parseDocMap(fullDocmap);
+    const env = new MockActivityEnvironment();
+    // eslint-disable-next-line no-spaced-func
+    const manuscriptData = await env.run<[string], ManuscriptData, (docMapInput: string) => Promise<ManuscriptData>>(parseDocMap, fullDocmap);
 
     expect(manuscriptData.versions[0].preprint.content).toStrictEqual('s3://biorxiv/dummy-1.meca');
   });
