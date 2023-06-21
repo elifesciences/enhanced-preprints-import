@@ -1,5 +1,6 @@
 import { Article } from '@stencila/schema';
 import { GetObjectCommand, GetObjectCommandInput } from '@aws-sdk/client-s3';
+import { Context } from '@temporalio/activity';
 import { getEPPS3Client } from '../S3Bucket';
 import { EnhancedArticle } from './send-version-to-epp';
 import { ImportContentOutput } from '../workflows/import-content';
@@ -28,9 +29,11 @@ export const generateVersionJson: GenerateVersionJson = async ({ importContentRe
     Key: importContentResult.jsonContentFile.Key,
   };
 
+  Context.current().heartbeat('Fetching article JSON');
   const json: string = await s3.send(new GetObjectCommand(getObjectCommandInput))
     .then((obj) => obj.Body?.transformToString() ?? '');
 
+  Context.current().heartbeat('Generating version JSON');
   const articleStruct = parseJsonContentToProcessedArticle(json);
   const versionJSON: EnhancedArticle = {
     msid,

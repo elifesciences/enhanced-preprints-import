@@ -1,6 +1,8 @@
 import { VersionedReviewedPreprint, parser } from '@elifesciences/docmap-ts';
+import { Context } from '@temporalio/activity';
 
 export const parseDocMap = async (docMapInput: string): Promise<parser.ManuscriptData> => {
+  Context.current().heartbeat('parsing DocMap');
   const manuscriptData = parser.parsePreprintDocMap(docMapInput);
 
   try {
