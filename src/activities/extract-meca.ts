@@ -7,9 +7,9 @@ import { tmpdir } from 'os';
 import path, { dirname } from 'path';
 import { GetObjectCommand, GetObjectCommandInput, PutObjectCommand } from '@aws-sdk/client-s3';
 import * as fs from 'fs';
+import { Context } from '@temporalio/activity';
 import { constructEPPS3FilePath, getEPPS3Client } from '../S3Bucket';
 import { NonRetryableError } from '../errors';
-import { Context } from '@temporalio/activity';
 
 export type MecaFile = {
   id: string,

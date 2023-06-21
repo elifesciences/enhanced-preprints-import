@@ -2,9 +2,9 @@ import axios from 'axios';
 import {
   BlockContent, CreativeWorkTypes, InlineContent, Node, Organization, Person,
 } from '@stencila/schema';
+import { Context } from '@temporalio/activity';
 import { config } from '../config';
 import { EPPPeerReview } from './fetch-review-content';
-import { Context } from '@temporalio/activity';
 
 export type Content = Array<Node> | Node;
 

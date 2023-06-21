@@ -5,6 +5,7 @@ import {
   GetObjectCommand,
   PutObjectCommand,
 } from '@aws-sdk/client-s3';
+import { Context } from '@temporalio/activity';
 import { VersionedReviewedPreprint } from '@elifesciences/docmap-ts';
 import {
   S3File,
@@ -12,7 +13,6 @@ import {
   getEPPS3Client,
   getMecaS3Client, parseS3Path, sharedS3,
 } from '../S3Bucket';
-import { Context } from '@temporalio/activity';
 
 type CopySourcePreprintToEPPOutput = {
   result: CopyObjectCommandOutput,

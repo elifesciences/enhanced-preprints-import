@@ -1,6 +1,6 @@
 import { MockActivityEnvironment } from '@temporalio/testing';
-import { parseDocMap } from './parse-docmap';
 import { ManuscriptData } from '@elifesciences/docmap-ts';
+import { parseDocMap } from './parse-docmap';
 
 const simpleDocmap = `{
   "id": "test",

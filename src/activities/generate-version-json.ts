@@ -1,9 +1,9 @@
 import { Article } from '@stencila/schema';
 import { GetObjectCommand, GetObjectCommandInput } from '@aws-sdk/client-s3';
+import { Context } from '@temporalio/activity';
 import { getEPPS3Client } from '../S3Bucket';
 import { EnhancedArticle } from './send-version-to-epp';
 import { ImportContentOutput } from '../workflows/import-content';
-import { Context } from '@temporalio/activity';
 
 const parseJsonContentToProcessedArticle = (content: string) => {
   const contentStruct = JSON.parse(content) as Article;
