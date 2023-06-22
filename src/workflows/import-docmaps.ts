@@ -10,6 +10,7 @@ import { ImportMessage } from '../types';
 
 const {
   filterDocmapIndex,
+  removeVersionFromEpp,
 } = proxyActivities<typeof activities>({
   startToCloseTimeout: '1 minute',
   retry: {
@@ -26,9 +27,9 @@ type ImportDocmapsOutput = ImportMessage & {
 export type Hash = { hash: string, idHash: string };
 
 export async function importDocmaps(docMapIndexUrl: string, hashes: Hash[], start?: number, end?: number): Promise<ImportDocmapsOutput> {
-  const docMapsWithIdHash = await filterDocmapIndex(hashes, docMapIndexUrl, start, end);
+  const { filteredDocMapsWithHash, removedDocMapsWithHash } = await filterDocmapIndex(hashes, docMapIndexUrl, start, end);
 
-  if (docMapsWithIdHash.length === 0) {
+  if (filteredDocMapsWithHash.length === 0) {
     return {
       status: 'SKIPPED',
       message: 'No new docmaps to import',
@@ -36,7 +37,7 @@ export async function importDocmaps(docMapIndexUrl: string, hashes: Hash[], star
     };
   }
 
-  await Promise.all(docMapsWithIdHash.map(async (docMapWithIdHash) => startChild(importDocmap, {
+  await Promise.all(filteredDocMapsWithHash.map(async (docMapWithIdHash) => startChild(importDocmap, {
     args: [docMapWithIdHash.docMap.id], // id contains the canonical URL of the docmap
     workflowId: `docmap-${docMapWithIdHash.idHash}`,
     // allows child workflows to outlive this workflow
@@ -45,9 +46,19 @@ export async function importDocmaps(docMapIndexUrl: string, hashes: Hash[], star
     workflowIdReusePolicy: WorkflowIdReusePolicy.WORKFLOW_ID_REUSE_POLICY_TERMINATE_IF_RUNNING,
   })));
 
+  if (removedDocMapsWithHash.length > 0) {
+    // REMOVE docmaps from removedDocMapsWithHash
+    Promise.all(
+      removedDocMapsWithHash.map(async (docMapWithIdHash) => {
+        // Make this send an array instead?
+        await removeVersionFromEpp(docMapWithIdHash.docMap.id);
+      }),
+    );
+  }
+
   return {
     status: 'SUCCESS',
-    message: `Importing ${docMapsWithIdHash.length} docmaps`,
-    hashes: docMapsWithIdHash.map<Hash>(({ docMapHash, idHash }) => ({ hash: docMapHash, idHash })),
+    message: `Importing ${filteredDocMapsWithHash.length} docmaps${removedDocMapsWithHash.length > 0 && `\nRemoving ${removedDocMapsWithHash.length} docmaps`}`,
+    hashes: filteredDocMapsWithHash.map<Hash>(({ docMapHash, idHash }) => ({ hash: docMapHash, idHash })),
   };
 }

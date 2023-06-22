@@ -13,7 +13,12 @@ type DocMapWithIdHash = {
   idHash: string,
 };
 
-export const filterDocmapIndex = async (hashes: Hash[], docMapIndex: string, start?: number, end?: number): Promise<DocMapWithIdHash[]> => {
+type FilterDocmapIndexOutput = {
+  filteredDocMapsWithHash: DocMapWithIdHash[],
+  removedDocMapsWithHash: DocMapWithIdHash[],
+};
+
+export const filterDocmapIndex = async (hashes: Hash[], docMapIndex: string, start?: number, end?: number): Promise<FilterDocmapIndexOutput> => {
   const docMapRes = await axios.get<DocMapIndex>(docMapIndex);
 
   const { data } = docMapRes;
@@ -32,5 +37,17 @@ export const filterDocmapIndex = async (hashes: Hash[], docMapIndex: string, sta
     idHash: MD5(docMap.id),
   }));
 
-  return filteredDocMapsWithHash;
+  // Filter docmaps that need to be removed
+  const removedDocMapsWithHash: DocMapWithIdHash[] = data.docmaps
+    .slice(start, end)
+    .filter((docmap) => {
+      const docMapIdHash = MD5(docmap.id);
+      return !hashes.some(({ idHash }) => idHash === docMapIdHash);
+    }).map<DocMapWithIdHash>((docMap) => ({
+    docMap,
+    docMapHash: MD5(docMap),
+    idHash: MD5(docMap.id),
+  }));
+
+  return { filteredDocMapsWithHash, removedDocMapsWithHash };
 };
