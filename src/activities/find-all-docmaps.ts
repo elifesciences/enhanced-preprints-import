@@ -1,16 +1,36 @@
 import axios from 'axios';
 import { DocMap } from '@elifesciences/docmap-ts';
+import { MD5 } from 'object-hash';
+import { Hash } from '../workflows/import-docmaps';
 
 type DocMapIndex = {
   docmaps: DocMap[],
 };
 
-export const findAllDocmaps = async (docMapIndex: string): Promise<DocMap[] | undefined> => {
-  const { data, status } = await axios.get<DocMapIndex>(docMapIndex);
+type DocMapWithIdHash = {
+  docMap: DocMap,
+  docMapHash: string,
+  idHash: string,
+};
 
-  if (status === 200) {
-    return data.docmaps;
-  }
+export const filterDocmapIndex = async (hashes: Hash[], docMapIndex: string, start?: number, end?: number): Promise<DocMapWithIdHash[]> => {
+  const docMapRes = await axios.get<DocMapIndex>(docMapIndex);
 
-  return undefined;
+  const { data } = docMapRes;
+  const newHashes: string[] = [];
+
+  // Filter docmaps with NO matching hashes
+  const filteredDocMapsWithHash: DocMapWithIdHash[] = data.docmaps
+    .slice(start, end)
+    .filter((docmap) => {
+      const docMapHash = MD5(docmap);
+      newHashes.push(docMapHash);
+      return !hashes.some(({ hash }) => hash === docMapHash);
+    }).map<DocMapWithIdHash>((docMap) => ({
+    docMap,
+    docMapHash: MD5(docMap),
+    idHash: MD5(docMap.id),
+  }));
+
+  return filteredDocMapsWithHash;
 };

@@ -2,14 +2,15 @@ services:
   minio:
     image: minio/minio:RELEASE.2023-01-02T09-40-09Z
     ports:
-      - "9000:9000"
-      - "9001:9001"
+      - 9000:9000
+      - 9001:9001
     volumes:
       - minio_storage:/data
     environment:
       MINIO_ROOT_USER: minio
       MINIO_ROOT_PASSWORD: miniotest
     command: server --console-address ":9001" /data
+
   createbucket:
     image: minio/mc:RELEASE.2022-12-24T15-21-38Z
     depends_on:
@@ -21,13 +22,15 @@ services:
       /usr/bin/mc mb myminio/biorxiv;
       exit 0;
       "
-  temporalite:
+
+  temporal:
     build:
       context: .
-      dockerfile: Dockerfile.temporalite
+      dockerfile: Dockerfile.temporal
     ports:
       - 7233:7233
       - 8233:8233
+
   worker:
     build:
       context: .
@@ -35,12 +38,21 @@ services:
       target: worker
     depends_on:
       - createbucket
-      - temporalite
+      - temporal
     environment:
       EPP_SERVER_URI: http://api:3000
-      TEMPORAL_SERVER: temporalite:7233
+      TEMPORAL_SERVER: temporal:7233
+
+      # EPP S3 bucket
+      S3_ENDPOINT: http://minio:9000
       AWS_ACCESS_KEY_ID: minio
       AWS_SECRET_ACCESS_KEY: miniotest
+      BUCKET_NAME: epp
+
+      # Meca S3 Bucket (on minio)
+      MECA_S3_ENDPOINT: http://minio:9000
+      MECA_AWS_ACCESS_KEY_ID: minio
+      MECA_AWS_SECRET_ACCESS_KEY: miniotest
     restart: on-failure:5
     command:
       - yarn
@@ -48,28 +60,7 @@ services:
     volumes:
       - ./src:/app/src
 
-
   # Downstream services for EPP
-  ## Image Server
-  image-server:
-    image: ghcr.io/elifesciences/epp-image-server:master-e98296e1-20230316.0421
-    ports:
-    - "8182:8182"
-    environment:
-      LOG_APPLICATION_LEVEL: debug
-      SOURCE_STATIC: S3Source
-      S3SOURCE_ENDPOINT: http://minio:9000/
-      S3SOURCE_BASICLOOKUPSTRATEGY_PATH_PREFIX: articles/
-      S3SOURCE_BASICLOOKUPSTRATEGY_BUCKET_NAME: epp
-      AWS_ACCESS_KEY_ID: minio
-      AWS_SECRET_ACCESS_KEY: miniotest
-    healthcheck:
-      test: curl http://image-server:8182/
-      interval: 5s
-      timeout: 5s
-      retries: 10
-      start_period: 2s
-
   ## Database (MongoDB) server
   mongodb:
     image: mongo
@@ -85,7 +76,7 @@ services:
       retries: 10
       start_period: 2s
 
-  ## Database (MongoDB) GUI
+  ## Database (MongoDB) GUI
   mongo-express:
     image: mongo-express
     environment:
@@ -102,7 +93,7 @@ services:
 
   ## EPP API
   api:
-    image: ghcr.io/elifesciences/enhanced-preprints:master-49688ba2-20230331.1940
+    image: ghcr.io/elifesciences/enhanced-preprints:master-d9fa94b4-20230621.0859
     healthcheck:
       test: ["CMD-SHELL", "sh -c 'apk add curl; curl http://api:3000/'"]
       interval: 5s
@@ -111,8 +102,6 @@ services:
       start_period: 2s
     depends_on:
       mongodb:
-        condition: service_healthy
-      image-server:
         condition: service_healthy
     environment:
       REPO_TYPE: MongoDB

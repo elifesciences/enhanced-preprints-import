@@ -1,0 +1,10 @@
+services:
+  worker:
+    environment:
+      MECA_AWS_ACCESS_KEY_ID: ${MECA_AWS_ACCESS_KEY_ID}
+      MECA_AWS_SECRET_ACCESS_KEY: ${MECA_AWS_SECRET_ACCESS_KEY}
+      MECA_S3_ENDPOINT:
+      MECA_AWS_ROLE_ARN: ${MECA_AWS_ROLE_ARN}
+volumes:
+  minio_storage: {}
+  mongodb_data: {}

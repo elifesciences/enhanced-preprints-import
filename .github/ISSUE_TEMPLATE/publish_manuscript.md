@@ -1,7 +1,7 @@
 ---
 name: Publish manuscript
 about: Use this template for tracking publication of manuscripts.
-title: "MSID: %%msid%% DOI: %%doi-suffix%%"
+title: "MSID: %%msid%% Version: %%version%% DOI: %%doi-suffix%%"
 labels: 
 assignees: 
 ---
@@ -14,7 +14,7 @@ assignees:
 
 Who can help: @QueenKraken, @nlisgo, @scottaubrey
 
-- [ ] Manuscript is in data hub index (https://data-hub-api.elifesciences.org/enhanced-preprints/docmaps/v1/get-by-doi?preprint_doi=%%doi-prefix%%%2F%%doi-suffix%%)
+- [ ] Manuscript is in data hub index (https://data-hub-api.elifesciences.org/enhanced-preprints/docmaps/v1/by-publisher/elife/get-by-manuscript-id?manuscript_id=%%msid%%)
 
 or (only one should be ticked. remove other from description.)
 
@@ -34,7 +34,7 @@ Thanks
 
 Who can help: @fred-atherden, @nlisgo, @scottaubrey
 
-- [ ] Manuscript is available for preview (https://prod--epp.elifesciences.org/preview/%%doi-prefix%%/%%doi-suffix%%)
+- [ ] Manuscript is available for preview (https://prod--epp.elifesciences.org/preview/%%msid%%/v%%version%%)
     - [ ] Trigger import for staging: https://prod--epp.elifesciences.org/import
     - [ ] Sync data folder with s3://prod-elife-epp-data/data
     - [ ] Trigger import for staging: https://staging--epp.elifesciences.org/import
@@ -56,6 +56,7 @@ Who can help: Editorial team
 
 - [ ] Public reviews available on sciety (https://sciety.org/articles/activity/%%doi-prefix%%/%%doi-suffix%%)
 - [ ] Manuscript and editor details at the top of this issue (Supplied by Editorial team)
+- [ ] Reviews returned by EPP - https://prod--epp.elifesciences.org/api/reviewed-preprints/%%msid%%/v%%version%%/reviews
 
 <details>
 <summary>Example</summary>
@@ -149,7 +150,7 @@ Post the following to the [#enhanced-preprint](https://elifesciences.slack.com/a
 
 ## Step 7: Introduce PDF to data folder and git repo
 
-- [ ] PDF is avaliable at https://github.com/elifesciences/enhanced-preprints-data/raw/master/data/%%doi-prefix%%/%%doi-suffix%%/%%doi-suffix%%.pdf
+- [ ] PDF is avaliable at https://github.com/elifesciences/enhanced-preprints-data/raw/master/data/%%msid%%/v%%version%%/%%msid%%-v%%version%%.pdf
 
 Detailed instructions: https://github.com/elifesciences/enhanced-preprints-data#add-a-pdf
 

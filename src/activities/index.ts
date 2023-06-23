@@ -1,6 +1,9 @@
-export { extractMeca } from './extract-meca';
+export { copySourcePreprintToEPP } from './copy-source-meca';
 export { convertXmlToJson } from './convert-xml-to-json';
-export { findAllDocmaps } from './find-all-docmaps';
+export { extractMeca } from './extract-meca';
 export { fetchDocMap } from './fetch-docmap';
+export { fetchReviewContent } from './fetch-review-content';
+export { filterDocmapIndex } from './find-all-docmaps';
+export { generateVersionJson } from './generate-version-json';
 export { parseDocMap } from './parse-docmap';
-export { identifyBiorxivPreprintLocation, copyBiorxivPreprintToEPP } from './biorxiv';
+export { sendVersionToEpp } from './send-version-to-epp';

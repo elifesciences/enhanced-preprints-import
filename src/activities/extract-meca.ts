@@ -1,11 +1,15 @@
 import { VersionedReviewedPreprint } from '@elifesciences/docmap-ts';
 import { XMLParser } from 'fast-xml-parser';
-import { mkdirSync, readFileSync, writeFileSync } from 'fs';
+import { mkdirSync, writeFileSync } from 'fs';
 import { mkdtemp } from 'fs/promises';
 import JSZip from 'jszip';
 import { tmpdir } from 'os';
 import path, { dirname } from 'path';
-import { constructEPPS3FilePath, getS3Client } from '../S3Bucket';
+import { GetObjectCommand, GetObjectCommandInput, PutObjectCommand } from '@aws-sdk/client-s3';
+import * as fs from 'fs';
+import { Context } from '@temporalio/activity';
+import { constructEPPS3FilePath, getEPPS3Client } from '../S3Bucket';
+import { NonRetryableError } from '../errors';
 
 export type MecaFile = {
   id: string,
@@ -62,17 +66,28 @@ const extractFileContents = async (zip: JSZip, item: MecaFile, toDir: string): P
 
 export const extractMeca = async (version: VersionedReviewedPreprint): Promise<MecaFiles> => {
   const tmpDirectory = await mkdtemp(`${tmpdir()}/epp_content`);
-  const localMecaFilePath = `${tmpDirectory}/meca.zip`;
 
-  const s3 = getS3Client();
+  const s3 = getEPPS3Client();
   const source = constructEPPS3FilePath('content.meca', version);
-  await s3.fGetObject(source.Bucket, source.Key, localMecaFilePath);
 
-  const zip = await JSZip.loadAsync(readFileSync(localMecaFilePath));
+  Context.current().heartbeat('Getting object');
+  const getObjectCommandInput: GetObjectCommandInput = {
+    Bucket: source.Bucket,
+    Key: source.Key,
+  };
+  const buffer = await s3.send(new GetObjectCommand(getObjectCommandInput))
+    .then((obj) => obj.Body?.transformToByteArray());
 
+  if (buffer === undefined) {
+    throw new Error('Could not retrieve object from S3');
+  }
+
+  const zip = await JSZip.loadAsync(buffer);
+
+  Context.current().heartbeat('Loading manifest');
   const manifestXml = await zip.file('manifest.xml')?.async('nodebuffer');
   if (manifestXml === undefined) {
-    throw new Error('Cannot find manifest.xml in meca file');
+    throw new NonRetryableError('Cannot find manifest.xml in meca file');
   }
 
   // define where the arrays should be
@@ -85,6 +100,7 @@ export const extractMeca = async (version: VersionedReviewedPreprint): Promise<M
     isArray: (name, jpath) => alwaysArray.indexOf(jpath) !== -1,
   });
 
+  Context.current().heartbeat('Parsing XML');
   const manifest = parser.parse(manifestXml).manifest as Manifest;
   const items = manifest.item.flatMap<MecaFile>((item: ManifestItem) => item.instance.map((instance) => {
     const instancePath = instance['@_href'];
@@ -106,16 +122,23 @@ export const extractMeca = async (version: VersionedReviewedPreprint): Promise<M
   const unprocessedArticle = items.filter((item) => item.type === 'article' && item.mimeType === 'application/xml')[0];
   const id = unprocessedArticle.id ?? '';
   const title = unprocessedArticle.title ?? '';
+  Context.current().heartbeat('Extracting Article');
   const article = await extractFromThisArchive(unprocessedArticle);
 
   // get other content that represent the article
+  Context.current().heartbeat('Extracting Article (alt types)');
   const otherArticleInstances = items.filter((item) => item.type === 'article' && item.mimeType !== 'application/xml').map(extractFromThisArchive);
 
+  Context.current().heartbeat('Extracting figures');
   const figures = await Promise.all(items.filter((item) => item.type === 'figure').map(extractFromThisArchive));
+  Context.current().heartbeat('Extracting equations');
   const equations = await Promise.all(items.filter((item) => item.type === 'equation').map(extractFromThisArchive));
+  Context.current().heartbeat('Extracting tables');
   const tables = await Promise.all(items.filter((item) => item.type === 'table').map(extractFromThisArchive));
+  Context.current().heartbeat('Extracting supplements');
   const supplements = await Promise.all(items.filter((item) => item.type === 'supplement').map(extractFromThisArchive));
 
+  Context.current().heartbeat('Extracting all other resources');
   const others = await Promise.all([
     ...otherArticleInstances,
     ...equations,
@@ -141,9 +164,14 @@ export const extractMeca = async (version: VersionedReviewedPreprint): Promise<M
   }
 
   // define a closure that simplifies uploading a file to the correct location
-  const uploadItem = (localFile: LocalMecaFile, remoteFileName: string) => {
+  const uploadItem = async (localFile: LocalMecaFile, remoteFileName: string) => {
     const s3Path = constructEPPS3FilePath(remoteFileName, version);
-    s3.fPutObject(s3Path.Bucket, s3Path.Key, localFile.localPath);
+    const fileStream = fs.createReadStream(localFile.localPath);
+    await s3.send(new PutObjectCommand({
+      Bucket: s3Path.Bucket,
+      Key: s3Path.Key,
+      Body: fileStream,
+    }));
   };
 
   const articleUploadPromise = uploadItem(article, 'article.xml');
@@ -152,6 +180,7 @@ export const extractMeca = async (version: VersionedReviewedPreprint): Promise<M
   const equationUploadPromises = tables.map((equation) => uploadItem(equation, equation.fileName));
   const supplementUploadPromises = tables.map((supplement) => uploadItem(supplement, supplement.fileName));
 
+  Context.current().heartbeat('Uploading all resources');
   await Promise.all([
     articleUploadPromise,
     ...figureUploadPromises,

@@ -1,6 +1,7 @@
 import axios from 'axios';
 import { mocked } from 'jest-mock';
-import { findAllDocmaps } from './find-all-docmaps';
+import { MD5 } from 'object-hash';
+import { filterDocmapIndex } from './find-all-docmaps';
 
 jest.mock('axios');
 
@@ -15,26 +16,52 @@ describe('parse-docmap-activity', () => {
       status: 200,
     }));
 
-    const result = await findAllDocmaps('http://somewhere.not.real/docmap/index');
+    const result = await filterDocmapIndex([], 'http://somewhere.not.real/docmap/index');
     expect(result).toStrictEqual([]);
   });
 
   it('returns docmaps found in index', async () => {
     // Arrange
     const mockedGet = mocked(axios.get);
+    const mockedHash = MD5({ id: 'fake-docmap' });
+    const mockedIdHash = MD5('fake-docmap');
 
     // @ts-ignore
     mockedGet.mockImplementation(() => Promise.resolve({
-      data: { docmaps: [{ '@id': 'fake-docmap' }] },
+      data: { docmaps: [{ id: 'fake-docmap' }] },
       status: 200,
     }));
 
     // Act
-    const result = await findAllDocmaps('http://somewhere.not.real/docmap/index');
+    const result = await filterDocmapIndex([], 'http://somewhere.not.real/docmap/index');
 
     // Assert
     expect(result).toBeDefined();
     expect(result?.length).toStrictEqual(1);
-    expect(result?.[0]).toMatchObject({ '@id': 'fake-docmap' });
+    expect(result?.[0].docMap).toMatchObject({ id: 'fake-docmap' });
+    expect(result?.length).toStrictEqual(1);
+    expect(result?.[0].docMapHash).toStrictEqual(mockedHash);
+    expect(result?.[0].idHash).toStrictEqual(mockedIdHash);
+  });
+
+  it('skips existing docmaps (that are hashed from the last import)', async () => {
+    // Arrange
+    const mockedGet = mocked(axios.get);
+    const mockedHash = MD5({ id: 'fake-docmap' });
+    const mockedIdHash = MD5('fake-docmap');
+
+    // @ts-ignore
+    mockedGet.mockImplementation(() => Promise.resolve({
+      data: { docmaps: [{ id: 'fake-docmap' }] },
+      status: 200,
+    }));
+
+    // Act
+    const result = await filterDocmapIndex([{ hash: mockedHash, idHash: mockedIdHash }], 'http://somewhere.not.real/docmap/index');
+
+    // Assert
+    expect(result).toBeDefined();
+    expect(result).toStrictEqual([]);
+    expect(result?.length).toStrictEqual(0);
   });
 });
