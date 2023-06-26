@@ -23,8 +23,13 @@ type CopySourcePreprintToEPPOutput = {
 export const copySourcePreprintToEPP = async (version: VersionedReviewedPreprint): Promise<CopySourcePreprintToEPPOutput> => {
   const s3Connection = getEPPS3Client();
 
+  const s3Url = version.preprint.content?.find((url) => url.startsWith('s3://'));
+  if (s3Url === undefined) {
+    throw Error(`Cannot import content - no s3 URL found in content strings [${version.preprint.content?.join(',')}]`);
+  }
+
   // extract bucket and Path for S3 client
-  const source = parseS3Path(version.preprint.content ?? '');
+  const source = parseS3Path(s3Url);
   const sourceBucketAndPath = `${source.Bucket}/${source.Key}`;
 
   // copy MECA
