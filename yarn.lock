@@ -2086,14 +2086,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@elifesciences/docmap-ts@https://github.com/elifesciences/docmap-ts#tag=v0.0.16":
-  version: 0.0.16
-  resolution: "@elifesciences/docmap-ts@https://github.com/elifesciences/docmap-ts.git#commit=821a5c4c4b1388e741ae5aa046b0702fedc7b627"
+"@elifesciences/docmap-ts@https://github.com/elifesciences/docmap-ts#fix-updating-preprint-from-expression":
+  version: 0.0.18
+  resolution: "@elifesciences/docmap-ts@https://github.com/elifesciences/docmap-ts.git#commit=6b08c7ba7ca5b3fe8f7bbbd54b195b43afe90076"
   dependencies:
     "@tsconfig/node18": ^1.0.1
     ts-node: ^10.9.1
     typescript: ^4.9.3
-  checksum: b80d9de3c9d02548117c12f577f5f34d96ce6db823ecb301eefb61f95bb250d2622134f360c2188916f5c4dc8228951df944106f47c24d8485a799b2cd723fb4
+  checksum: 0476f381cfc269caf9d0a633e601227d5b83b47447e9d5281563bae0b0cd497b8044bb9103c2c16c4c521bddf70adc7ae0006c63bd92f5672627b684894d302d
   languageName: node
   linkType: hard
 
@@ -7068,7 +7068,7 @@ __metadata:
   dependencies:
     "@aws-sdk/client-s3": ^3.310.0
     "@aws-sdk/credential-providers": ^3.310.0
-    "@elifesciences/docmap-ts": "https://github.com/elifesciences/docmap-ts#tag=v0.0.16"
+    "@elifesciences/docmap-ts": "https://github.com/elifesciences/docmap-ts#fix-updating-preprint-from-expression"
     "@stencila/encoda": ^0.121.0
     "@stencila/schema": ^1.18.0
     "@temporalio/activity": ^1.7.4
