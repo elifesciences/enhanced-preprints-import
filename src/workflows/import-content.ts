@@ -50,8 +50,7 @@ export type ImportContentOutput = {
 };
 
 export async function importContent(version: VersionedReviewedPreprint): Promise<ImportContentOutput> {
-  const biorxivDoi = version.preprint.doi.startsWith('10.1101/');
-  if (!biorxivDoi) {
+  if (!version.preprint.content) {
     throw Error('Cannot find a supported content file');
   }
 
