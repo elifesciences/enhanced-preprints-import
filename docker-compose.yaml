@@ -60,7 +60,6 @@ services:
       AWS_ACCESS_KEY_ID: minio
       AWS_SECRET_ACCESS_KEY: miniotest
       BUCKET_NAME: epp
-      BUCKET_PREFIX: import
 
       # Meca S3 Bucket (on minio)
       MECA_S3_ENDPOINT: http://minio:9000
