@@ -27,9 +27,21 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.temporal
+    command:
+    - "/temporal"
+    - "server"
+    - "start-dev"
+    - "--namespace"
+    - "default"
+    - "--ip"
+    - "0.0.0.0"
+    - "--db-filename"
+    - "/data/temporal.db"
     ports:
       - 7233:7233
       - 8233:8233
+    volumes:
+      - temporal_data:/data
 
   worker:
     build:
@@ -114,3 +126,4 @@ services:
 volumes:
   minio_storage: {}
   mongodb_data: {}
+  temporal_data: {}

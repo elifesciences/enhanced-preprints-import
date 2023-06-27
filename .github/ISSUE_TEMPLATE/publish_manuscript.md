@@ -46,7 +46,11 @@ Pull request: [PLACE LINK TO PULL REQUEST HERE]
 
 Detailed instructions: https://github.com/elifesciences/enhanced-preprints-data#add-a-manuscript
 
-## Step 3: Awaiting public reviews
+## Step 3: Awaiting public reviews and QC
+
+Who can help: Production team
+
+- [ ] QC passed or QC not needed
 
 Who can help: Editorial team
 
