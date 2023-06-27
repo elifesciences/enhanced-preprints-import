@@ -51,6 +51,34 @@ const fullDocmap = `{
           "status": "manuscript-published"
         }
       ],
+      "inputs": [],
+      "next-step": "_:b1"
+    },
+    "_:b1": {
+      "actions": [
+        {
+          "participants": [],
+          "outputs": [
+            {
+              "type": "preprint",
+              "doi": "10.1101/000002",
+              "url": "https://www.biorxiv.org/content/10.1101/000001v2",
+              "published": "2022-11-14",
+              "versionIdentifier": "2"
+            }
+          ]
+        }
+      ],
+      "assertions": [
+        {
+          "item": {
+            "type": "preprint",
+            "doi": "10.1101/000001",
+            "versionIdentifier": "2"
+          },
+          "status": "manuscript-published"
+        }
+      ],
       "inputs": []
     }
   }
@@ -69,6 +97,7 @@ describe('parse-docmap-activity', () => {
     // eslint-disable-next-line no-spaced-func
     const manuscriptData = await env.run<[string], ManuscriptData, (docMapInput: string) => Promise<ManuscriptData>>(parseDocMap, fullDocmap);
 
+    expect(manuscriptData.versions.length).toBe(1);
     expect(manuscriptData.versions[0].preprint.content).toStrictEqual('s3://biorxiv/dummy-1.meca');
   });
 });
