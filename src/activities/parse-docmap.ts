@@ -42,7 +42,6 @@ export const parseDocMap = async (docMapInput: string): Promise<parser.Manuscrip
     };
   });
   const docMap = JSON.stringify(docmapStruct);
-  console.log(docmapStruct, JSON.stringify(docmapStruct, undefined, '  '));
   /* eslint-enable no-underscore-dangle */
 
   Context.current().heartbeat('parsing DocMap');
