@@ -1,32 +1,48 @@
-import { VersionedReviewedPreprint, parser } from '@elifesciences/docmap-ts';
+import { parser } from '@elifesciences/docmap-ts';
 import { Context } from '@temporalio/activity';
 
 export const parseDocMap = async (docMapInput: string): Promise<parser.ManuscriptData> => {
+  Context.current().heartbeat('pre-parsing DocMap for tdmPath');
+  // TO-DO: This is a temporary hack, remove/replace once DocMaps are fixed to hold the meca path in the output content
+  const docmapStruct = JSON.parse(docMapInput);
+  /* eslint-disable no-underscore-dangle */
+  const mapExpressionWithTdmPathToContent = (expression: any) => {
+    if (!expression._tdmPath) {
+      return expression;
+    }
+
+    if (!Array.isArray(expression.content)) {
+      return {
+        ...expression,
+        content: [{ url: expression._tdmPath }],
+      };
+    }
+
+    expression.content.push({ url: expression._tdmPath });
+    return expression;
+  };
+
+  Object.entries(docmapStruct.steps).forEach(([stepId, step]: [string, any]) => {
+    docmapStruct.steps[stepId] = {
+      ...step,
+      inputs: step.inputs.map(mapExpressionWithTdmPathToContent),
+      actions: step.actions.map((action: any) => ({
+        ...action,
+        outputs: action.outputs.map(mapExpressionWithTdmPathToContent),
+      })),
+      assertions: step.assertions.map((assertion: any) => {
+        if (!assertion.item) {
+          return assertion;
+        }
+        return {
+          ...assertion,
+          item: mapExpressionWithTdmPathToContent(assertion.item),
+        };
+      }),
+    };
+  });
+  const docMap = JSON.stringify(docmapStruct);
+
   Context.current().heartbeat('parsing DocMap');
-  const manuscriptData = parser.parsePreprintDocMap(docMapInput);
-
-  try {
-    if (!manuscriptData) { throw new Error('Manuscript data is undefined'); }
-
-    // TO-DO: This is a temporary hack, remove/replace once DocMaps are fixed to hold the meca path in the output content
-    const { steps } = JSON.parse(docMapInput);
-
-    const contentPaths: Record<string, string> = {};
-    Object.keys(steps).forEach((key) => {
-      // Loop through the actions in a step and the corresponding outputs to extract _tdmPaths
-      // eslint-disable-next-line @typescript-eslint/dot-notation
-      steps[key].actions.forEach((action: any) => action.outputs?.forEach((output: any) => { if (output['_tdmPath']) contentPaths[output.versionIdentifier] = output['_tdmPath']; }));
-    });
-
-    manuscriptData.versions = manuscriptData.versions.reduce<VersionedReviewedPreprint[]>((versions, version) => {
-      if (contentPaths[version.versionIdentifier]) {
-        versions.push({ ...version, preprint: { ...version.preprint, content: contentPaths[version.versionIdentifier] } });
-      }
-      return versions;
-    }, []);
-
-    return manuscriptData;
-  } catch (error: any) {
-    throw Error(`Could not parse docmap:\n${error.message}`);
-  }
+  return parser.parsePreprintDocMap(docMap);
 };

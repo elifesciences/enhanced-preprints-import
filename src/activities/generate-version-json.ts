@@ -43,7 +43,7 @@ export const generateVersionJson: GenerateVersionJson = async ({ importContentRe
     versionDoi: version.doi,
     article: articleStruct,
     preprintDoi: version.preprint.doi,
-    preprintUrl: version.preprint.content,
+    preprintUrl: version.preprint.url,
     preprintPosted: version.preprint.publishedDate,
     sentForReview: version.sentForReviewDate,
     peerReview: importContentResult.reviewData ?? version.peerReview,

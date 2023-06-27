@@ -73,7 +73,7 @@ const fullDocmap = `{
         {
           "item": {
             "type": "preprint",
-            "doi": "10.1101/000001",
+            "doi": "10.1101/000002",
             "versionIdentifier": "2"
           },
           "status": "manuscript-published"
@@ -89,7 +89,7 @@ describe('parse-docmap-activity', () => {
     expect(async () => {
       const env = new MockActivityEnvironment();
       await env.run(parseDocMap, simpleDocmap);
-    }).rejects.toThrowError('Could not parse docmap');
+    }).rejects.toThrowError('Docmap has no steps');
   });
 
   it('parses a full docmap with content paths', async () => {
@@ -97,7 +97,7 @@ describe('parse-docmap-activity', () => {
     // eslint-disable-next-line no-spaced-func
     const manuscriptData = await env.run<[string], ManuscriptData, (docMapInput: string) => Promise<ManuscriptData>>(parseDocMap, fullDocmap);
 
-    expect(manuscriptData.versions.length).toBe(1);
-    expect(manuscriptData.versions[0].preprint.content).toStrictEqual('s3://biorxiv/dummy-1.meca');
+    expect(manuscriptData.versions.length).toBe(2);
+    expect(manuscriptData.versions[0].preprint.content).toStrictEqual(['s3://biorxiv/dummy-1.meca']);
   });
 });
