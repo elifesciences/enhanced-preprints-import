@@ -63,5 +63,5 @@ export type S3File = {
 
 export const constructEPPS3FilePath = (filename: string, version: VersionedReviewedPreprint): S3File => ({
   Bucket: config.eppBucketName,
-  Key: `${version.id}/v${version.versionIdentifier}/${filename}`,
+  Key: `${config.eppBucketPrefix}${version.id}/v${version.versionIdentifier}/${filename}`,
 });
