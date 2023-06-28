@@ -1,6 +1,5 @@
 import { VersionedReviewedPreprint } from '@elifesciences/docmap-ts';
 import { readFileSync } from 'fs';
-import { dirname, basename } from 'path';
 import { S3Client } from '@aws-sdk/client-s3';
 import { fromWebToken, fromTemporaryCredentials } from '@aws-sdk/credential-providers';
 import { S3Config, config } from './config';
