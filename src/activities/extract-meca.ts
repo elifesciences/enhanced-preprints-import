@@ -174,11 +174,11 @@ export const extractMeca = async (version: VersionedReviewedPreprint): Promise<M
     }));
   };
 
-  const articleUploadPromise = uploadItem(article, 'article.xml');
-  const figureUploadPromises = figures.map((figure) => uploadItem(figure, figure.fileName));
-  const tableUploadPromises = tables.map((table) => uploadItem(table, table.fileName));
-  const equationUploadPromises = tables.map((equation) => uploadItem(equation, equation.fileName));
-  const supplementUploadPromises = tables.map((supplement) => uploadItem(supplement, supplement.fileName));
+  const articleUploadPromise = uploadItem(article, article.path);
+  const figureUploadPromises = figures.map((figure) => uploadItem(figure, figure.path));
+  const tableUploadPromises = tables.map((table) => uploadItem(table, table.path));
+  const equationUploadPromises = tables.map((equation) => uploadItem(equation, equation.path));
+  const supplementUploadPromises = tables.map((supplement) => uploadItem(supplement, supplement.path));
 
   Context.current().heartbeat('Uploading all resources');
   await Promise.all([

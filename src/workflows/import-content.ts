@@ -59,7 +59,7 @@ export async function importContent(version: VersionedReviewedPreprint): Promise
   // Extract Meca
   const mecaFiles = await extractMeca(version);
 
-  const { path: jsonContentFile } = await convertXmlToJson(version);
+  const { path: jsonContentFile } = await convertXmlToJson(version, mecaFiles);
 
   // fetch review content (if present)
   const reviewData = await fetchReviewContent(version);

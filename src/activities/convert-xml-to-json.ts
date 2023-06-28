@@ -2,7 +2,7 @@ import { VersionedReviewedPreprint } from '@elifesciences/docmap-ts';
 import { convert } from '@stencila/encoda';
 import { mkdtemp } from 'fs/promises';
 import { tmpdir } from 'os';
-import { dirname } from 'path';
+import path from 'path';
 import * as fs from 'fs';
 import {
   GetObjectCommand,
@@ -11,7 +11,10 @@ import {
   PutObjectCommandOutput,
 } from '@aws-sdk/client-s3';
 import { Readable } from 'stream';
-import { constructEPPS3FilePath, getEPPS3Client, S3File } from '../S3Bucket';
+import {
+  constructEPPS3FilePath, getEPPS3Client, getPrefixlessKey, S3File,
+} from '../S3Bucket';
+import { MecaFiles } from './extract-meca';
 
 type ConvertXmlToJsonOutput = {
   result: PutObjectCommandOutput,
@@ -33,12 +36,14 @@ async function saveObjectToFile(object: GetObjectCommandOutput, filePath: string
   });
 }
 
-export const convertXmlToJson = async (version: VersionedReviewedPreprint): Promise<ConvertXmlToJsonOutput> => {
+export const convertXmlToJson = async (version: VersionedReviewedPreprint, mecaFiles: MecaFiles): Promise<ConvertXmlToJsonOutput> => {
   const tmpDirectory = await mkdtemp(`${tmpdir()}/epp_json`);
-  const localXmlFilePath = `${tmpDirectory}/article.xml`;
+  const localXmlFilePath = `${tmpDirectory}/${mecaFiles.article.path}`;
+  // mkdir incase the article path is in a subdirectory
+  fs.mkdirSync(path.dirname(localXmlFilePath), { recursive: true });
 
   const s3 = getEPPS3Client();
-  const source = constructEPPS3FilePath('article.xml', version);
+  const source = constructEPPS3FilePath(mecaFiles.article.path, version);
   const object = await s3.send(new GetObjectCommand(source));
   await saveObjectToFile(object, localXmlFilePath);
 
@@ -58,14 +63,19 @@ export const convertXmlToJson = async (version: VersionedReviewedPreprint): Prom
     throw new Error(`Could not convert XML file ${localXmlFilePath}`);
   }
 
+  // correct any paths in the json
+  const corrected = mecaFiles.figures.reduce((json, mecaFile) => {
+    // this is a construct of where the files would have been relative to the article in the meca archive
+    const oldPath = path.join(tmpDirectory, mecaFile.path);
+
+    // this is where the path would be relative to the S3 root directory + meca path
+    const newPath = getPrefixlessKey(constructEPPS3FilePath(mecaFile.path, version));
+
+    return json.replaceAll(oldPath, newPath);
+  }, converted);
+
   // Upload destination in S3
   const destination = constructEPPS3FilePath('article.json', version);
-
-  // correct any paths in the json
-  const s3Path = dirname(destination.Key);
-  const corrected = converted.replaceAll(tmpDirectory, `${s3Path}/figures`);
-
-  // Upload
   const result = await s3.send(new PutObjectCommand({
     Bucket: destination.Bucket,
     Key: destination.Key,
