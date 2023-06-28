@@ -50,14 +50,14 @@ type ManifestItem = {
 };
 
 const extractFileContents = async (zip: JSZip, item: MecaFile, toDir: string): Promise<LocalMecaFile> => {
-  const buffer = await zip.file(item.path)?.async('nodebuffer');
-  if (buffer === undefined) {
+  const content = await zip.file(item.path)?.async('base64');
+  if (content === undefined) {
     throw Error(`MECA archive corrupted, expected ${item.path} from manifest, but it failed`);
   }
   const outputPath = `${toDir}/${item.path}`;
   const outputDir = dirname(outputPath);
   mkdirSync(outputDir, { recursive: true });
-  writeFileSync(outputPath, buffer.toString());
+  writeFileSync(outputPath, content, 'base64');
   return {
     ...item,
     localPath: outputPath,
