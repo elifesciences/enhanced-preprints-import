@@ -38,7 +38,7 @@ export const generateVersionJson: GenerateVersionJson = async ({ importContentRe
   const versionJSON: EnhancedArticle = {
     msid,
     doi: version.doi,
-    id: version.id,
+    id: `${version.id}v${version.versionIdentifier}`, // construct a global version ID from concat of id and version-specific ID
     versionIdentifier: version.versionIdentifier,
     versionDoi: version.doi,
     article: articleStruct,
