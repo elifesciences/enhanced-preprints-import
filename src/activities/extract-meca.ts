@@ -28,9 +28,7 @@ export type MecaFiles = {
   id: string,
   title: string,
   article: MecaFile,
-  figures: MecaFile[],
-  supplements: MecaFile[],
-  others: MecaFile[],
+  supportingFiles: MecaFile[],
 };
 
 type Manifest = {
@@ -131,18 +129,9 @@ export const extractMeca = async (version: VersionedReviewedPreprint): Promise<M
   const article = await extractFromThisArchive(unprocessedArticle);
 
   // get other content that represent the article
-  const otherArticleInstances = items.filter((item) => item.type === 'article' && item.mimeType !== 'application/xml').map(extractFromThisArchive);
-
-  const figures = await Promise.all(items.filter((item) => item.type === 'figure').map(extractFromThisArchive));
-  const equations = await Promise.all(items.filter((item) => item.type === 'equation').map(extractFromThisArchive));
-  const tables = await Promise.all(items.filter((item) => item.type === 'table').map(extractFromThisArchive));
-  const supplements = await Promise.all(items.filter((item) => item.type === 'supplement').map(extractFromThisArchive));
-
-  const others = await Promise.all([
-    ...otherArticleInstances,
-    ...equations,
-    ...tables,
-  ]);
+  const otherArticleInstances = await Promise.all(items.filter((item) => item.type === 'article' && item.mimeType !== 'application/xml').map(extractFromThisArchive));
+  const supportingFiles = await Promise.all(items.filter((item) => ['figure', 'equation', 'table', 'supplement'].includes(item.type)).map(extractFromThisArchive));
+  supportingFiles.push(...otherArticleInstances);
 
   // check there are no more item types left to be imported
   const knownTypes = [
@@ -177,25 +166,17 @@ export const extractMeca = async (version: VersionedReviewedPreprint): Promise<M
   };
 
   const articleUploadPromise = uploadItem(article, article.path);
-  const figureUploadPromises = figures.map((figure) => uploadItem(figure, figure.path));
-  const tableUploadPromises = tables.map((table) => uploadItem(table, table.path));
-  const equationUploadPromises = equations.map((equation) => uploadItem(equation, equation.path));
-  const supplementUploadPromises = supplements.map((supplement) => uploadItem(supplement, supplement.path));
+  const supportingFilesUploads = supportingFiles.map((figure) => uploadItem(figure, figure.path));
 
   await Promise.all([
     articleUploadPromise,
-    ...figureUploadPromises,
-    ...tableUploadPromises,
-    ...equationUploadPromises,
-    ...supplementUploadPromises,
+    ...supportingFilesUploads,
   ]);
 
   return {
     id,
     title,
     article,
-    figures,
-    supplements,
-    others,
+    supportingFiles,
   };
 };
