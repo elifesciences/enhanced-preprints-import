@@ -118,7 +118,10 @@ export const extractMeca = async (version: VersionedReviewedPreprint): Promise<M
   // define a closure that curries the zip and toDir in this scope
   const extractFromThisArchive = async (item: MecaFile) => {
     Context.current().heartbeat(`Extracting ${item.type} ${item.fileName} (${item.id})`);
-    return extractFileContents(zip, item, tmpDirectory);
+    return extractFileContents(zip, item, tmpDirectory).then((file) => {
+      Context.current().heartbeat(`Extracted ${item.type} ${item.fileName} (${item.id})`);
+      return file;
+    });
   };
 
   // get the article content
@@ -170,13 +173,14 @@ export const extractMeca = async (version: VersionedReviewedPreprint): Promise<M
       Key: s3Path.Key,
       Body: fileStream,
     }));
+    Context.current().heartbeat(`Finished uploading ${localFile.type} ${localFile.fileName} (${localFile.id}) to ${s3Path.Key}`);
   };
 
   const articleUploadPromise = uploadItem(article, article.path);
   const figureUploadPromises = figures.map((figure) => uploadItem(figure, figure.path));
   const tableUploadPromises = tables.map((table) => uploadItem(table, table.path));
-  const equationUploadPromises = tables.map((equation) => uploadItem(equation, equation.path));
-  const supplementUploadPromises = tables.map((supplement) => uploadItem(supplement, supplement.path));
+  const equationUploadPromises = equations.map((equation) => uploadItem(equation, equation.path));
+  const supplementUploadPromises = supplements.map((supplement) => uploadItem(supplement, supplement.path));
 
   await Promise.all([
     articleUploadPromise,
