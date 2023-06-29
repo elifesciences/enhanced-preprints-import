@@ -116,29 +116,25 @@ export const extractMeca = async (version: VersionedReviewedPreprint): Promise<M
   }));
 
   // define a closure that curries the zip and toDir in this scope
-  const extractFromThisArchive = async (item: MecaFile) => extractFileContents(zip, item, tmpDirectory);
+  const extractFromThisArchive = async (item: MecaFile) => {
+    Context.current().heartbeat(`Extracting ${item.type} ${item.fileName} (${item.id})`);
+    return extractFileContents(zip, item, tmpDirectory);
+  };
 
   // get the article content
   const unprocessedArticle = items.filter((item) => item.type === 'article' && item.mimeType === 'application/xml')[0];
   const id = unprocessedArticle.id ?? '';
   const title = unprocessedArticle.title ?? '';
-  Context.current().heartbeat('Extracting Article');
   const article = await extractFromThisArchive(unprocessedArticle);
 
   // get other content that represent the article
-  Context.current().heartbeat('Extracting Article (alt types)');
   const otherArticleInstances = items.filter((item) => item.type === 'article' && item.mimeType !== 'application/xml').map(extractFromThisArchive);
 
-  Context.current().heartbeat('Extracting figures');
   const figures = await Promise.all(items.filter((item) => item.type === 'figure').map(extractFromThisArchive));
-  Context.current().heartbeat('Extracting equations');
   const equations = await Promise.all(items.filter((item) => item.type === 'equation').map(extractFromThisArchive));
-  Context.current().heartbeat('Extracting tables');
   const tables = await Promise.all(items.filter((item) => item.type === 'table').map(extractFromThisArchive));
-  Context.current().heartbeat('Extracting supplements');
   const supplements = await Promise.all(items.filter((item) => item.type === 'supplement').map(extractFromThisArchive));
 
-  Context.current().heartbeat('Extracting all other resources');
   const others = await Promise.all([
     ...otherArticleInstances,
     ...equations,
@@ -165,9 +161,11 @@ export const extractMeca = async (version: VersionedReviewedPreprint): Promise<M
 
   // define a closure that simplifies uploading a file to the correct location
   const uploadItem = async (localFile: LocalMecaFile, remoteFileName: string) => {
+    const s3UploadConnection = getEPPS3Client();
     const s3Path = constructEPPS3FilePath(remoteFileName, version);
+    Context.current().heartbeat(`Uploading ${localFile.type} ${localFile.fileName} (${localFile.id}) to ${s3Path.Key}`);
     const fileStream = fs.createReadStream(localFile.localPath);
-    await s3.send(new PutObjectCommand({
+    await s3UploadConnection.send(new PutObjectCommand({
       Bucket: s3Path.Bucket,
       Key: s3Path.Key,
       Body: fileStream,
@@ -180,7 +178,6 @@ export const extractMeca = async (version: VersionedReviewedPreprint): Promise<M
   const equationUploadPromises = tables.map((equation) => uploadItem(equation, equation.path));
   const supplementUploadPromises = tables.map((supplement) => uploadItem(supplement, supplement.path));
 
-  Context.current().heartbeat('Uploading all resources');
   await Promise.all([
     articleUploadPromise,
     ...figureUploadPromises,
