@@ -118,7 +118,10 @@ export const extractMeca = async (version: VersionedReviewedPreprint): Promise<M
   // define a closure that curries the zip and toDir in this scope
   const extractFromThisArchive = async (item: MecaFile) => {
     Context.current().heartbeat(`Extracting ${item.type} ${item.fileName} (${item.id})`);
-    return extractFileContents(zip, item, tmpDirectory);
+    return extractFileContents(zip, item, tmpDirectory).then((file) => {
+      Context.current().heartbeat(`Extracted ${item.type} ${item.fileName} (${item.id})`);
+      return file;
+    });
   };
 
   // get the article content
