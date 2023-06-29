@@ -170,13 +170,14 @@ export const extractMeca = async (version: VersionedReviewedPreprint): Promise<M
       Key: s3Path.Key,
       Body: fileStream,
     }));
+    Context.current().heartbeat(`Finished uploading ${localFile.type} ${localFile.fileName} (${localFile.id}) to ${s3Path.Key}`);
   };
 
   const articleUploadPromise = uploadItem(article, article.path);
   const figureUploadPromises = figures.map((figure) => uploadItem(figure, figure.path));
   const tableUploadPromises = tables.map((table) => uploadItem(table, table.path));
-  const equationUploadPromises = tables.map((equation) => uploadItem(equation, equation.path));
-  const supplementUploadPromises = tables.map((supplement) => uploadItem(supplement, supplement.path));
+  const equationUploadPromises = equations.map((equation) => uploadItem(equation, equation.path));
+  const supplementUploadPromises = supplements.map((supplement) => uploadItem(supplement, supplement.path));
 
   await Promise.all([
     articleUploadPromise,
