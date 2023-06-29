@@ -1,4 +1,4 @@
-FROM node:16 as base
+FROM node:16@sha256:fddc8c24ce0bce462d5050667a80a3681c9c6f9d645c151d5a85e968b21e167a as base
 RUN mkdir /app
 WORKDIR /app
 
@@ -29,6 +29,3 @@ ADD jest.config.ts jest.config.ts
 
 FROM app as worker
 CMD ["yarn", "start:worker"]
-
-FROM app as import-app
-CMD ["yarn", "start:app"]
