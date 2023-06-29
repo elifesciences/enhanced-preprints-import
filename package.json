@@ -47,9 +47,7 @@
   },
   "scripts": {
     "start:worker": "ts-node src/worker.ts",
-    "start:app": "ts-node src/server.ts",
     "start:worker:dev": "nodemon src/worker.ts",
-    "start:app:dev": "nodemon src/server.ts",
     "test": "jest",
     "lint": "eslint --ext .ts src/"
   }
