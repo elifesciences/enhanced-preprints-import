@@ -64,7 +64,7 @@ export const convertXmlToJson = async (version: VersionedReviewedPreprint, mecaF
   }
 
   // correct any paths in the json
-  const corrected = mecaFiles.figures.reduce((json, mecaFile) => {
+  const corrected = mecaFiles.supportingFiles.reduce((json, mecaFile) => {
     // this is a construct of where the files would have been relative to the article in the meca archive
     const oldPath = path.join(tmpDirectory, mecaFile.path);
 
