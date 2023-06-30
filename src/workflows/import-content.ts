@@ -49,9 +49,9 @@ export type ImportContentOutput = {
   reviewData?: EPPPeerReview
 };
 
-export async function importContent(version: VersionedReviewedPreprint): Promise<ImportContentOutput> {
+export async function importContent(version: VersionedReviewedPreprint): Promise<ImportContentOutput | string> {
   if (!version.preprint.content) {
-    throw Error('Cannot find a supported content file');
+    return 'No content to import';
   }
 
   const { path: mecaPath } = await copySourcePreprintToEPP(version);
