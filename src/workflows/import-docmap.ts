@@ -1,6 +1,5 @@
 import { executeChild, proxyActivities, workflowInfo } from '@temporalio/workflow';
 import type * as activities from '../activities/index';
-import { EnhancedArticle } from '../activities/send-version-to-epp';
 import { importContent } from './import-content';
 import { useWorkflowState } from '../hooks/useWorkflowState';
 
@@ -26,14 +25,35 @@ const {
 
 export const store = useWorkflowState(workflowInfo().workflowId, true);
 
-export async function importDocmap(url: string): Promise<void> {
+type ImportDocmapOutput = {
+  id: string,
+  versionIdentifier: string,
+  result: string,
+};
+
+export async function importDocmap(url: string): Promise<ImportDocmapOutput[]> {
   const result = await fetchDocMap(url).then((docMap) => parseDocMap(docMap));
 
-  await Promise.all(
-    result.versions.map(async (version, index) => executeChild(importContent, {
-      args: [version],
-      workflowId: `${workflowInfo().workflowId}/version-${index}/content`,
-    }).then(async (importContentResult) => generateVersionJson({ importContentResult, msid: result.id, version }))
-      .then(async (versionJson: EnhancedArticle) => sendVersionToEpp(versionJson))),
+  return Promise.all(
+    result.versions.map(async (version, index) => {
+      const importContentResult = await executeChild(importContent, {
+        args: [version],
+        workflowId: `${workflowInfo().workflowId}/version-${index}/content`,
+      });
+      if (typeof importContentResult === 'string') {
+        return {
+          id: version.id,
+          versionIdentifier: version.versionIdentifier,
+          result: importContentResult,
+        };
+      }
+      const versionJson = await generateVersionJson({ importContentResult, msid: result.id, version });
+      await sendVersionToEpp(versionJson);
+      return {
+        id: version.id,
+        versionIdentifier: version.versionIdentifier,
+        result: 'Sent to EPP',
+      };
+    }),
   );
 }
