@@ -3438,9 +3438,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@stencila/encoda@npm:^0.121.0":
-  version: 0.121.1
-  resolution: "@stencila/encoda@npm:0.121.1"
+"@stencila/encoda@npm:0.121.2":
+  version: 0.121.2
+  resolution: "@stencila/encoda@npm:0.121.2"
   dependencies:
     "@stencila/jesta": ^1.10.5
     "@stencila/logga": ^4.0.0
@@ -3506,7 +3506,7 @@ __metadata:
     "@stencila/schema": ^1.9.0
   bin:
     encoda: dist/index.js
-  checksum: dc55b7ad56b9e64aa012bcdc68e2efecc3f1e3728b21dae10d5b92669f97ce0beb7c94b9dfe47cddb5f1a36a647bb3c91200ab99bf184c0093b9ab1206f9f805
+  checksum: 7acc82eb2ab66cef482955e564786d004b47c7d8cab15828c2910892ba406ec6dccff9eaf1a5e0d8b90aa10a3ad24446f3667644eaec1f4528abb98a0f5c47d3
   languageName: node
   linkType: hard
 
@@ -7085,7 +7085,7 @@ __metadata:
     "@aws-sdk/client-s3": ^3.310.0
     "@aws-sdk/credential-providers": ^3.310.0
     "@elifesciences/docmap-ts": "https://github.com/elifesciences/docmap-ts#v0.0.19"
-    "@stencila/encoda": ^0.121.0
+    "@stencila/encoda": 0.121.2
     "@stencila/schema": ^1.18.0
     "@temporalio/activity": ^1.7.4
     "@temporalio/client": ^1.7.4
