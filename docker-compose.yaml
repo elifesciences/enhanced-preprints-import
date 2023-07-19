@@ -103,6 +103,18 @@ services:
     ports:
       - "8081:8081"
 
+  ## BIORXIV XSLT
+  xslt:
+    image: ghcr.io/elifesciences/enhanced-preprints-biorxiv-xslt-api:master-546eda94-20230719.1020
+    healthcheck:
+      test: ["CMD-SHELL", "sh -c 'curl http://xslt:80/'"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+      start_period: 2s
+    ports:
+      - 3004:80
+
   ## EPP API
   api:
     image: ghcr.io/elifesciences/enhanced-preprints:master-20031da3-20230713.1636
