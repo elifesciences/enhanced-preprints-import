@@ -112,8 +112,10 @@ services:
       timeout: 5s
       retries: 10
       start_period: 2s
+    environment:
+      PORT: 3000
     ports:
-      - 3002:3000
+      - 3004:3000
 
   ## EPP API
   api:
