@@ -39,6 +39,22 @@ jobs:
         run: docker run ${{ env.IMPORT_WORKER_IMAGE_REPO }}:test-${{ github.sha }} yarn test
       - name: run lint
         run: docker run ${{ env.IMPORT_WORKER_IMAGE_REPO }}:test-${{ github.sha }} yarn lint
+  test-build:
+    runs-on: ubuntu-latest
+    if: github.ref != 'refs/heads/master'
+    steps:
+      - uses: actions/checkout@v3
+      - name: Build test
+        uses: docker/build-push-action@v4
+        with:
+          context: .
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+          target: worker
+          platforms: linux/amd64
+          load: true
+          tags: |
+            ghcr.io/elifesciences/enhanced-preprints-import-worker:test
   build-and-push:
     needs: [test]
     runs-on: ubuntu-latest
