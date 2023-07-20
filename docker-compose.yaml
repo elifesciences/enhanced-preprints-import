@@ -65,6 +65,7 @@ services:
       MECA_S3_ENDPOINT: http://minio:9000
       MECA_AWS_ACCESS_KEY_ID: minio
       MECA_AWS_SECRET_ACCESS_KEY: miniotest
+      XSLT_TRANSFORM_ADDRESS: http://xslt:80
     restart: on-failure:5
     command:
       - yarn

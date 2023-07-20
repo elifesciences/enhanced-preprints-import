@@ -6,35 +6,19 @@ import path from 'path';
 import * as fs from 'fs';
 import {
   GetObjectCommand,
-  GetObjectCommandOutput,
   PutObjectCommand,
   PutObjectCommandOutput,
 } from '@aws-sdk/client-s3';
-import { Readable } from 'stream';
 import {
   constructEPPS3FilePath, getEPPS3Client, getPrefixlessKey, S3File,
 } from '../S3Bucket';
 import { MecaFiles } from './extract-meca';
+import { transformXML } from './transform-xml';
 
 type ConvertXmlToJsonOutput = {
   result: PutObjectCommandOutput,
   path: S3File
 };
-
-async function saveObjectToFile(object: GetObjectCommandOutput, filePath: string): Promise<void> {
-  const fileStream = fs.createWriteStream(filePath);
-
-  (object.Body as Readable).pipe(fileStream);
-
-  return new Promise((resolve, reject) => {
-    fileStream.on('finish', () => {
-      resolve();
-    });
-    fileStream.on('error', (error) => {
-      reject(error);
-    });
-  });
-}
 
 export const convertXmlToJson = async (version: VersionedReviewedPreprint, mecaFiles: MecaFiles): Promise<ConvertXmlToJsonOutput> => {
   const tmpDirectory = await mkdtemp(`${tmpdir()}/epp_json`);
@@ -45,7 +29,14 @@ export const convertXmlToJson = async (version: VersionedReviewedPreprint, mecaF
   const s3 = getEPPS3Client();
   const source = constructEPPS3FilePath(mecaFiles.article.path, version);
   const object = await s3.send(new GetObjectCommand(source));
-  await saveObjectToFile(object, localXmlFilePath);
+
+  const xml = await object.Body?.transformToString();
+  if (!xml) {
+    throw new Error('Unable to retrieve XML from S3');
+  }
+
+  const transformedXML = await transformXML(xml);
+  fs.writeFileSync(localXmlFilePath, transformedXML);
 
   const converted = await convert(
     localXmlFilePath,
