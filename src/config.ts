@@ -17,6 +17,8 @@ export type Config = {
   eppServerUri: string,
   biorxivURI: string,
   temporalServer: string,
+  temporalNamespace: string,
+  temporalTaskQueue: string,
   prometheusBindAddress: string,
 };
 
@@ -47,4 +49,6 @@ export const config: Config = {
   biorxivURI: env.BIORXIV_URI || 'https://api.biorxiv.org',
   prometheusBindAddress: env.PROMETHEUS_BIND_ADDRESS || '0.0.0.0:9464',
   temporalServer: env.TEMPORAL_SERVER || 'localhost',
+  temporalNamespace: env.TEMPORAL_NAMESPACE || 'default',
+  temporalTaskQueue: env.TEMPORAL_TASK_QUEUE || 'epp',
 };
