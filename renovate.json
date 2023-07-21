@@ -3,6 +3,7 @@
   "extends": [
     "config:base"
   ],
+  "dependencyDashboardTitle":"Dependency Dashboard - EPP import",
   "packageRules": [
     {
       "matchUpdateTypes": [
