@@ -3,6 +3,7 @@
   "extends": [
     "config:base"
   ],
+  "dependencyDashboardTitle":"Dependency Dashboard - EPP import",
   "packageRules": [
     {
       "matchUpdateTypes": [
@@ -29,6 +30,10 @@
       "matchPackageNames": ["node"],
       "matchDatasources": ["docker"],
       "versioning": "node"
+    },
+    {
+      "matchPackageNames": ["@stencila/encoda"],
+      "automerge": false
     }
   ]
 }
