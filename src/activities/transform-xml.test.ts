@@ -52,15 +52,10 @@ describe('TransformXML', () => {
 
     mockedAxios.post.mockRejectedValueOnce(error);
 
-    try {
-      await transformXML(xmlInput);
-    } catch (e) {
-      expect(e).toEqual(error);
-    }
+    await expect(transformXML(xmlInput)).rejects.toStrictEqual(error);
 
     expect(Context.current().heartbeat).toHaveBeenCalledTimes(1);
     expect(Context.current().heartbeat).toHaveBeenCalledWith('Starting XML transform');
-    expect(Context.current().heartbeat).not.toHaveBeenCalledWith('Finishing XML transform');
 
     expect(mockedAxios.post).toHaveBeenCalledTimes(1);
     expect(mockedAxios.post).toHaveBeenCalledWith(config.xsltTransformAddress, xmlInput);
