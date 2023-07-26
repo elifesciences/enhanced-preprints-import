@@ -4,6 +4,8 @@ import { mkdtemp } from 'fs/promises';
 import { tmpdir } from 'os';
 import path from 'path';
 import * as fs from 'fs';
+import axios from 'axios';
+import { Context } from '@temporalio/activity';
 import {
   GetObjectCommand,
   PutObjectCommand,
@@ -13,11 +15,25 @@ import {
   constructEPPS3FilePath, getEPPS3Client, getPrefixlessKey, S3File,
 } from '../S3Bucket';
 import { MecaFiles } from './extract-meca';
-import { transformXML } from './transform-xml';
+import { config } from '../config';
+
+type TransformResponse = {
+  xml: string,
+  logs: string[],
+};
 
 type ConvertXmlToJsonOutput = {
   result: PutObjectCommandOutput,
-  path: S3File
+  path: S3File,
+  xsltLogs: string[],
+};
+
+export const transformXML = async (xmlInput: string): Promise<TransformResponse> => {
+  Context.current().heartbeat('Starting XML transform');
+  const transformedResponse = await axios.post<TransformResponse>(config.xsltTransformAddress, xmlInput);
+
+  Context.current().heartbeat('Finishing XML transform');
+  return transformedResponse.data;
 };
 
 export const convertXmlToJson = async (version: VersionedReviewedPreprint, mecaFiles: MecaFiles): Promise<ConvertXmlToJsonOutput> => {
@@ -36,7 +52,7 @@ export const convertXmlToJson = async (version: VersionedReviewedPreprint, mecaF
   }
 
   const transformedXML = await transformXML(xml);
-  fs.writeFileSync(localXmlFilePath, transformedXML);
+  fs.writeFileSync(localXmlFilePath, transformedXML.xml);
 
   const converted = await convert(
     localXmlFilePath,
@@ -76,5 +92,6 @@ export const convertXmlToJson = async (version: VersionedReviewedPreprint, mecaF
   return {
     result,
     path: destination,
+    xsltLogs: transformedXML.logs,
   };
 };
