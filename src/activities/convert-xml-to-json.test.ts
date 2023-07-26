@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { Context } from '@temporalio/activity';
-import { transformXML } from './transform-xml';
+import { transformXML } from './convert-xml-to-json';
 import { config } from '../config';
 
 // Mock Context, axios, and config
@@ -43,7 +43,7 @@ describe('TransformXML', () => {
 
     expect(mockedAxios.post).toHaveBeenCalledTimes(1);
     expect(mockedAxios.post).toHaveBeenCalledWith(config.xsltTransformAddress, xmlInput);
-    expect(result).toEqual(response.xml);
+    expect(result).toEqual(response);
   });
 
   it('should handle transform error', async () => {
