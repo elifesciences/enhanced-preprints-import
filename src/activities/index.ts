@@ -7,3 +7,4 @@ export { filterDocmapIndex } from './find-all-docmaps';
 export { generateVersionJson } from './generate-version-json';
 export { parseDocMap } from './parse-docmap';
 export { sendVersionToEpp } from './send-version-to-epp';
+export { transformXML } from './transform-xml';

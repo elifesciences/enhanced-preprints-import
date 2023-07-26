@@ -6,7 +6,6 @@ import { EPPPeerReview } from '../activities/fetch-review-content';
 import type * as activities from '../activities/index';
 
 const {
-  convertXmlToJson,
   fetchReviewContent,
 } = proxyActivities<typeof activities>({
   startToCloseTimeout: '1 minute',
@@ -19,6 +18,7 @@ const {
 });
 
 const {
+  convertXmlToJson,
   copySourcePreprintToEPP,
 } = proxyActivities<typeof activities>({
   startToCloseTimeout: '10 minutes',

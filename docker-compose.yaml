@@ -65,6 +65,7 @@ services:
       MECA_S3_ENDPOINT: http://minio:9000
       MECA_AWS_ACCESS_KEY_ID: minio
       MECA_AWS_SECRET_ACCESS_KEY: miniotest
+      XSLT_TRANSFORM_ADDRESS: http://xslt:80
     restart: on-failure:5
     command:
       - yarn
@@ -105,7 +106,8 @@ services:
 
   ## BIORXIV XSLT
   xslt:
-    image: ghcr.io/elifesciences/enhanced-preprints-biorxiv-xslt-api:master-546eda94-20230719.1020
+    image: ghcr.io/elifesciences/enhanced-preprints-biorxiv-xslt-api:master-a573c27b-20230724.1343
+    restart: always
     healthcheck:
       test: ["CMD-SHELL", "sh -c 'curl http://xslt:80/'"]
       interval: 5s
