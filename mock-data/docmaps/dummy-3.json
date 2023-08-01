@@ -60,7 +60,7 @@
           "content": [
             {
               "type": "computer-file",
-              "url": "s3://biorxiv/dummy-3.meca"
+              "url": "s3://biorxiv/dummy-3.zip"
             }
           ]
         }
