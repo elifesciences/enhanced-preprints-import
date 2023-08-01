@@ -45,7 +45,14 @@
           "item": {
             "type": "preprint",
             "doi": "10.7554/000001.1",
-            "versionIdentifier": "1"
+            "versionIdentifier": "1",
+            "embodimentOf": {
+              "type": "menuscript",
+              "doi": "10.7554/000001",
+              "identifier": "000001",
+              "volumeIdentifier": "1",
+              "electronicArticleIdentifier": "RP000001"
+            }
           },
           "status": "draft"
         }
