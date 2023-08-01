@@ -2,7 +2,6 @@ import { Article } from '@stencila/schema';
 import { GetObjectCommand, GetObjectCommandInput } from '@aws-sdk/client-s3';
 import { Context } from '@temporalio/activity';
 import { Manuscript, VersionedReviewedPreprint } from '@elifesciences/docmap-ts/dist/docmap-parser';
-import { Preprint } from '@elifesciences/docmap-ts';
 import { getEPPS3Client } from '../S3Bucket';
 import { EnhancedArticle } from './send-version-to-epp';
 import { ImportContentOutput } from '../workflows/import-content';
