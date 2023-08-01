@@ -30,6 +30,8 @@ export type EnhancedArticle = {
   sentForReview?: Date,
   peerReview?: EPPPeerReview,
   published?: Date,
+  volume?: string,
+  eLocationId?: string,
 };
 
 type EPPImportResponse = {
