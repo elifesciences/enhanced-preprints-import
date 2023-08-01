@@ -61,8 +61,8 @@ export const generateVersionJson: GenerateVersionJson = async ({
     sentForReview: version.sentForReviewDate,
     peerReview: importContentResult.reviewData,
     published: version.publishedDate,
-    volume: manuscript.volume,
-    eLocationId: manuscript.eLocationId,
+    volume: manuscript?.volume,
+    eLocationId: manuscript?.eLocationId,
   };
 
   return versionJSON;
