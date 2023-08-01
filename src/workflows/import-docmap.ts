@@ -48,9 +48,12 @@ export async function importDocmap(url: string): Promise<ImportDocmapOutput[]> {
         };
       }
       if (result.manuscript === undefined) {
-        throw new Error("Manuscript is undefined"); 
+        throw new Error('Manuscript is undefined');
+        return;
       }
-      const versionJson = await generateVersionJson({ importContentResult, msid: result.id, version, manuscript: result.manuscript });
+      const versionJson = await generateVersionJson({
+        importContentResult, msid: result.id, version, manuscript: result.manuscript,
+      });
       await sendVersionToEpp(versionJson);
       return {
         id: version.id,
