@@ -23,11 +23,10 @@
           "outputs": [
             {
               "type": "preprint",
-              "doi": "10.1101/000001",
-              "url": "https://www.biorxiv.org/content/10.1101/000001v1",
-              "published": "2022-11-14",
+              "identifier": "000001",
+              "doi": "10.7554/000001.1",
               "versionIdentifier": "1",
-              "_tdmPath": "s3://biorxiv/dummy-1.meca"
+              "license": "http://creativecommons.org/licenses/by/4.0/"
             }
           ]
         }
@@ -39,10 +38,33 @@
             "doi": "10.1101/000001",
             "versionIdentifier": "1"
           },
-          "status": "manuscript-published"
+          "status": "under-review",
+          "happened": "2023-05-06T09:03:08+00:00"
+        },
+        {
+          "item": {
+            "type": "preprint",
+            "doi": "10.7554/000001.1",
+            "versionIdentifier": "1"
+          },
+          "status": "draft"
         }
       ],
-      "inputs": []
+      "inputs": [
+        {
+          "type": "preprint",
+          "doi": "10.1101/000001",
+          "url": "https://www.biorxiv.org/content/10.1101/000001v1",
+          "versionIdentifier": "1",
+          "published": "2023-05-05",
+          "content": [
+            {
+              "type": "computer-file",
+              "url": "s3://biorxiv/dummy-1.meca"
+            }
+          ]
+        }
+      ]
     }
   }
 }
