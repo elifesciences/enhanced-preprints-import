@@ -21,7 +21,7 @@ const parseJsonContentToProcessedArticle = (content: string) => {
 type GenerateVersionJson = (
   {
     importContentResult, msid, version, manuscript,
-  }: { importContentResult: ImportContentOutput, msid: string, version: VersionedReviewedPreprint, manuscript: Manuscript }
+  }: { importContentResult: ImportContentOutput, msid: string, version: VersionedReviewedPreprint, manuscript?: Manuscript }
 ) => Promise<EnhancedArticle>;
 
 export const generateVersionJson: GenerateVersionJson = async ({
