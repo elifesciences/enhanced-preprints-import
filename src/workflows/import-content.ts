@@ -6,7 +6,6 @@ import { EPPPeerReview } from '../activities/fetch-review-content';
 import type * as activities from '../activities/index';
 
 const {
-  convertXmlToJson,
   fetchReviewContent,
 } = proxyActivities<typeof activities>({
   startToCloseTimeout: '1 minute',
@@ -19,6 +18,7 @@ const {
 });
 
 const {
+  convertXmlToJson,
   copySourcePreprintToEPP,
 } = proxyActivities<typeof activities>({
   startToCloseTimeout: '10 minutes',
@@ -46,7 +46,8 @@ export type ImportContentOutput = {
   mecaPath: S3File,
   mecaFiles: MecaFiles,
   jsonContentFile: S3File,
-  reviewData?: EPPPeerReview
+  reviewData?: EPPPeerReview,
+  xsltLogs: string[],
 };
 
 export async function importContent(version: VersionedReviewedPreprint): Promise<ImportContentOutput | string> {
@@ -59,7 +60,7 @@ export async function importContent(version: VersionedReviewedPreprint): Promise
   // Extract Meca
   const mecaFiles = await extractMeca(version);
 
-  const { path: jsonContentFile } = await convertXmlToJson(version, mecaFiles);
+  const { path: jsonContentFile, xsltLogs } = await convertXmlToJson(version, mecaFiles);
 
   // fetch review content (if present)
   const reviewData = await fetchReviewContent(version);
@@ -69,5 +70,6 @@ export async function importContent(version: VersionedReviewedPreprint): Promise
     mecaFiles,
     jsonContentFile,
     reviewData,
+    xsltLogs,
   };
 }

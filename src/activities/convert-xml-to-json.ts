@@ -4,37 +4,37 @@ import { mkdtemp } from 'fs/promises';
 import { tmpdir } from 'os';
 import path from 'path';
 import * as fs from 'fs';
+import axios from 'axios';
+import { Context } from '@temporalio/activity';
 import {
   GetObjectCommand,
-  GetObjectCommandOutput,
   PutObjectCommand,
   PutObjectCommandOutput,
 } from '@aws-sdk/client-s3';
-import { Readable } from 'stream';
 import {
   constructEPPS3FilePath, getEPPS3Client, getPrefixlessKey, S3File,
 } from '../S3Bucket';
 import { MecaFiles } from './extract-meca';
+import { config } from '../config';
+
+type TransformResponse = {
+  xml: string,
+  logs: string[],
+};
 
 type ConvertXmlToJsonOutput = {
   result: PutObjectCommandOutput,
-  path: S3File
+  path: S3File,
+  xsltLogs: string[],
 };
 
-async function saveObjectToFile(object: GetObjectCommandOutput, filePath: string): Promise<void> {
-  const fileStream = fs.createWriteStream(filePath);
+export const transformXML = async (xmlInput: string): Promise<TransformResponse> => {
+  Context.current().heartbeat('Starting XML transform');
+  const transformedResponse = await axios.post<TransformResponse>(config.xsltTransformAddress, xmlInput);
 
-  (object.Body as Readable).pipe(fileStream);
-
-  return new Promise((resolve, reject) => {
-    fileStream.on('finish', () => {
-      resolve();
-    });
-    fileStream.on('error', (error) => {
-      reject(error);
-    });
-  });
-}
+  Context.current().heartbeat('Finishing XML transform');
+  return transformedResponse.data;
+};
 
 export const convertXmlToJson = async (version: VersionedReviewedPreprint, mecaFiles: MecaFiles): Promise<ConvertXmlToJsonOutput> => {
   const tmpDirectory = await mkdtemp(`${tmpdir()}/epp_json`);
@@ -45,7 +45,14 @@ export const convertXmlToJson = async (version: VersionedReviewedPreprint, mecaF
   const s3 = getEPPS3Client();
   const source = constructEPPS3FilePath(mecaFiles.article.path, version);
   const object = await s3.send(new GetObjectCommand(source));
-  await saveObjectToFile(object, localXmlFilePath);
+
+  const xml = await object.Body?.transformToString();
+  if (!xml) {
+    throw new Error('Unable to retrieve XML from S3');
+  }
+
+  const transformedXML = await transformXML(xml);
+  fs.writeFileSync(localXmlFilePath, transformedXML.xml);
 
   const converted = await convert(
     localXmlFilePath,
@@ -85,5 +92,6 @@ export const convertXmlToJson = async (version: VersionedReviewedPreprint, mecaF
   return {
     result,
     path: destination,
+    xsltLogs: transformedXML.logs,
   };
 };

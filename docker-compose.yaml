@@ -2,8 +2,8 @@ services:
   minio:
     image: minio/minio:RELEASE.2023-01-02T09-40-09Z
     ports:
-      - 9000:9000
-      - 9001:9001
+      - 9100:9000
+      - 9101:9001
     volumes:
       - minio_storage:/data
     environment:
@@ -65,6 +65,7 @@ services:
       MECA_S3_ENDPOINT: http://minio:9000
       MECA_AWS_ACCESS_KEY_ID: minio
       MECA_AWS_SECRET_ACCESS_KEY: miniotest
+      XSLT_TRANSFORM_ADDRESS: http://xslt:80
     restart: on-failure:5
     command:
       - yarn
@@ -105,7 +106,8 @@ services:
 
   ## BIORXIV XSLT
   xslt:
-    image: ghcr.io/elifesciences/enhanced-preprints-biorxiv-xslt-api:master-546eda94-20230719.1020
+    image: ghcr.io/elifesciences/enhanced-preprints-biorxiv-xslt-api:master-a573c27b-20230724.1343
+    restart: always
     healthcheck:
       test: ["CMD-SHELL", "sh -c 'curl http://xslt:80/'"]
       interval: 5s
@@ -117,7 +119,7 @@ services:
 
   ## EPP API
   api:
-    image: ghcr.io/elifesciences/enhanced-preprints:master-95df4168-20230714.1848
+    image: ghcr.io/elifesciences/enhanced-preprints:master-ea68c9d8-20230801.0920
     healthcheck:
       test: ["CMD-SHELL", "sh -c 'apk add curl; curl http://api:3000/'"]
       interval: 5s

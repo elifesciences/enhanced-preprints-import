@@ -20,6 +20,7 @@ export type Config = {
   temporalNamespace: string,
   temporalTaskQueue: string,
   prometheusBindAddress: string,
+  xsltTransformAddress: string,
 };
 
 if (!env.EPP_SERVER_URI) {
@@ -49,6 +50,7 @@ export const config: Config = {
   biorxivURI: env.BIORXIV_URI || 'https://api.biorxiv.org',
   prometheusBindAddress: env.PROMETHEUS_BIND_ADDRESS || '0.0.0.0:9464',
   temporalServer: env.TEMPORAL_SERVER || 'localhost',
+  xsltTransformAddress: env.XSLT_TRANSFORM_ADDRESS || 'http://localhost:3004',
   temporalNamespace: env.TEMPORAL_NAMESPACE || 'default',
   temporalTaskQueue: env.TEMPORAL_TASK_QUEUE || 'epp',
 };
