@@ -27,12 +27,11 @@
               "doi": "10.7554/000001.1",
               "versionIdentifier": "1",
               "license": "http://creativecommons.org/licenses/by/4.0/",
-              "embodimentOf": {
+              "partOf": {
                 "type": "manuscript",
                 "doi": "10.7554/000001",
                 "identifier": "000001",
-                "volumeIdentifier": "1",
-                "electronicArticleIdentifier": "RP000001"
+                "volumeIdentifier": "1"
               }
             }
           ]
@@ -52,7 +51,13 @@
           "item": {
             "type": "preprint",
             "doi": "10.7554/000001.1",
-            "versionIdentifier": "1"
+            "versionIdentifier": "1",
+            "partOf": {
+              "type": "manuscript",
+              "doi": "10.7554/000001",
+              "identifier": "000001",
+              "electronicArticleIdentifier": "RP000001"
+            }
           },
           "status": "draft"
         }
