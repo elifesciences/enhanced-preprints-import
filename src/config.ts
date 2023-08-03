@@ -17,6 +17,8 @@ export type Config = {
   eppServerUri: string,
   biorxivURI: string,
   temporalServer: string,
+  temporalNamespace: string,
+  temporalTaskQueue: string,
   prometheusBindAddress: string,
   xsltTransformAddress: string,
 };
@@ -49,4 +51,6 @@ export const config: Config = {
   prometheusBindAddress: env.PROMETHEUS_BIND_ADDRESS || '0.0.0.0:9464',
   temporalServer: env.TEMPORAL_SERVER || 'localhost',
   xsltTransformAddress: env.XSLT_TRANSFORM_ADDRESS || 'http://localhost:3004',
+  temporalNamespace: env.TEMPORAL_NAMESPACE || 'default',
+  temporalTaskQueue: env.TEMPORAL_TASK_QUEUE || 'epp',
 };
