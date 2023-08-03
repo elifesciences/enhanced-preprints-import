@@ -1,6 +1,7 @@
 import { Article } from '@stencila/schema';
 import { GetObjectCommand, GetObjectCommandInput } from '@aws-sdk/client-s3';
 import { Context } from '@temporalio/activity';
+import { Manuscript, VersionedReviewedPreprint } from '@elifesciences/docmap-ts/dist/docmap-parser';
 import { getEPPS3Client } from '../S3Bucket';
 import { EnhancedArticle } from './send-version-to-epp';
 import { ImportContentOutput } from '../workflows/import-content';
@@ -18,10 +19,22 @@ const parseJsonContentToProcessedArticle = (content: string) => {
 };
 
 type GenerateVersionJson = (
-  { importContentResult, msid, version }: { importContentResult: ImportContentOutput, msid: string, version: any }
+  {
+    importContentResult, msid, version, manuscript,
+  }: { importContentResult: ImportContentOutput, msid: string, version: VersionedReviewedPreprint, manuscript?: Manuscript }
 ) => Promise<EnhancedArticle>;
 
-export const generateVersionJson: GenerateVersionJson = async ({ importContentResult, msid, version }) => {
+export const generateVersionJson: GenerateVersionJson = async ({
+  importContentResult, msid, version, manuscript,
+}) => {
+  if (version.preprint.publishedDate === undefined) {
+    throw new Error("Preprint doesn't have a published date");
+  }
+
+  if (version.preprint.url === undefined) {
+    throw new Error("Preprint doesn't have a URL");
+  }
+
   const s3 = getEPPS3Client();
 
   const getObjectCommandInput: GetObjectCommandInput = {
@@ -46,8 +59,10 @@ export const generateVersionJson: GenerateVersionJson = async ({ importContentRe
     preprintUrl: version.preprint.url,
     preprintPosted: version.preprint.publishedDate,
     sentForReview: version.sentForReviewDate,
-    peerReview: importContentResult.reviewData ?? version.peerReview,
+    peerReview: importContentResult.reviewData,
     published: version.publishedDate,
+    volume: manuscript?.volume,
+    eLocationId: manuscript?.eLocationId,
   };
 
   return versionJSON;
