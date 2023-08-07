@@ -106,14 +106,8 @@ services:
 
   ## BIORXIV XSLT
   xslt:
-    image: ghcr.io/elifesciences/enhanced-preprints-biorxiv-xslt-api:master-a573c27b-20230724.1343
+    image: ghcr.io/elifesciences/enhanced-preprints-biorxiv-xslt-api:master-afc3e88c-20230803.1222
     restart: always
-    healthcheck:
-      test: ["CMD-SHELL", "sh -c 'curl http://xslt:80/'"]
-      interval: 5s
-      timeout: 5s
-      retries: 10
-      start_period: 2s
     ports:
       - 3004:80
 
