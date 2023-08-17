@@ -1,4 +1,4 @@
-FROM node:16@sha256:aeb19a58be00038b1d519538ee24ee5c8e4ddc6f42703e70e8b02dff79269da2 as base
+FROM node:16@sha256:818b5adc1ee4a04e8ad5efeb70871571efe414315ad7f16844f24f9962ffdc7e as base
 RUN mkdir /app
 WORKDIR /app
 
