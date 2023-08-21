@@ -56,7 +56,11 @@
               "type": "manuscript",
               "doi": "10.7554/000001",
               "identifier": "000001",
-              "electronicArticleIdentifier": "RP000001"
+              "electronicArticleIdentifier": "RP000001",
+              "subjectDisciplines": [
+                "Cell Biology",
+                "Structural Biology and Molecular Biophysics"
+              ]
             }
           },
           "status": "draft"

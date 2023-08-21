@@ -63,6 +63,7 @@ export const generateVersionJson: GenerateVersionJson = async ({
     published: version.publishedDate,
     volume: manuscript?.volume,
     eLocationId: manuscript?.eLocationId,
+    subjects: manuscript?.subjects,
   };
 
   return versionJSON;
