@@ -2084,14 +2084,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@elifesciences/docmap-ts@https://github.com/elifesciences/docmap-ts#v0.0.25":
-  version: 0.0.25
-  resolution: "@elifesciences/docmap-ts@https://github.com/elifesciences/docmap-ts.git#commit=12fde9f670b79cdeae70f8f129cc683524d32001"
+"@elifesciences/docmap-ts@https://github.com/elifesciences/docmap-ts#subject-disciplines":
+  version: 0.0.26
+  resolution: "@elifesciences/docmap-ts@https://github.com/elifesciences/docmap-ts.git#commit=4941076c474cc6cffeec01ffde618871ef4cc799"
   dependencies:
     "@tsconfig/node18": ^1.0.1
     ts-node: ^10.9.1
     typescript: ^4.9.3
-  checksum: 25522b9230da7128937cc98591626ce722b59685a3dec413190b7854af6c9c8dc894824f0e7e04a502980dd901f82ec0be9ce37c8ebfe7ddfb50e69121a87841
+  checksum: 3c128f1ce58c7d5d184d3736a07fdcf0ec123aefe1cae0e445fb8465adc13262ef8771974d25d8953bf1dd67e408aeda8d9c2f37706880460f310a0ce4e18c43
   languageName: node
   linkType: hard
 
@@ -7220,7 +7220,7 @@ __metadata:
   dependencies:
     "@aws-sdk/client-s3": ^3.310.0
     "@aws-sdk/credential-providers": ^3.310.0
-    "@elifesciences/docmap-ts": "https://github.com/elifesciences/docmap-ts#v0.0.25"
+    "@elifesciences/docmap-ts": "https://github.com/elifesciences/docmap-ts#subject-disciplines"
     "@stencila/encoda": 1.0.1
     "@stencila/schema": ^1.18.0
     "@temporalio/activity": ^1.7.4
