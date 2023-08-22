@@ -47,9 +47,11 @@ services:
   yarn:
     build:
       context: .
-      target: worker
+      target: deps
     command: yarn
     volumes:
+      - ./package.json:/app/package.json
+      - ./yarn.lock:/app/yarn.lock
       - node_modules:/app/node_modules
 
   worker:
