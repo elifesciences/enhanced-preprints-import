@@ -80,7 +80,22 @@
             }
           ]
         }
-      ]
+      ],
+      "next-step": "_:b1"
+    },
+    "_:b1": {
+      "inputs": [],
+      "actions": [],
+      "assertions": [{
+        "item": {
+          "type": "preprint",
+          "doi": "10.7554/000001.1",
+          "versionIdentifier": "1"
+        },
+        "status": "manuscript-published",
+        "happened": "2023-05-07T09:03:08+00:00"
+      }],
+      "previous-step": "_:b0"
     }
   }
 }
