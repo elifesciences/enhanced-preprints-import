@@ -58,9 +58,7 @@ services:
       target: worker
     depends_on:
       createbucket:
-        condition: service_healthy
-      temporal:
-        condition: service_healthy
+        condition: service_completed_successfully
       yarn:
         condition: service_completed_successfully
     environment:
