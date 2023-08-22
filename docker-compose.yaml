@@ -1,3 +1,4 @@
+version: '3.4'
 services:
   minio:
     image: minio/minio:RELEASE.2023-01-02T09-40-09Z
@@ -43,14 +44,25 @@ services:
     volumes:
       - temporal_data:/data
 
+  yarn:
+    build:
+      context: .
+      target: worker
+    command: yarn
+    volumes:
+      - node_modules:/app/node_modules
+
   worker:
     build:
       context: .
-      dockerfile: Dockerfile
       target: worker
     depends_on:
-      - createbucket
-      - temporal
+      createbucket:
+        condition: service_healthy
+      temporal:
+        condition: service_healthy
+      yarn:
+        condition: service_completed_successfully
     environment:
       EPP_SERVER_URI: http://api:3000
       TEMPORAL_SERVER: temporal:7233
@@ -66,12 +78,13 @@ services:
       MECA_AWS_ACCESS_KEY_ID: minio
       MECA_AWS_SECRET_ACCESS_KEY: miniotest
       XSLT_TRANSFORM_ADDRESS: http://xslt:80
-    restart: on-failure:5
+    restart: on-failure
     command:
       - yarn
       - start:worker:dev
     volumes:
       - ./src:/app/src
+      - node_modules:/app/node_modules
 
   # Downstream services for EPP
   ## Database (MongoDB) server
@@ -183,6 +196,7 @@ services:
       - ./.docker/nginx.conf:/etc/nginx/conf.d/default.conf
 
 volumes:
-  minio_storage: {}
-  mongodb_data: {}
-  temporal_data: {}
+  minio_storage:
+  mongodb_data:
+  temporal_data:
+  node_modules:
