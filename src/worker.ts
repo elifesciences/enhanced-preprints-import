@@ -28,7 +28,7 @@ async function run() {
     workflowsPath: require.resolve('./workflows'),
     taskQueue: config.temporalTaskQueue,
     namespace: config.temporalNamespace,
-    maxConcurrentActivityTaskExecutions: 10,
+    maxConcurrentActivityTaskExecutions: config.temporalMaxConcurrentActivityTaskExecutions,
     activities,
   });
 
