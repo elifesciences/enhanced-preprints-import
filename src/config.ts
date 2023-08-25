@@ -39,6 +39,7 @@ const getNumericEnvVar = (varName: string, defaultValue: number) => {
     return value;
   }
 
+  // eslint-disable-next-line no-console
   console.log(`Could not interpret EnvVar ${varName} value '${env[varName]}' as integer, returning default ${defaultValue}`);
   return defaultValue;
 };
