@@ -29,6 +29,8 @@ async function run() {
     taskQueue: config.temporalTaskQueue,
     namespace: config.temporalNamespace,
     maxConcurrentActivityTaskExecutions: config.temporalMaxConcurrentActivityTaskExecutions,
+    maxConcurrentWorkflowTaskExecutions: config.temporalMaxConcurrentWorkflowTaskExecutions,
+    maxCachedWorkflows: config.temporalMaxCachedWorkflows,
     activities,
   });
 

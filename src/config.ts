@@ -21,7 +21,9 @@ export type Config = {
   temporalTaskQueue: string,
   prometheusBindAddress: string,
   xsltTransformAddress: string,
-  temporalMaxConcurrentActivityTaskExecutions: number
+  temporalMaxConcurrentActivityTaskExecutions: number,
+  temporalMaxConcurrentWorkflowTaskExecutions: number,
+  temporalMaxCachedWorkflows: number,
 };
 
 if (!env.EPP_SERVER_URI) {
@@ -71,4 +73,6 @@ export const config: Config = {
   temporalNamespace: env.TEMPORAL_NAMESPACE || 'default',
   temporalTaskQueue: env.TEMPORAL_TASK_QUEUE || 'epp',
   temporalMaxConcurrentActivityTaskExecutions: getNumericEnvVar('TEMPORAL_MAX_CONCURRENT_ACTIVITY_TASK_EXECUTIONS', 10),
+  temporalMaxConcurrentWorkflowTaskExecutions: getNumericEnvVar('TEMPORAL_MAX_CONCURRENT_WORKFLOW_TASK_EXECUTIONS', 2),
+  temporalMaxCachedWorkflows: getNumericEnvVar('TEMPORAL_MAX_CACHED_WORKFLOWS', 2),
 };
