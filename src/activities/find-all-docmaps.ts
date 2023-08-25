@@ -8,9 +8,9 @@ type DocMapIndex = {
 };
 
 type DocMapWithIdHash = {
-  docMap: DocMap,
+  docMapId: string,
   docMapHash: string,
-  idHash: string,
+  docMapIdHash: string,
 };
 
 export const filterDocmapIndex = async (hashes: Hash[], docMapIndex: string, start?: number, end?: number): Promise<DocMapWithIdHash[]> => {
@@ -27,9 +27,9 @@ export const filterDocmapIndex = async (hashes: Hash[], docMapIndex: string, sta
       newHashes.push(docMapHash);
       return !hashes.some(({ hash }) => hash === docMapHash);
     }).map<DocMapWithIdHash>((docMap) => ({
-    docMap,
+    docMapId: docMap.id,
     docMapHash: MD5(docMap),
-    idHash: MD5(docMap.id),
+    docMapIdHash: MD5(docMap.id),
   }));
 
   return filteredDocMapsWithHash;
