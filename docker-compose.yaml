@@ -132,7 +132,7 @@ services:
       - 3000:3000
 
   app:
-    image: ghcr.io/elifesciences/enhanced-preprints-client:master-768cddf0-20230903.0018
+    image: ghcr.io/elifesciences/enhanced-preprints-client:master-0a9aea3d-20230904.1427
     healthcheck:
       test: ["CMD-SHELL", "sh -c 'apk add curl; curl -X POST http://app:3000/'"]
       interval: 5s
