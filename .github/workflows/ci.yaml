@@ -14,7 +14,7 @@ jobs:
     env:
       IMPORT_WORKER_IMAGE_REPO: ghcr.io/elifesciences/enhanced-preprints-import-worker
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v2
       - name: Set up Docker Buildx
@@ -46,7 +46,7 @@ jobs:
     env:
       IMPORT_WORKER_IMAGE_REPO: ghcr.io/elifesciences/enhanced-preprints-import-worker
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v2
       - name: Set up Docker Buildx
