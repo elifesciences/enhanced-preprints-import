@@ -126,7 +126,7 @@ services:
 
   ## EPP API
   api:
-    image: ghcr.io/elifesciences/enhanced-preprints:master-d3dcc4be-20230822.0846
+    image: ghcr.io/elifesciences/enhanced-preprints:master-5b0bcf58-20230904.2135
     healthcheck:
       test: ["CMD-SHELL", "sh -c 'apk add curl; curl http://api:3000/'"]
       interval: 5s
@@ -145,7 +145,7 @@ services:
       - 3000:3000
 
   app:
-    image: ghcr.io/elifesciences/enhanced-preprints-client:master-e28698c3-20230822.1258
+    image: ghcr.io/elifesciences/enhanced-preprints-client:master-0a9aea3d-20230904.1427
     healthcheck:
       test: ["CMD-SHELL", "sh -c 'apk add curl; curl -X POST http://app:3000/'"]
       interval: 5s
@@ -165,7 +165,7 @@ services:
 
   ## Image Server
   image-server:
-    image: ghcr.io/elifesciences/epp-image-server:master-3c0e83f8-20230816.0352
+    image: ghcr.io/elifesciences/epp-image-server:master-1835990b-20230902.0312
     environment:
       SOURCE_STATIC: S3Source
       S3SOURCE_ENDPOINT: http://minio:9000/

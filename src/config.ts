@@ -21,11 +21,30 @@ export type Config = {
   temporalTaskQueue: string,
   prometheusBindAddress: string,
   xsltTransformAddress: string,
+  temporalMaxConcurrentActivityTaskExecutions: number,
+  temporalMaxConcurrentWorkflowTaskExecutions: number,
+  temporalMaxCachedWorkflows: number,
 };
 
 if (!env.EPP_SERVER_URI) {
   throw Error('Environment variable `EPP_SERVER_URI` is required');
 }
+
+const getNumericEnvVar = (varName: string, defaultValue: number) => {
+  if (env[varName] === undefined) {
+    return defaultValue;
+  }
+
+  const value = parseInt(env[varName] || '', 10);
+
+  if (Number.isInteger(value)) {
+    return value;
+  }
+
+  // eslint-disable-next-line no-console
+  console.log(`Could not interpret EnvVar ${varName} value '${env[varName]}' as integer, returning default ${defaultValue}`);
+  return defaultValue;
+};
 
 export const config: Config = {
   eppS3: {
@@ -53,4 +72,7 @@ export const config: Config = {
   xsltTransformAddress: env.XSLT_TRANSFORM_ADDRESS || 'http://localhost:3004',
   temporalNamespace: env.TEMPORAL_NAMESPACE || 'default',
   temporalTaskQueue: env.TEMPORAL_TASK_QUEUE || 'epp',
+  temporalMaxConcurrentActivityTaskExecutions: getNumericEnvVar('TEMPORAL_MAX_CONCURRENT_ACTIVITY_TASK_EXECUTIONS', 10),
+  temporalMaxConcurrentWorkflowTaskExecutions: getNumericEnvVar('TEMPORAL_MAX_CONCURRENT_WORKFLOW_TASK_EXECUTIONS', 2),
+  temporalMaxCachedWorkflows: getNumericEnvVar('TEMPORAL_MAX_CACHED_WORKFLOWS', 2),
 };

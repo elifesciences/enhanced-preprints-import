@@ -38,10 +38,10 @@ describe('parse-docmap-activity', () => {
     // Assert
     expect(result).toBeDefined();
     expect(result?.length).toStrictEqual(1);
-    expect(result?.[0].docMap).toMatchObject({ id: 'fake-docmap' });
+    expect(result?.[0].docMapId).toStrictEqual('fake-docmap');
     expect(result?.length).toStrictEqual(1);
     expect(result?.[0].docMapHash).toStrictEqual(mockedHash);
-    expect(result?.[0].idHash).toStrictEqual(mockedIdHash);
+    expect(result?.[0].docMapIdHash).toStrictEqual(mockedIdHash);
   });
 
   it('skips existing docmaps (that are hashed from the last import)', async () => {
