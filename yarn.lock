@@ -2084,14 +2084,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@elifesciences/docmap-ts@https://github.com/elifesciences/docmap-ts#v0.0.27":
-  version: 0.0.27
-  resolution: "@elifesciences/docmap-ts@https://github.com/elifesciences/docmap-ts.git#commit=745b11b6f37201aad7c53c310bed0c48f73ef373"
+"@elifesciences/docmap-ts@https://github.com/elifesciences/docmap-ts#v0.0.29":
+  version: 0.0.29
+  resolution: "@elifesciences/docmap-ts@https://github.com/elifesciences/docmap-ts.git#commit=04eda204929d58e186900bbb01f12857ee5460cb"
   dependencies:
     "@tsconfig/node18": ^1.0.1
     ts-node: ^10.9.1
     typescript: ^4.9.3
-  checksum: 475bf4e1c0bcdbd52467534d0f76e7b2ef6aa9509cc021a79dc60e883109c291ff09db3c655ada9c1e64489d91b72e00ca862f86edb406f1e111dd081264390a
+  checksum: f626973802db7abc43f14292d2b936217db7f64c04c35a406eb8ba2c0f01322bce81baa7b21432bdff30ecd6118d3284a440ca7994e0d9cb66b021db47e1cb1f
   languageName: node
   linkType: hard
 
@@ -7257,7 +7257,7 @@ __metadata:
   dependencies:
     "@aws-sdk/client-s3": ^3.310.0
     "@aws-sdk/credential-providers": ^3.310.0
-    "@elifesciences/docmap-ts": "https://github.com/elifesciences/docmap-ts#v0.0.27"
+    "@elifesciences/docmap-ts": "https://github.com/elifesciences/docmap-ts#v0.0.29"
     "@stencila/encoda": 1.0.1
     "@stencila/schema": ^1.18.0
     "@temporalio/activity": ^1.7.4
@@ -7277,7 +7277,7 @@ __metadata:
     eslint: 8.48.0
     eslint-config-airbnb: 19.0.4
     eslint-config-airbnb-typescript: 17.1.0
-    eslint-config-prettier: 8.10.0
+    eslint-config-prettier: 9.0.0
     eslint-plugin-deprecation: ^1.5.0
     eslint-plugin-import: 2.28.1
     eslint-plugin-no-only-tests: ^3.1.0
@@ -7579,14 +7579,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"eslint-config-prettier@npm:8.10.0":
-  version: 8.10.0
-  resolution: "eslint-config-prettier@npm:8.10.0"
+"eslint-config-prettier@npm:9.0.0":
+  version: 9.0.0
+  resolution: "eslint-config-prettier@npm:9.0.0"
   peerDependencies:
     eslint: ">=7.0.0"
   bin:
     eslint-config-prettier: bin/cli.js
-  checksum: 153266badd477e49b0759816246b2132f1dbdb6c7f313ca60a9af5822fd1071c2bc5684a3720d78b725452bbac04bb130878b2513aea5e72b1b792de5a69fec8
+  checksum: 362e991b6cb343f79362bada2d97c202e5303e6865888918a7445c555fb75e4c078b01278e90be98aa98ae22f8597d8e93d48314bec6824f540f7efcab3ce451
   languageName: node
   linkType: hard
 
