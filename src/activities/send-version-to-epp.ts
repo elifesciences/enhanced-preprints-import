@@ -33,6 +33,7 @@ export type EnhancedArticle = {
   volume?: string,
   eLocationId?: string,
   subjects?: string[],
+  publishedYear?: number
 };
 
 type EPPImportResponse = {
