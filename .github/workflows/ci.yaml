@@ -70,8 +70,7 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
           target: worker
-          # platforms: linux/amd64,linux/arm64
-          platforms: linux/amd64
+          platforms: linux/amd64,linux/arm64
           push: true
           tags: |
             ${{ env.IMPORT_WORKER_IMAGE_REPO }}:latest
