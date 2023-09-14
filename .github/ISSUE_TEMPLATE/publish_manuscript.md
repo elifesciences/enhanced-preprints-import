@@ -14,7 +14,7 @@ assignees:
 
 Who can help: @QueenKraken, @nlisgo, @scottaubrey
 
-- [ ] Manuscript is in data hub index (https://data-hub-api.elifesciences.org/enhanced-preprints/docmaps/v1/by-publisher/elife/get-by-manuscript-id?manuscript_id=%%msid%%)
+- [ ] Manuscript is in data hub index (https://data-hub-api.elifesciences.org/enhanced-preprints/docmaps/v2/by-publisher/elife/get-by-manuscript-id?manuscript_id=%%msid%%)
 
 or (only one should be ticked. remove other from description.)
 
