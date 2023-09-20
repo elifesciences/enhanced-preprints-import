@@ -33,7 +33,7 @@ const {
 const {
   extractMeca,
 } = proxyActivities<typeof activities>({
-  startToCloseTimeout: '10 minutes',
+  heartbeatTimeout: '5 minutes',
   retry: {
     initialInterval: '1 minute',
     backoffCoefficient: 2,
