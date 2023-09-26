@@ -168,6 +168,7 @@ export const extractMeca = async (version: VersionedReviewedPreprint): Promise<M
   const articleUploadPromise = uploadItem(article, article.path);
   const supportingFilesUploads = supportingFiles.map((figure) => uploadItem(figure, figure.path));
 
+  Context.current().heartbeat(`Commencing upload of manuscript with ${supportingFilesUploads.length} supporting files`);
   await Promise.all([
     articleUploadPromise,
     ...supportingFilesUploads,
