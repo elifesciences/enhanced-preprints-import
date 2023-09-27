@@ -130,16 +130,20 @@ export const extractMeca = async (version: VersionedReviewedPreprint): Promise<M
 
   // get other content that represent the article
   const otherArticleInstances = await Promise.all(items.filter((item) => item.type === 'article' && item.mimeType !== 'application/xml').map(extractFromThisArchive));
-  const supportingFiles = await Promise.all(items.filter((item) => ['figure', 'equation', 'table', 'supplement'].includes(item.type)).map(extractFromThisArchive));
+  const supportingFiles = await Promise.all(items.filter((item) => ['figure', 'fig', 'equation', 'inlineequation', 'inlinefigure', 'table', 'supplement', 'video'].includes(item.type)).map(extractFromThisArchive));
   supportingFiles.push(...otherArticleInstances);
 
   // check there are no more item types left to be imported
   const knownTypes = [
     'article',
     'figure',
+    'fig',
     'equation',
+    'inlineequation',
+    'inlinefigure',
     'table',
     'supplement',
+    'video'
 
     // unhandled item types
     'transfer-details',
