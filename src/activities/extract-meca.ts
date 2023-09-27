@@ -48,6 +48,7 @@ type ManifestItem = {
 };
 
 const extractFileContents = async (zip: JSZip, item: MecaFile, toDir: string): Promise<LocalMecaFile> => {
+  // Memory: This loads a file in the MECA into memory
   const content = await zip.file(item.path)?.async('base64');
   if (content === undefined) {
     throw Error(`MECA archive corrupted, expected ${item.path} from manifest, but it failed`);
@@ -74,12 +75,14 @@ export const extractMeca = async (version: VersionedReviewedPreprint): Promise<M
     Key: source.Key,
   };
   const buffer = await s3.send(new GetObjectCommand(getObjectCommandInput))
+    // Memory: This loads the MECA into memory
     .then((obj) => obj.Body?.transformToByteArray());
 
   if (buffer === undefined) {
     throw new Error('Could not retrieve object from S3');
   }
 
+  // Memory: Does this make a copy of the MECA contents?
   const zip = await JSZip.loadAsync(buffer);
 
   Context.current().heartbeat('Loading manifest');
