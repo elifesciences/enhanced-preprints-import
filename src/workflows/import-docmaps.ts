@@ -25,8 +25,8 @@ type ImportDocmapsOutput = ImportMessage & {
 
 export type Hash = { hash: string, idHash: string };
 
-export async function importDocmaps(docMapIndexUrl: string, hashes: Hash[], start?: number, end?: number, limit?: number): Promise<ImportDocmapsOutput> {
-  const docMapsWithIdHash = await filterDocmapIndex(hashes, docMapIndexUrl, start, end, limit);
+export async function importDocmaps(docMapIndexUrl: string, hashes: Hash[], start?: number, end?: number): Promise<ImportDocmapsOutput> {
+  const docMapsWithIdHash = await filterDocmapIndex(hashes, docMapIndexUrl, start, end);
 
   if (docMapsWithIdHash.length === 0) {
     return {
