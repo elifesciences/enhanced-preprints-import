@@ -4235,6 +4235,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/yauzl@npm:^2.10.1":
+  version: 2.10.1
+  resolution: "@types/yauzl@npm:2.10.1"
+  dependencies:
+    "@types/node": "*"
+  checksum: 3377916a2d493cb2422b167fb7dfff8cb3ea045a9489dab4955858719bf7fe6808e5f6a51ee819904fb7f623f7ac092b87f9d6a857ea1214a45070d19c8b3d7e
+  languageName: node
+  linkType: hard
+
 "@types/yauzl@npm:^2.9.1":
   version: 2.10.0
   resolution: "@types/yauzl@npm:2.10.0"
@@ -7271,6 +7280,7 @@ __metadata:
     "@types/jest": ^29.2.5
     "@types/node": ^18.11.9
     "@types/object-hash": ^3.0.2
+    "@types/yauzl": ^2.10.1
     "@typescript-eslint/eslint-plugin": 6.1.0
     "@typescript-eslint/parser": ^6.0.0
     axios: ^1.2.2
@@ -7291,6 +7301,7 @@ __metadata:
     ts-jest: 29.1.1
     ts-node: 10.9.1
     typescript: 5.2.2
+    yauzl: ^2.10.0
   languageName: unknown
   linkType: soft
 

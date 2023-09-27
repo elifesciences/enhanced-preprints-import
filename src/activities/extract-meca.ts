@@ -1,6 +1,6 @@
 import { VersionedReviewedPreprint } from '@elifesciences/docmap-ts';
 import { XMLParser } from 'fast-xml-parser';
-import { mkdirSync, writeFileSync } from 'fs';
+import { mkdirSync } from 'fs';
 import { mkdtemp } from 'fs/promises';
 import JSZip from 'jszip';
 import { tmpdir } from 'os';
@@ -8,6 +8,7 @@ import path, { dirname } from 'path';
 import { GetObjectCommand, GetObjectCommandInput, PutObjectCommand } from '@aws-sdk/client-s3';
 import * as fs from 'fs';
 import { Context } from '@temporalio/activity';
+import yauzl from 'yauzl';
 import { constructEPPS3FilePath, getEPPS3Client } from '../S3Bucket';
 import { NonRetryableError } from '../errors';
 
@@ -47,21 +48,31 @@ type ManifestItem = {
   instance: ManifestItemInstance[],
 };
 
-const extractFileContents = async (zip: JSZip, item: MecaFile, toDir: string): Promise<LocalMecaFile> => {
-  // Memory: This loads a file in the MECA into memory
-  const content = await zip.file(item.path)?.async('base64');
-  if (content === undefined) {
-    throw Error(`MECA archive corrupted, expected ${item.path} from manifest, but it failed`);
-  }
-  const outputPath = `${toDir}/${item.path}`;
-  const outputDir = dirname(outputPath);
-  mkdirSync(outputDir, { recursive: true });
-  writeFileSync(outputPath, content, 'base64');
-  return {
-    ...item,
-    localPath: outputPath,
-  };
-};
+const extractFileContents = (zipFilePath: string, item: MecaFile, toDir: string): Promise<LocalMecaFile> => new Promise((resolve) => {
+  yauzl.open(zipFilePath, { lazyEntries: true }, (yauzlErr, zipfile) => {
+    if (yauzlErr) throw yauzlErr;
+    zipfile.readEntry();
+    zipfile.on('entry', (entry) => {
+      if (entry.fileName !== item.path) {
+        zipfile.readEntry();
+        return;
+      }
+      const outputPath = `${toDir}/${item.path}`;
+      const outputDir = dirname(outputPath);
+      mkdirSync(outputDir, { recursive: true });
+      zipfile.openReadStream(entry, (readError, readStream) => {
+        if (readError) throw readError;
+        readStream.pipe(fs.createWriteStream(outputPath));
+        readStream.on('end', () => {
+          resolve({
+            ...item,
+            localPath: outputPath,
+          });
+        });
+      });
+    });
+  });
+});
 
 export const extractMeca = async (version: VersionedReviewedPreprint): Promise<MecaFiles> => {
   const tmpDirectory = await mkdtemp(`${tmpdir()}/epp_content`);
