@@ -143,7 +143,7 @@ export const extractMeca = async (version: VersionedReviewedPreprint): Promise<M
     'inlinefigure',
     'table',
     'supplement',
-    'video'
+    'video',
 
     // unhandled item types
     'transfer-details',
