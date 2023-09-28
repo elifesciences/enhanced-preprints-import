@@ -25,13 +25,25 @@ jobs:
           registry: ghcr.io
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
-      - name: Build and load test image
+      - name: Build multiplatform image
         uses: docker/build-push-action@v4
         with:
           context: .
           cache-from: type=gha
           cache-to: type=gha,mode=max
           platforms: linux/amd64,linux/arm64
+          target: tests
+          load: false
+          push: false
+          tags: |
+            ${{ env.IMPORT_WORKER_IMAGE_REPO }}:test-${{ github.sha }}
+      - name: load build platform image
+        uses: docker/build-push-action@v4
+        with:
+          context: .
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+          platforms: linux/amd64
           target: tests
           load: true
           tags: |
