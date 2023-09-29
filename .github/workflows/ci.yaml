@@ -51,8 +51,6 @@ jobs:
           target: tests
           load: false
           push: false
-          tags: |
-            ${{ env.IMPORT_WORKER_IMAGE_REPO }}:test-${{ github.sha }}
   build-and-push:
     needs: [test]
     runs-on: ubuntu-latest
