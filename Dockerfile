@@ -15,7 +15,6 @@ WORKDIR /app
 COPY --from=deps /app/.yarn .yarn
 COPY --from=deps /app/package.json package.json
 COPY --from=deps /app/yarn.lock yarn.lock
-COPY --from=deps /app/node_modules node_modules
 COPY --from=deps /app/.yarnrc.yml .yarnrc.yml
 ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true
 RUN yarn
