@@ -33,7 +33,7 @@ jobs:
         run: docker run ${{ env.IMPORT_WORKER_IMAGE_REPO }}:test-${{ github.sha }} yarn test
       - name: run lint
         run: docker run ${{ env.IMPORT_WORKER_IMAGE_REPO }}:test-${{ github.sha }} yarn lint
-  test-multiplatform:
+  test-build-multiplatform:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
