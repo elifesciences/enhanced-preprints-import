@@ -12,7 +12,9 @@ RUN yarn
 FROM --platform=$TARGETPLATFORM node:16 as platform_deps
 RUN mkdir /app
 WORKDIR /app
-COPY --from=deps /app/.yarn .yarn
+COPY --from=deps /app/.yarn/patches .yarn/patches
+COPY --from=deps /app/.yarn/releases .yarn/releases
+COPY --from=deps /app/.yarn/cache .yarn/cache
 COPY --from=deps /app/package.json package.json
 COPY --from=deps /app/yarn.lock yarn.lock
 COPY --from=deps /app/.yarnrc.yml .yarnrc.yml
@@ -28,7 +30,6 @@ ADD src/ src/
 ADD tsconfig.json tsconfig.json
 COPY --from=platform_deps /app/package.json package.json
 COPY --from=platform_deps /app/node_modules node_modules
-RUN yarn
 
 
 FROM app as tests
