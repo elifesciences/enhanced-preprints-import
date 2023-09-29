@@ -12,7 +12,6 @@ RUN yarn
 FROM --platform=$TARGETPLATFORM node:16 as platform_deps
 RUN mkdir /app
 WORKDIR /app
-COPY --from=deps /app/.yarn/patches .yarn/patches
 COPY --from=deps /app/.yarn/releases .yarn/releases
 COPY --from=deps /app/.yarn/cache .yarn/cache
 COPY --from=deps /app/package.json package.json
