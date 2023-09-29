@@ -4,8 +4,8 @@ WORKDIR /app
 RUN apt-get update && apt-get install -y git python3 build-essential libc-dev
 ADD package.json package.json
 ADD yarn.lock yarn.lock
-ADD .yarn .yarn
 ADD .yarnrc.yml .yarnrc.yml
+ADD .yarn .yarn
 ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true
 RUN yarn
 
