@@ -8,6 +8,7 @@ import * as fs from 'fs';
 import { Context } from '@temporalio/activity';
 import { Readable } from 'stream';
 import decompress from 'decompress';
+import rimraf from 'rimraf';
 import { constructEPPS3FilePath, getEPPS3Client } from '../S3Bucket';
 import { NonRetryableError } from '../errors';
 
@@ -180,6 +181,9 @@ export const extractMeca = async (version: VersionedReviewedPreprint): Promise<M
     articleUploadPromise,
     ...supportingFilesUploads,
   ]);
+
+  // Delete tmpDirectory
+  rimraf.sync(tmpDirectory);
 
   return {
     id,

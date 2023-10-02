@@ -1,0 +1,130 @@
+CONTAINER ID   NAME                                 CPU %     MEM USAGE / LIMIT     MEM %     NET I/O           BLOCK I/O    PIDS
+9472c6c390f9   enhanced-preprints-import_worker_1   0.02%     470.4MiB / 30.87GiB   1.49%     9.55kB / 2.01kB   0B / 852kB   72
+CONTAINER ID   NAME                                 CPU %     MEM USAGE / LIMIT     MEM %     NET I/O           BLOCK I/O    PIDS
+9472c6c390f9   enhanced-preprints-import_worker_1   0.02%     470.4MiB / 30.87GiB   1.49%     9.66kB / 2.01kB   0B / 852kB   72
+CONTAINER ID   NAME                                 CPU %     MEM USAGE / LIMIT     MEM %     NET I/O         BLOCK I/O    PIDS
+9472c6c390f9   enhanced-preprints-import_worker_1   27.45%    475.2MiB / 30.87GiB   1.50%     49kB / 27.4kB   0B / 852kB   72
+CONTAINER ID   NAME                                 CPU %     MEM USAGE / LIMIT     MEM %     NET I/O         BLOCK I/O    PIDS
+9472c6c390f9   enhanced-preprints-import_worker_1   0.02%     477.4MiB / 30.87GiB   1.51%     66.1kB / 35kB   0B / 852kB   72
+CONTAINER ID   NAME                                 CPU %     MEM USAGE / LIMIT     MEM %     NET I/O         BLOCK I/O    PIDS
+9472c6c390f9   enhanced-preprints-import_worker_1   0.01%     477.4MiB / 30.87GiB   1.51%     66.1kB / 35kB   0B / 852kB   72
+CONTAINER ID   NAME                                 CPU %     MEM USAGE / LIMIT     MEM %     NET I/O         BLOCK I/O    PIDS
+9472c6c390f9   enhanced-preprints-import_worker_1   0.03%     477.7MiB / 30.87GiB   1.51%     66.1kB / 35kB   0B / 852kB   72
+CONTAINER ID   NAME                                 CPU %     MEM USAGE / LIMIT     MEM %     NET I/O          BLOCK I/O    PIDS
+9472c6c390f9   enhanced-preprints-import_worker_1   4.87%     478.3MiB / 30.87GiB   1.51%     209kB / 44.3kB   0B / 852kB   72
+CONTAINER ID   NAME                                 CPU %     MEM USAGE / LIMIT     MEM %     NET I/O          BLOCK I/O    PIDS
+9472c6c390f9   enhanced-preprints-import_worker_1   18.08%    480.9MiB / 30.87GiB   1.52%     24.3MB / 164kB   0B / 852kB   72
+CONTAINER ID   NAME                                 CPU %     MEM USAGE / LIMIT     MEM %     NET I/O          BLOCK I/O    PIDS
+9472c6c390f9   enhanced-preprints-import_worker_1   33.31%    484.5MiB / 30.87GiB   1.53%     60.1MB / 314kB   0B / 852kB   72
+CONTAINER ID   NAME                                 CPU %     MEM USAGE / LIMIT     MEM %     NET I/O          BLOCK I/O     PIDS
+9472c6c390f9   enhanced-preprints-import_worker_1   69.70%    486.4MiB / 30.87GiB   1.54%     98.5MB / 467kB   0B / 55.4MB   72
+CONTAINER ID   NAME                                 CPU %     MEM USAGE / LIMIT     MEM %     NET I/O         BLOCK I/O     PIDS
+9472c6c390f9   enhanced-preprints-import_worker_1   68.71%    496.9MiB / 30.87GiB   1.57%     137MB / 618kB   0B / 55.4MB   72
+CONTAINER ID   NAME                                 CPU %     MEM USAGE / LIMIT     MEM %     NET I/O         BLOCK I/O    PIDS
+9472c6c390f9   enhanced-preprints-import_worker_1   18.14%    497.6MiB / 30.87GiB   1.57%     160MB / 736kB   0B / 153MB   72
+CONTAINER ID   NAME                                 CPU %     MEM USAGE / LIMIT     MEM %     NET I/O         BLOCK I/O    PIDS
+9472c6c390f9   enhanced-preprints-import_worker_1   10.05%    498.1MiB / 30.87GiB   1.58%     178MB / 854kB   0B / 153MB   72
+CONTAINER ID   NAME                                 CPU %     MEM USAGE / LIMIT     MEM %     NET I/O         BLOCK I/O    PIDS
+9472c6c390f9   enhanced-preprints-import_worker_1   103.48%   498.7MiB / 30.87GiB   1.58%     198MB / 975kB   0B / 153MB   72
+CONTAINER ID   NAME                                 CPU %     MEM USAGE / LIMIT     MEM %     NET I/O         BLOCK I/O    PIDS
+9472c6c390f9   enhanced-preprints-import_worker_1   78.99%    499.4MiB / 30.87GiB   1.58%     218MB / 1.1MB   0B / 153MB   72
+CONTAINER ID   NAME                                 CPU %     MEM USAGE / LIMIT     MEM %     NET I/O          BLOCK I/O    PIDS
+9472c6c390f9   enhanced-preprints-import_worker_1   71.70%    500.2MiB / 30.87GiB   1.58%     239MB / 1.22MB   0B / 153MB   72
+CONTAINER ID   NAME                                 CPU %     MEM USAGE / LIMIT     MEM %     NET I/O          BLOCK I/O    PIDS
+9472c6c390f9   enhanced-preprints-import_worker_1   69.58%    501.1MiB / 30.87GiB   1.59%     260MB / 1.34MB   0B / 153MB   72
+CONTAINER ID   NAME                                 CPU %     MEM USAGE / LIMIT     MEM %     NET I/O          BLOCK I/O    PIDS
+9472c6c390f9   enhanced-preprints-import_worker_1   14.27%    501.3MiB / 30.87GiB   1.59%     281MB / 1.46MB   0B / 153MB   72
+CONTAINER ID   NAME                                 CPU %     MEM USAGE / LIMIT     MEM %     NET I/O         BLOCK I/O    PIDS
+9472c6c390f9   enhanced-preprints-import_worker_1   62.52%    502.2MiB / 30.87GiB   1.59%     308MB / 1.6MB   0B / 153MB   72
+CONTAINER ID   NAME                                 CPU %     MEM USAGE / LIMIT     MEM %     NET I/O          BLOCK I/O    PIDS
+9472c6c390f9   enhanced-preprints-import_worker_1   96.05%    503.9MiB / 30.87GiB   1.59%     338MB / 1.73MB   0B / 153MB   72
+CONTAINER ID   NAME                                 CPU %     MEM USAGE / LIMIT   MEM %     NET I/O          BLOCK I/O    PIDS
+9472c6c390f9   enhanced-preprints-import_worker_1   96.96%    506MiB / 30.87GiB   1.60%     375MB / 1.88MB   0B / 153MB   72
+CONTAINER ID   NAME                                 CPU %     MEM USAGE / LIMIT     MEM %     NET I/O          BLOCK I/O    PIDS
+9472c6c390f9   enhanced-preprints-import_worker_1   91.06%    508.2MiB / 30.87GiB   1.61%     398MB / 1.99MB   0B / 153MB   72
+CONTAINER ID   NAME                                 CPU %     MEM USAGE / LIMIT     MEM %     NET I/O          BLOCK I/O    PIDS
+9472c6c390f9   enhanced-preprints-import_worker_1   201.39%   1.165GiB / 30.87GiB   3.77%     412MB / 2.08MB   0B / 153MB   72
+CONTAINER ID   NAME                                 CPU %     MEM USAGE / LIMIT     MEM %     NET I/O          BLOCK I/O    PIDS
+9472c6c390f9   enhanced-preprints-import_worker_1   173.85%   907.9MiB / 30.87GiB   2.87%     412MB / 2.08MB   0B / 153MB   72
+CONTAINER ID   NAME                                 CPU %     MEM USAGE / LIMIT     MEM %     NET I/O          BLOCK I/O    PIDS
+9472c6c390f9   enhanced-preprints-import_worker_1   276.02%   1.212GiB / 30.87GiB   3.93%     412MB / 2.08MB   0B / 208MB   72
+CONTAINER ID   NAME                                 CPU %     MEM USAGE / LIMIT     MEM %     NET I/O          BLOCK I/O    PIDS
+9472c6c390f9   enhanced-preprints-import_worker_1   116.21%   1.501GiB / 30.87GiB   4.86%     412MB / 2.08MB   0B / 208MB   72
+CONTAINER ID   NAME                                 CPU %     MEM USAGE / LIMIT     MEM %     NET I/O          BLOCK I/O    PIDS
+9472c6c390f9   enhanced-preprints-import_worker_1   95.48%    787.5MiB / 30.87GiB   2.49%     413MB / 18.6MB   0B / 208MB   72
+CONTAINER ID   NAME                                 CPU %     MEM USAGE / LIMIT     MEM %     NET I/O          BLOCK I/O    PIDS
+9472c6c390f9   enhanced-preprints-import_worker_1   4.50%     785.3MiB / 30.87GiB   2.48%     413MB / 37.2MB   0B / 208MB   72
+CONTAINER ID   NAME                                 CPU %     MEM USAGE / LIMIT     MEM %     NET I/O          BLOCK I/O    PIDS
+9472c6c390f9   enhanced-preprints-import_worker_1   3.12%     785.8MiB / 30.87GiB   2.49%     414MB / 55.8MB   0B / 208MB   72
+CONTAINER ID   NAME                                 CPU %     MEM USAGE / LIMIT     MEM %     NET I/O          BLOCK I/O    PIDS
+9472c6c390f9   enhanced-preprints-import_worker_1   5.94%     784.1MiB / 30.87GiB   2.48%     414MB / 74.8MB   0B / 208MB   72
+CONTAINER ID   NAME                                 CPU %     MEM USAGE / LIMIT     MEM %     NET I/O          BLOCK I/O    PIDS
+9472c6c390f9   enhanced-preprints-import_worker_1   4.98%     766.2MiB / 30.87GiB   2.42%     414MB / 93.7MB   0B / 208MB   72
+CONTAINER ID   NAME                                 CPU %     MEM USAGE / LIMIT     MEM %     NET I/O         BLOCK I/O    PIDS
+9472c6c390f9   enhanced-preprints-import_worker_1   9.14%     767.9MiB / 30.87GiB   2.43%     415MB / 112MB   0B / 208MB   72
+CONTAINER ID   NAME                                 CPU %     MEM USAGE / LIMIT     MEM %     NET I/O         BLOCK I/O    PIDS
+9472c6c390f9   enhanced-preprints-import_worker_1   10.01%    764.9MiB / 30.87GiB   2.42%     415MB / 131MB   0B / 208MB   72
+CONTAINER ID   NAME                                 CPU %     MEM USAGE / LIMIT     MEM %     NET I/O         BLOCK I/O    PIDS
+9472c6c390f9   enhanced-preprints-import_worker_1   5.78%     763.9MiB / 30.87GiB   2.42%     415MB / 150MB   0B / 208MB   72
+CONTAINER ID   NAME                                 CPU %     MEM USAGE / LIMIT     MEM %     NET I/O         BLOCK I/O    PIDS
+9472c6c390f9   enhanced-preprints-import_worker_1   7.06%     763.2MiB / 30.87GiB   2.41%     415MB / 168MB   0B / 208MB   72
+CONTAINER ID   NAME                                 CPU %     MEM USAGE / LIMIT     MEM %     NET I/O         BLOCK I/O    PIDS
+9472c6c390f9   enhanced-preprints-import_worker_1   3.80%     764.4MiB / 30.87GiB   2.42%     416MB / 186MB   0B / 208MB   72
+CONTAINER ID   NAME                                 CPU %     MEM USAGE / LIMIT     MEM %     NET I/O         BLOCK I/O    PIDS
+9472c6c390f9   enhanced-preprints-import_worker_1   7.01%     764.3MiB / 30.87GiB   2.42%     416MB / 206MB   0B / 467MB   72
+CONTAINER ID   NAME                                 CPU %     MEM USAGE / LIMIT     MEM %     NET I/O         BLOCK I/O    PIDS
+9472c6c390f9   enhanced-preprints-import_worker_1   5.78%     764.7MiB / 30.87GiB   2.42%     416MB / 225MB   0B / 467MB   72
+CONTAINER ID   NAME                                 CPU %     MEM USAGE / LIMIT     MEM %     NET I/O         BLOCK I/O    PIDS
+9472c6c390f9   enhanced-preprints-import_worker_1   2.97%     764.4MiB / 30.87GiB   2.42%     417MB / 244MB   0B / 467MB   72
+CONTAINER ID   NAME                                 CPU %     MEM USAGE / LIMIT     MEM %     NET I/O         BLOCK I/O    PIDS
+9472c6c390f9   enhanced-preprints-import_worker_1   3.12%     763.2MiB / 30.87GiB   2.41%     417MB / 263MB   0B / 669MB   72
+CONTAINER ID   NAME                                 CPU %     MEM USAGE / LIMIT     MEM %     NET I/O         BLOCK I/O    PIDS
+9472c6c390f9   enhanced-preprints-import_worker_1   84.07%    762.8MiB / 30.87GiB   2.41%     417MB / 281MB   0B / 669MB   72
+CONTAINER ID   NAME                                 CPU %     MEM USAGE / LIMIT   MEM %     NET I/O         BLOCK I/O    PIDS
+9472c6c390f9   enhanced-preprints-import_worker_1   5.53%     764MiB / 30.87GiB   2.42%     418MB / 300MB   0B / 669MB   72
+CONTAINER ID   NAME                                 CPU %     MEM USAGE / LIMIT     MEM %     NET I/O         BLOCK I/O    PIDS
+9472c6c390f9   enhanced-preprints-import_worker_1   6.19%     763.6MiB / 30.87GiB   2.42%     418MB / 319MB   0B / 669MB   72
+CONTAINER ID   NAME                                 CPU %     MEM USAGE / LIMIT     MEM %     NET I/O         BLOCK I/O    PIDS
+9472c6c390f9   enhanced-preprints-import_worker_1   61.73%    763.9MiB / 30.87GiB   2.42%     418MB / 338MB   0B / 669MB   72
+CONTAINER ID   NAME                                 CPU %     MEM USAGE / LIMIT     MEM %     NET I/O         BLOCK I/O    PIDS
+9472c6c390f9   enhanced-preprints-import_worker_1   2.54%     765.7MiB / 30.87GiB   2.42%     418MB / 356MB   0B / 669MB   72
+CONTAINER ID   NAME                                 CPU %     MEM USAGE / LIMIT     MEM %     NET I/O         BLOCK I/O    PIDS
+9472c6c390f9   enhanced-preprints-import_worker_1   2.86%     766.7MiB / 30.87GiB   2.43%     419MB / 375MB   0B / 669MB   72
+CONTAINER ID   NAME                                 CPU %     MEM USAGE / LIMIT     MEM %     NET I/O         BLOCK I/O    PIDS
+9472c6c390f9   enhanced-preprints-import_worker_1   40.58%    765.7MiB / 30.87GiB   2.42%     419MB / 394MB   0B / 669MB   72
+CONTAINER ID   NAME                                 CPU %     MEM USAGE / LIMIT     MEM %     NET I/O         BLOCK I/O    PIDS
+9472c6c390f9   enhanced-preprints-import_worker_1   2.13%     762.8MiB / 30.87GiB   2.41%     419MB / 411MB   0B / 669MB   72
+CONTAINER ID   NAME                                 CPU %     MEM USAGE / LIMIT     MEM %     NET I/O         BLOCK I/O    PIDS
+9472c6c390f9   enhanced-preprints-import_worker_1   62.88%    761.8MiB / 30.87GiB   2.41%     419MB / 429MB   0B / 669MB   72
+CONTAINER ID   NAME                                 CPU %     MEM USAGE / LIMIT     MEM %     NET I/O         BLOCK I/O    PIDS
+9472c6c390f9   enhanced-preprints-import_worker_1   2.43%     762.7MiB / 30.87GiB   2.41%     420MB / 446MB   0B / 669MB   72
+CONTAINER ID   NAME                                 CPU %     MEM USAGE / LIMIT   MEM %     NET I/O         BLOCK I/O    PIDS
+9472c6c390f9   enhanced-preprints-import_worker_1   119.45%   762MiB / 30.87GiB   2.41%     420MB / 463MB   0B / 669MB   72
+CONTAINER ID   NAME                                 CPU %     MEM USAGE / LIMIT     MEM %     NET I/O         BLOCK I/O    PIDS
+9472c6c390f9   enhanced-preprints-import_worker_1   10.95%    759.1MiB / 30.87GiB   2.40%     420MB / 473MB   0B / 669MB   72
+CONTAINER ID   NAME                                 CPU %     MEM USAGE / LIMIT     MEM %     NET I/O         BLOCK I/O    PIDS
+9472c6c390f9   enhanced-preprints-import_worker_1   0.03%     759.1MiB / 30.87GiB   2.40%     420MB / 473MB   0B / 669MB   72
+CONTAINER ID   NAME                                 CPU %     MEM USAGE / LIMIT     MEM %     NET I/O         BLOCK I/O    PIDS
+9472c6c390f9   enhanced-preprints-import_worker_1   0.02%     759.1MiB / 30.87GiB   2.40%     420MB / 473MB   0B / 669MB   72
+CONTAINER ID   NAME                                 CPU %     MEM USAGE / LIMIT     MEM %     NET I/O         BLOCK I/O    PIDS
+9472c6c390f9   enhanced-preprints-import_worker_1   0.10%     759.1MiB / 30.87GiB   2.40%     420MB / 473MB   0B / 669MB   72
+CONTAINER ID   NAME                                 CPU %     MEM USAGE / LIMIT     MEM %     NET I/O         BLOCK I/O    PIDS
+9472c6c390f9   enhanced-preprints-import_worker_1   0.03%     759.1MiB / 30.87GiB   2.40%     420MB / 473MB   0B / 669MB   72
+CONTAINER ID   NAME                                 CPU %     MEM USAGE / LIMIT     MEM %     NET I/O         BLOCK I/O    PIDS
+9472c6c390f9   enhanced-preprints-import_worker_1   0.01%     759.1MiB / 30.87GiB   2.40%     420MB / 473MB   0B / 669MB   72
+CONTAINER ID   NAME                                 CPU %     MEM USAGE / LIMIT     MEM %     NET I/O         BLOCK I/O    PIDS
+9472c6c390f9   enhanced-preprints-import_worker_1   0.01%     759.1MiB / 30.87GiB   2.40%     420MB / 473MB   0B / 669MB   72
+CONTAINER ID   NAME                                 CPU %     MEM USAGE / LIMIT     MEM %     NET I/O         BLOCK I/O    PIDS
+9472c6c390f9   enhanced-preprints-import_worker_1   0.01%     759.1MiB / 30.87GiB   2.40%     420MB / 473MB   0B / 669MB   72
+CONTAINER ID   NAME                                 CPU %     MEM USAGE / LIMIT     MEM %     NET I/O         BLOCK I/O    PIDS
+9472c6c390f9   enhanced-preprints-import_worker_1   0.01%     759.1MiB / 30.87GiB   2.40%     420MB / 473MB   0B / 669MB   72
+CONTAINER ID   NAME                                 CPU %     MEM USAGE / LIMIT     MEM %     NET I/O         BLOCK I/O    PIDS
+9472c6c390f9   enhanced-preprints-import_worker_1   0.02%     759.1MiB / 30.87GiB   2.40%     420MB / 473MB   0B / 669MB   72
+CONTAINER ID   NAME                                 CPU %     MEM USAGE / LIMIT     MEM %     NET I/O         BLOCK I/O    PIDS
+9472c6c390f9   enhanced-preprints-import_worker_1   15.73%    796.1MiB / 30.87GiB   2.52%     420MB / 473MB   0B / 669MB   72
+CONTAINER ID   NAME                                 CPU %     MEM USAGE / LIMIT     MEM %     NET I/O         BLOCK I/O    PIDS
+9472c6c390f9   enhanced-preprints-import_worker_1   16.29%    801.8MiB / 30.87GiB   2.54%     421MB / 473MB   0B / 669MB   72
+CONTAINER ID   NAME                                 CPU %     MEM USAGE / LIMIT     MEM %     NET I/O         BLOCK I/O    PIDS
+9472c6c390f9   enhanced-preprints-import_worker_1   0.02%     801.8MiB / 30.87GiB   2.54%     421MB / 473MB   0B / 669MB   72
+CONTAINER ID   NAME                                 CPU %     MEM USAGE / LIMIT     MEM %     NET I/O         BLOCK I/O    PIDS
+9472c6c390f9   enhanced-preprints-import_worker_1   0.13%     801.8MiB / 30.87GiB   2.54%     421MB / 473MB   0B / 669MB   72
