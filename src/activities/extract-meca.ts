@@ -109,28 +109,21 @@ export const extractMeca = async (version: VersionedReviewedPreprint): Promise<M
         const unprocessedArticle = items.filter((item) => item.type === 'article' && item.mimeType === 'application/xml')[0];
         const id = unprocessedArticle.id ?? '';
         const title = unprocessedArticle.title ?? '';
-        console.log('wtf');
-        console.log(unprocessedArticle);
-        console.log(id);
-        console.log(title);
-        console.log(items);
         const article: LocalMecaFile = {
           ...unprocessedArticle,
-          localPath: dirname(`${tmpDirectory}/${unprocessedArticle.path}`),
+          localPath: `${tmpDirectory}/${unprocessedArticle.path}`,
         };
-        console.log(article);
 
         // get other content that represent the article
         const otherArticleInstances: LocalMecaFile[] = await Promise.all(items.filter((item) => item.type === 'article' && item.mimeType !== 'application/xml').map((item) => ({
           ...item,
-          localPath: dirname(`${tmpDirectory}/${item.path}`),
+          localPath: `${tmpDirectory}/${item.path}`,
         })));
         const supportingFiles: LocalMecaFile[] = await Promise.all(items.filter((item) => ['figure', 'fig', 'equation', 'inlineequation', 'inlinefigure', 'table', 'supplement', 'video'].includes(item.type)).map((item) => ({
           ...item,
-          localPath: dirname(`${tmpDirectory}/${item.path}`),
+          localPath: `${tmpDirectory}/${item.path}`,
         })));
         supportingFiles.push(...otherArticleInstances);
-        console.log(supportingFiles);
 
         // check there are no more item types left to be imported
         const knownTypes = [
@@ -194,5 +187,5 @@ export const extractMeca = async (version: VersionedReviewedPreprint): Promise<M
     throw new Error('Empty response from GetObjectCommand');
   }
 
-  throw new Error('');
+  throw new Error('should not get this far');
 };
