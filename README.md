@@ -64,7 +64,7 @@ docker compose -f docker-compose.yaml up
 Then you can use the following tctl command instead:
 
 ```shell
-tctl wf run -tq epp -wt importDocmaps -wid docmap-index-import -i '"http://data-hub-api.elifesciences.org/enhanced-preprints/docmaps/v2/index"' -i '[]'
+tctl wf run -tq epp -wt importDocmaps -wid docmap-index-import -i '"https://data-hub-api.elifesciences.org/enhanced-preprints/docmaps/v2/index"' -i '[]'
 ```
 
 ## Run with a local instance of the API
@@ -104,7 +104,7 @@ docker-compose -f docker-compose.yaml -f docker-compose.override.yaml -f docker-
 Finally, you can run the `tctl` command to extract a slice of the Docmap index (so you don't index **all** Docmaps in your local environment), where the third argument is the start index and the last argument is the end index:
 
 ```shell
-tctl wf run -tq epp -wt importDocmaps -wid docmap-index-import -i '"http://data-hub-api.elifesciences.org/enhanced-preprints/docmaps/v2/index"' -i '[]' -i 5 -i 30
+tctl wf run -tq epp -wt importDocmaps -wid docmap-index-import -i '"https://data-hub-api.elifesciences.org/enhanced-preprints/docmaps/v2/index"' -i '[]' -i 5 -i 30
 ```
 
 ## Run with "real" S3 as a destination
