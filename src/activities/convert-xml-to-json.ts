@@ -89,6 +89,9 @@ export const convertXmlToJson = async (version: VersionedReviewedPreprint, mecaF
     Body: corrected,
   }));
 
+  // Delete tmpDirectory
+  fs.rmSync(tmpDirectory, { recursive: true, force: true });
+
   return {
     result,
     path: destination,
