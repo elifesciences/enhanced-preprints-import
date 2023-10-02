@@ -60,132 +60,131 @@ export const extractMeca = async (version: VersionedReviewedPreprint): Promise<M
   };
   const data = await s3.send(new GetObjectCommand(getObjectCommandInput));
 
-  const mecaPath = path.join(tmpDirectory, 'content.meca');
-  if (data.Body instanceof Readable) {
-    const stream = data.Body;
-    const writeStream = fs.createWriteStream(mecaPath);
+  const downloadMeca = (body: Readable, localPath: string) => new Promise((resolve, reject) => {
+    const stream = body;
+    const writeStream = fs.createWriteStream(localPath);
     stream.pipe(writeStream);
 
-    writeStream.on('finish', async () => {
-      Context.current().heartbeat('Meca successfully downloaded');
+    writeStream.on('finish', resolve);
+    writeStream.on('error', reject);
+  });
 
-      await decompress(mecaPath, tmpDirectory).then(() => {
-        Context.current().heartbeat('Meca successfully extracted');
+  const mecaPath = path.join(tmpDirectory, 'content.meca');
 
-        fs.unlinkSync(mecaPath);
-      });
-
-      Context.current().heartbeat('Loading manifest');
-
-      try {
-        const manifestXml = fs.readFileSync(path.join(tmpDirectory, 'manifest.xml'));
-
-        // define where the arrays should be
-        const alwaysArray = [
-          'manifest.item',
-          'manifest.item.instance',
-        ];
-        const parser = new XMLParser({
-          ignoreAttributes: false,
-          isArray: (name, jpath) => alwaysArray.indexOf(jpath) !== -1,
-        });
-
-        Context.current().heartbeat('Parsing XML');
-        const manifest = parser.parse(manifestXml).manifest as Manifest;
-        const items = manifest.item.flatMap<MecaFile>((item: ManifestItem) => item.instance.map((instance) => {
-          const instancePath = instance['@_href'];
-          const fileName = path.basename(instancePath);
-          return ({
-            id: item['@_id'],
-            type: item['@_type'],
-            title: item.title,
-            mimeType: instance['@_media-type'],
-            path: instancePath,
-            fileName,
-          });
-        }));
-
-        // get the article content
-        const unprocessedArticle = items.filter((item) => item.type === 'article' && item.mimeType === 'application/xml')[0];
-        const id = unprocessedArticle.id ?? '';
-        const title = unprocessedArticle.title ?? '';
-        const article: LocalMecaFile = {
-          ...unprocessedArticle,
-          localPath: `${tmpDirectory}/${unprocessedArticle.path}`,
-        };
-
-        // get other content that represent the article
-        const otherArticleInstances: LocalMecaFile[] = await Promise.all(items.filter((item) => item.type === 'article' && item.mimeType !== 'application/xml').map((item) => ({
-          ...item,
-          localPath: `${tmpDirectory}/${item.path}`,
-        })));
-        const supportingFiles: LocalMecaFile[] = await Promise.all(items.filter((item) => ['figure', 'fig', 'equation', 'inlineequation', 'inlinefigure', 'table', 'supplement', 'video'].includes(item.type)).map((item) => ({
-          ...item,
-          localPath: `${tmpDirectory}/${item.path}`,
-        })));
-        supportingFiles.push(...otherArticleInstances);
-
-        // check there are no more item types left to be imported
-        const knownTypes = [
-          'article',
-          'figure',
-          'fig',
-          'equation',
-          'inlineequation',
-          'inlinefigure',
-          'table',
-          'supplement',
-          'video',
-
-          // unhandled item types
-          'transfer-details',
-          'x-hw-directives',
-        ];
-        const foundUnknownItems = items.filter((item) => !knownTypes.includes(item.type));
-        if (foundUnknownItems.length > 0) {
-          const unknownTypes = foundUnknownItems.map((item) => item.type);
-          throw new Error(`Found unknown manifest items types ${unknownTypes.join(', ')}`);
-        }
-
-        // define a closure that simplifies uploading a file to the correct location
-        const uploadItem = async (localFile: LocalMecaFile, remoteFileName: string) => {
-          const s3UploadConnection = getEPPS3Client();
-          const s3Path = constructEPPS3FilePath(remoteFileName, version);
-          Context.current().heartbeat(`Uploading ${localFile.type} ${localFile.fileName} (${localFile.id}) to ${s3Path.Key}`);
-          const fileStream = fs.createReadStream(localFile.localPath);
-          await s3UploadConnection.send(new PutObjectCommand({
-            Bucket: s3Path.Bucket,
-            Key: s3Path.Key,
-            Body: fileStream,
-          }));
-          Context.current().heartbeat(`Finished uploading ${localFile.type} ${localFile.fileName} (${localFile.id}) to ${s3Path.Key}`);
-        };
-
-        const articleUploadPromise = uploadItem(article, article.path);
-        const supportingFilesUploads = supportingFiles.map((figure) => uploadItem(figure, figure.path));
-
-        Context.current().heartbeat(`Commencing upload of manuscript with ${supportingFilesUploads.length} supporting files`);
-        await Promise.all([
-          articleUploadPromise,
-          ...supportingFilesUploads,
-        ]);
-
-        return {
-          id,
-          title,
-          article,
-          supportingFiles,
-        };
-      } catch (error) {
-        throw new NonRetryableError('Cannot find manifest.xml in meca file');
-      }
-    });
-    writeStream.on('error', () => {
-      throw new Error('Could not retrieve object from S3');
-    });
-  } else {
+  if (!(data.Body instanceof Readable)) {
     throw new Error('Empty response from GetObjectCommand');
   }
 
-  throw new Error('should not get this far');
+  await downloadMeca(data.Body, mecaPath);
+  Context.current().heartbeat('Meca successfully downloaded');
+
+  await decompress(mecaPath, tmpDirectory).then(() => {
+    Context.current().heartbeat('Meca successfully extracted');
+
+    fs.unlinkSync(mecaPath);
+  });
+
+  Context.current().heartbeat('Loading manifest');
+
+  const readManifestXml = (): Buffer => {
+    try {
+      return fs.readFileSync(path.join(tmpDirectory, 'manifest.xml'));
+    } catch (error) {
+      throw new NonRetryableError('Cannot find manifest.xml in meca file');
+    }
+  };
+  const manifestXml = readManifestXml();
+  // define where the arrays should be
+  const alwaysArray = [
+    'manifest.item',
+    'manifest.item.instance',
+  ];
+  const parser = new XMLParser({
+    ignoreAttributes: false,
+    isArray: (name, jpath) => alwaysArray.indexOf(jpath) !== -1,
+  });
+
+  Context.current().heartbeat('Parsing XML');
+  const manifest = parser.parse(manifestXml).manifest as Manifest;
+  const items = manifest.item.flatMap<MecaFile>((item: ManifestItem) => item.instance.map((instance) => {
+    const instancePath = instance['@_href'];
+    const fileName = path.basename(instancePath);
+    return ({
+      id: item['@_id'],
+      type: item['@_type'],
+      title: item.title,
+      mimeType: instance['@_media-type'],
+      path: instancePath,
+      fileName,
+    });
+  }));
+
+  const prepareLocalMecaFile = (item: MecaFile, dir: string): LocalMecaFile => ({
+    ...item,
+    localPath: `${dir}/${item.path}`,
+  });
+
+  // get the article content
+  const unprocessedArticle = items.filter((item) => item.type === 'article' && item.mimeType === 'application/xml')[0];
+  const id = unprocessedArticle.id ?? '';
+  const title = unprocessedArticle.title ?? '';
+  const article = prepareLocalMecaFile(unprocessedArticle, tmpDirectory);
+
+  // get other content that represent the article
+  const otherArticleInstances: LocalMecaFile[] = await Promise.all(items.filter((item) => item.type === 'article' && item.mimeType !== 'application/xml').map((item) => prepareLocalMecaFile(item, tmpDirectory)));
+  const supportingFiles: LocalMecaFile[] = await Promise.all(items.filter((item) => ['figure', 'fig', 'equation', 'inlineequation', 'inlinefigure', 'table', 'supplement', 'video'].includes(item.type))
+    .map((item) => prepareLocalMecaFile(item, tmpDirectory)));
+  supportingFiles.push(...otherArticleInstances);
+
+  // check there are no more item types left to be imported
+  const knownTypes = [
+    'article',
+    'figure',
+    'fig',
+    'equation',
+    'inlineequation',
+    'inlinefigure',
+    'table',
+    'supplement',
+    'video',
+
+    // unhandled item types
+    'transfer-details',
+    'x-hw-directives',
+  ];
+  const foundUnknownItems = items.filter((item) => !knownTypes.includes(item.type));
+  if (foundUnknownItems.length > 0) {
+    const unknownTypes = foundUnknownItems.map((item) => item.type);
+    throw new Error(`Found unknown manifest items types ${unknownTypes.join(', ')}`);
+  }
+
+  // define a closure that simplifies uploading a file to the correct location
+  const uploadItem = async (localFile: LocalMecaFile, remoteFileName: string) => {
+    const s3UploadConnection = getEPPS3Client();
+    const s3Path = constructEPPS3FilePath(remoteFileName, version);
+    Context.current().heartbeat(`Uploading ${localFile.type} ${localFile.fileName} (${localFile.id}) to ${s3Path.Key}`);
+    const fileStream = fs.createReadStream(localFile.localPath);
+    await s3UploadConnection.send(new PutObjectCommand({
+      Bucket: s3Path.Bucket,
+      Key: s3Path.Key,
+      Body: fileStream,
+    }));
+    Context.current().heartbeat(`Finished uploading ${localFile.type} ${localFile.fileName} (${localFile.id}) to ${s3Path.Key}`);
+  };
+
+  const articleUploadPromise = uploadItem(article, article.path);
+  const supportingFilesUploads = supportingFiles.map((figure) => uploadItem(figure, figure.path));
+
+  Context.current().heartbeat(`Commencing upload of manuscript with ${supportingFilesUploads.length} supporting files`);
+  await Promise.all([
+    articleUploadPromise,
+    ...supportingFilesUploads,
+  ]);
+
+  return {
+    id,
+    title,
+    article,
+    supportingFiles,
+  };
 };
