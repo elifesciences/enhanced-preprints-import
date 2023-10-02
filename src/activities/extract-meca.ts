@@ -72,7 +72,7 @@ export const extractMeca = async (version: VersionedReviewedPreprint): Promise<M
   const mecaPath = path.join(tmpDirectory, 'content.meca');
 
   if (!(data.Body instanceof Readable)) {
-    throw new Error('Empty response from GetObjectCommand');
+    throw new Error('Could not retrieve object from S3');
   }
 
   await downloadMeca(data.Body, mecaPath);
