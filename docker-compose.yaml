@@ -171,7 +171,7 @@ services:
   app:
     image: ghcr.io/elifesciences/enhanced-preprints-client:master-c0144b59-20230913.1334
     healthcheck:
-      test: sh -c 'apk add curl; curl -X POST http://client:3000/'
+      test: sh -c 'apk add curl; curl http://app:3000/'
       interval: 5s
       timeout: 5s
       retries: 10
