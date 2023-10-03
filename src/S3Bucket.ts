@@ -1,7 +1,8 @@
 import { VersionedReviewedPreprint } from '@elifesciences/docmap-ts';
-import { readFileSync } from 'fs';
+import { createWriteStream, readFileSync } from 'fs';
 import { S3Client } from '@aws-sdk/client-s3';
 import { fromWebToken, fromTemporaryCredentials } from '@aws-sdk/credential-providers';
+import { Readable } from 'stream';
 import { S3Config, config } from './config';
 
 const getAWSCredentials = (s3config: S3Config) => {
@@ -67,3 +68,12 @@ export const constructEPPS3FilePath = (filename: string, version: VersionedRevie
 });
 
 export const getPrefixlessKey = (file: S3File): string => file.Key.replace(new RegExp(`^${config.eppBucketPrefix}`), '');
+
+export const streamToFile = (body: Readable, localPath: string) => new Promise((resolve, reject) => {
+  const stream = body;
+  const writeStream = createWriteStream(localPath);
+  stream.pipe(writeStream);
+
+  writeStream.on('finish', resolve);
+  writeStream.on('error', reject);
+});

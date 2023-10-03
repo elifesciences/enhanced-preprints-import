@@ -8,7 +8,7 @@ import * as fs from 'fs';
 import { Context } from '@temporalio/activity';
 import { Readable } from 'stream';
 import decompress from 'decompress';
-import { constructEPPS3FilePath, getEPPS3Client } from '../S3Bucket';
+import { constructEPPS3FilePath, getEPPS3Client, streamToFile } from '../S3Bucket';
 import { NonRetryableError } from '../errors';
 
 export type MecaFile = {
@@ -60,22 +60,13 @@ export const extractMeca = async (version: VersionedReviewedPreprint): Promise<M
   };
   const data = await s3.send(new GetObjectCommand(getObjectCommandInput));
 
-  const downloadMeca = (body: Readable, localPath: string) => new Promise((resolve, reject) => {
-    const stream = body;
-    const writeStream = fs.createWriteStream(localPath);
-    stream.pipe(writeStream);
-
-    writeStream.on('finish', resolve);
-    writeStream.on('error', reject);
-  });
-
   const mecaPath = path.join(tmpDirectory, 'content.meca');
 
   if (!(data.Body instanceof Readable)) {
     throw new Error('Could not retrieve object from S3');
   }
 
-  await downloadMeca(data.Body, mecaPath);
+  await streamToFile(data.Body, mecaPath);
   Context.current().heartbeat('Meca successfully downloaded');
 
   await decompress(mecaPath, tmpDirectory).then(() => {
