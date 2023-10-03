@@ -5,6 +5,7 @@ import { Manuscript, VersionedReviewedPreprint } from '@elifesciences/docmap-ts/
 import { getEPPS3Client } from '../S3Bucket';
 import { EnhancedArticle } from './send-version-to-epp';
 import { ImportContentOutput } from '../workflows/import-content';
+import { NonRetryableError } from '../errors';
 
 const parseJsonContentToProcessedArticle = (content: string) => {
   const contentStruct = JSON.parse(content) as Article;
@@ -28,11 +29,11 @@ export const generateVersionJson: GenerateVersionJson = async ({
   importContentResult, msid, version, manuscript,
 }) => {
   if (version.preprint.publishedDate === undefined) {
-    throw new Error("Preprint doesn't have a published date");
+    throw new NonRetryableError("Preprint doesn't have a published date");
   }
 
   if (version.preprint.url === undefined) {
-    throw new Error("Preprint doesn't have a URL");
+    throw new NonRetryableError("Preprint doesn't have a URL");
   }
 
   const s3 = getEPPS3Client();
