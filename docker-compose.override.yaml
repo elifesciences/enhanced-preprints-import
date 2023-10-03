@@ -18,6 +18,9 @@ services:
   worker:
     environment:
       BIORXIV_URI: http://mock-biorxiv
+    depends_on:
+      loadbucket:
+        condition: service_completed_successfully
 
   # mock datahub docmaps api
   mock-datahub:
