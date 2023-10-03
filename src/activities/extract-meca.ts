@@ -1,14 +1,14 @@
 import { VersionedReviewedPreprint } from '@elifesciences/docmap-ts';
 import { XMLParser } from 'fast-xml-parser';
-import { mkdirSync, writeFileSync } from 'fs';
 import { mkdtemp } from 'fs/promises';
-import JSZip from 'jszip';
 import { tmpdir } from 'os';
-import path, { dirname } from 'path';
+import path from 'path';
 import { GetObjectCommand, GetObjectCommandInput, PutObjectCommand } from '@aws-sdk/client-s3';
 import * as fs from 'fs';
 import { Context } from '@temporalio/activity';
-import { constructEPPS3FilePath, getEPPS3Client } from '../S3Bucket';
+import { Readable } from 'stream';
+import decompress from 'decompress';
+import { constructEPPS3FilePath, getEPPS3Client, streamToFile } from '../S3Bucket';
 import { NonRetryableError } from '../errors';
 
 export type MecaFile = {
@@ -47,21 +47,6 @@ type ManifestItem = {
   instance: ManifestItemInstance[],
 };
 
-const extractFileContents = async (zip: JSZip, item: MecaFile, toDir: string): Promise<LocalMecaFile> => {
-  const content = await zip.file(item.path)?.async('base64');
-  if (content === undefined) {
-    throw Error(`MECA archive corrupted, expected ${item.path} from manifest, but it failed`);
-  }
-  const outputPath = `${toDir}/${item.path}`;
-  const outputDir = dirname(outputPath);
-  mkdirSync(outputDir, { recursive: true });
-  writeFileSync(outputPath, content, 'base64');
-  return {
-    ...item,
-    localPath: outputPath,
-  };
-};
-
 export const extractMeca = async (version: VersionedReviewedPreprint): Promise<MecaFiles> => {
   const tmpDirectory = await mkdtemp(`${tmpdir()}/epp_content`);
 
@@ -73,21 +58,33 @@ export const extractMeca = async (version: VersionedReviewedPreprint): Promise<M
     Bucket: source.Bucket,
     Key: source.Key,
   };
-  const buffer = await s3.send(new GetObjectCommand(getObjectCommandInput))
-    .then((obj) => obj.Body?.transformToByteArray());
+  const data = await s3.send(new GetObjectCommand(getObjectCommandInput));
 
-  if (buffer === undefined) {
+  const mecaPath = path.join(tmpDirectory, 'content.meca');
+
+  if (!(data.Body instanceof Readable)) {
     throw new Error('Could not retrieve object from S3');
   }
 
-  const zip = await JSZip.loadAsync(buffer);
+  await streamToFile(data.Body, mecaPath);
+  Context.current().heartbeat('Meca successfully downloaded');
+
+  await decompress(mecaPath, tmpDirectory).then(() => {
+    Context.current().heartbeat('Meca successfully extracted');
+
+    fs.unlinkSync(mecaPath);
+  });
 
   Context.current().heartbeat('Loading manifest');
-  const manifestXml = await zip.file('manifest.xml')?.async('nodebuffer');
-  if (manifestXml === undefined) {
-    throw new NonRetryableError('Cannot find manifest.xml in meca file');
-  }
 
+  const readManifestXml = (): Buffer => {
+    try {
+      return fs.readFileSync(path.join(tmpDirectory, 'manifest.xml'));
+    } catch (error) {
+      throw new NonRetryableError('Cannot find manifest.xml in meca file');
+    }
+  };
+  const manifestXml = readManifestXml();
   // define where the arrays should be
   const alwaysArray = [
     'manifest.item',
@@ -113,24 +110,21 @@ export const extractMeca = async (version: VersionedReviewedPreprint): Promise<M
     });
   }));
 
-  // define a closure that curries the zip and toDir in this scope
-  const extractFromThisArchive = async (item: MecaFile) => {
-    Context.current().heartbeat(`Extracting ${item.type} ${item.fileName} (${item.id})`);
-    return extractFileContents(zip, item, tmpDirectory).then((file) => {
-      Context.current().heartbeat(`Extracted ${item.type} ${item.fileName} (${item.id})`);
-      return file;
-    });
-  };
+  const prepareLocalMecaFile = (item: MecaFile, dir: string): LocalMecaFile => ({
+    ...item,
+    localPath: `${dir}/${item.path}`,
+  });
 
   // get the article content
   const unprocessedArticle = items.filter((item) => item.type === 'article' && item.mimeType === 'application/xml')[0];
   const id = unprocessedArticle.id ?? '';
   const title = unprocessedArticle.title ?? '';
-  const article = await extractFromThisArchive(unprocessedArticle);
+  const article = prepareLocalMecaFile(unprocessedArticle, tmpDirectory);
 
   // get other content that represent the article
-  const otherArticleInstances = await Promise.all(items.filter((item) => item.type === 'article' && item.mimeType !== 'application/xml').map(extractFromThisArchive));
-  const supportingFiles = await Promise.all(items.filter((item) => ['figure', 'fig', 'equation', 'inlineequation', 'inlinefigure', 'table', 'supplement', 'video'].includes(item.type)).map(extractFromThisArchive));
+  const otherArticleInstances: LocalMecaFile[] = await Promise.all(items.filter((item) => item.type === 'article' && item.mimeType !== 'application/xml').map((item) => prepareLocalMecaFile(item, tmpDirectory)));
+  const supportingFiles: LocalMecaFile[] = await Promise.all(items.filter((item) => ['figure', 'fig', 'equation', 'inlineequation', 'inlinefigure', 'table', 'supplement', 'video'].includes(item.type))
+    .map((item) => prepareLocalMecaFile(item, tmpDirectory)));
   supportingFiles.push(...otherArticleInstances);
 
   // check there are no more item types left to be imported
@@ -152,7 +146,7 @@ export const extractMeca = async (version: VersionedReviewedPreprint): Promise<M
   const foundUnknownItems = items.filter((item) => !knownTypes.includes(item.type));
   if (foundUnknownItems.length > 0) {
     const unknownTypes = foundUnknownItems.map((item) => item.type);
-    throw Error(`Found unknown manifest items types ${unknownTypes.join(', ')}`);
+    throw new Error(`Found unknown manifest items types ${unknownTypes.join(', ')}`);
   }
 
   // define a closure that simplifies uploading a file to the correct location
@@ -177,6 +171,9 @@ export const extractMeca = async (version: VersionedReviewedPreprint): Promise<M
     articleUploadPromise,
     ...supportingFilesUploads,
   ]);
+
+  // Delete tmpDirectory
+  fs.rmSync(tmpDirectory, { recursive: true, force: true });
 
   return {
     id,

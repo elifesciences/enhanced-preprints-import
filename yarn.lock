@@ -3981,6 +3981,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/decompress@npm:^4.2.5":
+  version: 4.2.5
+  resolution: "@types/decompress@npm:4.2.5"
+  dependencies:
+    "@types/node": "*"
+  checksum: 039bfb51457c764251c7b0cfa8a85a2b3ba4643b621aa7fb6e3252bd271a879216fdbcdc685dc6316d6bd0d95a8ca1691cc5c11ff9730a65f48cfec1fa38cbf5
+  languageName: node
+  linkType: hard
+
 "@types/eslint-scope@npm:^3.7.3":
   version: 3.7.4
   resolution: "@types/eslint-scope@npm:3.7.4"
@@ -6857,7 +6866,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"decompress@npm:^4.2.0":
+"decompress@npm:^4.2.0, decompress@npm:^4.2.1":
   version: 4.2.1
   resolution: "decompress@npm:4.2.1"
   dependencies:
@@ -7267,6 +7276,7 @@ __metadata:
     "@temporalio/worker": ^1.7.4
     "@temporalio/workflow": ^1.7.4
     "@tsconfig/node18": ^1.0.1
+    "@types/decompress": ^4.2.5
     "@types/eslint": 8.44.2
     "@types/jest": ^29.2.5
     "@types/node": ^18.11.9
@@ -7274,6 +7284,7 @@ __metadata:
     "@typescript-eslint/eslint-plugin": 6.1.0
     "@typescript-eslint/parser": ^6.0.0
     axios: ^1.2.2
+    decompress: ^4.2.1
     eslint: 8.49.0
     eslint-config-airbnb: 19.0.4
     eslint-config-airbnb-typescript: 17.1.0
@@ -7285,7 +7296,6 @@ __metadata:
     fast-xml-parser: ^4.0.11
     jest: 29.6.4
     jest-mock: ^29.3.1
-    jszip: ^3.10.1
     nodemon: ^3.0.0
     object-hash: ^3.0.0
     ts-jest: 29.1.1
@@ -11013,7 +11023,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"jszip@npm:^3.1.5, jszip@npm:^3.10.1":
+"jszip@npm:^3.1.5":
   version: 3.10.1
   resolution: "jszip@npm:3.10.1"
   dependencies:
