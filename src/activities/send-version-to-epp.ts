@@ -29,7 +29,7 @@ export type EnhancedArticle = {
   preprintPosted: Date,
   sentForReview?: Date,
   peerReview?: EPPPeerReview,
-  published?: Date,
+  published?: Date | null,
   volume?: string,
   eLocationId?: string,
   subjects?: string[],
