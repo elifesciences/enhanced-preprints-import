@@ -143,7 +143,7 @@ services:
 
   ## BIORXIV XSLT
   xslt:
-    image: ghcr.io/elifesciences/enhanced-preprints-biorxiv-xslt-api:master-afc3e88c-20230803.1222
+    image: ghcr.io/elifesciences/enhanced-preprints-biorxiv-xslt-api:master-a89401f1-20231006.0914
     restart: always
     ports:
       - 3004:80

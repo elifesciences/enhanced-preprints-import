@@ -4,6 +4,6 @@ services:
     build:
       context: ${SERVER_DIR}
       dockerfile: Dockerfile
-      target: prod
+      target: dev
     volumes:
       - ${SERVER_DIR}/src:/opt/epp/src
