@@ -151,6 +151,10 @@ export const extractMeca = async (version: VersionedReviewedPreprint): Promise<M
 
   // define a closure that simplifies uploading a file to the correct location
   const uploadItem = async (localFile: LocalMecaFile, remoteFileName: string) => {
+    if (!fs.existsSync(localFile.localPath)) {
+      throw new NonRetryableError(`The file ${localFile.fileName} was not extracted from the meca archive`);
+    }
+
     const s3UploadConnection = getEPPS3Client();
     const s3Path = constructEPPS3FilePath(remoteFileName, version);
     Context.current().heartbeat(`Uploading ${localFile.type} ${localFile.fileName} (${localFile.id}) to ${s3Path.Key}`);
