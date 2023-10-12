@@ -51,6 +51,7 @@
     "start:worker": "ts-node src/worker.ts",
     "start:worker:dev": "nodemon src/worker.ts",
     "test": "jest",
-    "lint": "eslint --ext .ts src/"
+    "lint": "eslint --ext .ts src/",
+    "coverage": "jest --coverage"
   }
 }

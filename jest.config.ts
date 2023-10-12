@@ -8,4 +8,10 @@ export default {
   testEnvironment: 'node',
   clearMocks: true,
   coverageProvider: 'v8',
+  collectCoverageFrom: ['src/**/*'],
+  coverageDirectory: 'coverage/',
+  coveragePathIgnorePatterns: [
+    '/node_modules/',
+    '/public/',
+  ],
 };
