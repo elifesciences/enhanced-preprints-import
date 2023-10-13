@@ -20,7 +20,7 @@
         "ghcr.io/elifesciences/enhanced-preprints",
         "ghcr.io/elifesciences/enhanced-preprints-client"
       ],
-      "versioning": "regex:^master-(.*)-(?<minor>.*)$",
+      "versioning": "regex:^master-(.*)-(?<minor>[\\d]+)\\.(?<patch>[\\d]+)$",
       "automerge": true
     },
     {
