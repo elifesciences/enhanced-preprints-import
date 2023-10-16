@@ -9,6 +9,7 @@ type EPPParticipant = {
 };
 type EPPEvaluation = {
   date: Date;
+  doi: string;
   reviewType: ReviewType;
   text: string;
   participants: EPPParticipant[];
@@ -41,6 +42,7 @@ export const fetchReviewContent = async (version: VersionedReviewedPreprint): Pr
   if (version.peerReview.evaluationSummary) {
     evaluationSummary = {
       date: version.peerReview.evaluationSummary.date,
+      doi: version.peerReview.evaluationSummary.doi,
       participants: version.peerReview.evaluationSummary.participants,
       reviewType: version.peerReview.evaluationSummary.reviewType,
       text: await fetchEvaluationContent(version.peerReview.evaluationSummary),
@@ -51,6 +53,7 @@ export const fetchReviewContent = async (version: VersionedReviewedPreprint): Pr
   if (version.peerReview.authorResponse) {
     authorResponse = {
       date: version.peerReview.authorResponse.date,
+      doi: version.peerReview.authorResponse.doi,
       participants: version.peerReview.authorResponse.participants,
       reviewType: version.peerReview.authorResponse.reviewType,
       text: await fetchEvaluationContent(version.peerReview.authorResponse),
@@ -60,6 +63,7 @@ export const fetchReviewContent = async (version: VersionedReviewedPreprint): Pr
   Context.current().heartbeat('Fetching "peer reviews"');
   reviews = await Promise.all(version.peerReview.reviews.map(async (review) => ({
     date: review.date,
+    doi: review.doi,
     participants: review.participants,
     reviewType: review.reviewType,
     text: await fetchEvaluationContent(review),
