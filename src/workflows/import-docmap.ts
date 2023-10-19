@@ -1,4 +1,4 @@
-import { executeChild, proxyActivities, workflowInfo } from '@temporalio/workflow';
+import { executeChild, proxyActivities, upsertSearchAttributes, workflowInfo } from '@temporalio/workflow';
 import type * as activities from '../activities/index';
 import { importContent } from './import-content';
 import { useWorkflowState } from '../hooks/useWorkflowState';
@@ -33,13 +33,24 @@ type ImportDocmapOutput = {
 };
 
 export async function importDocmap(url: string): Promise<ImportDocmapOutput[]> {
+  upsertSearchAttributes({
+    DocmapURL: [url],
+  });
   const result = await fetchDocMap(url).then((docMap) => parseDocMap(docMap));
 
+  upsertSearchAttributes({
+    ManuscriptId: [result.id],
+  });
+
   return Promise.all(
-    result.versions.map(async (version, index) => {
+    result.versions.map(async (version) => {
       const importContentResult = await executeChild(importContent, {
         args: [version],
-        workflowId: `${workflowInfo().workflowId}/version-${index}/content`,
+        workflowId: `${workflowInfo().workflowId}/${version.versionIdentifier}/content`,
+        searchAttributes: {
+          DocmapURL: [url],
+          ManuscriptId: [version.id],
+        },
       });
       if (typeof importContentResult === 'string') {
         return {
