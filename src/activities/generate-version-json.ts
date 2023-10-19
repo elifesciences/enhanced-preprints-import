@@ -32,8 +32,8 @@ export const generateVersionJson: GenerateVersionJson = async ({
     throw new NonRetryableError("Preprint doesn't have a published date");
   }
 
-  if (version.preprint.url === undefined) {
-    throw new NonRetryableError("Preprint doesn't have a URL");
+  if (version.preprint.url === undefined && version.preprint.doi === undefined) {
+    throw new NonRetryableError("Preprint doesn't have a URL or doi");
   }
 
   const s3 = getEPPS3Client();
@@ -57,7 +57,7 @@ export const generateVersionJson: GenerateVersionJson = async ({
     versionDoi: version.doi,
     article: articleStruct,
     preprintDoi: version.preprint.doi,
-    preprintUrl: version.preprint.url,
+    preprintUrl: version.preprint.url ?? version.preprint.doi,
     preprintPosted: version.preprint.publishedDate,
     sentForReview: version.sentForReviewDate,
     peerReview: importContentResult.reviewData,
