@@ -1,4 +1,9 @@
-import { executeChild, proxyActivities, upsertSearchAttributes, workflowInfo } from '@temporalio/workflow';
+import {
+  executeChild,
+  proxyActivities,
+  upsertSearchAttributes,
+  workflowInfo,
+} from '@temporalio/workflow';
 import type * as activities from '../activities/index';
 import { importContent } from './import-content';
 import { useWorkflowState } from '../hooks/useWorkflowState';
