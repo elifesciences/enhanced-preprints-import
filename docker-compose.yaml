@@ -114,6 +114,8 @@ services:
         condition: service_completed_successfully
       yarn:
         condition: service_completed_successfully
+      temporal-setup-search:
+        condition: service_completed_successfully
       temporal:
         condition: service_healthy
       xslt:
