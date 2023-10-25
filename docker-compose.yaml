@@ -30,31 +30,70 @@ services:
       exit 0;
       "
 
+  temporal-db:
+    image: percona/percona-server:8.0.34-26.1-multi
+    ports:
+      - 3306:3306
+    environment:
+      MYSQL_ROOT_PASSWORD: testmysql
+    volumes:
+      - mysql_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin" ,"ping", "-h", "localhost"]
+      start_period: 2s
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+
   temporal:
-    build:
-      context: .
-      dockerfile: Dockerfile.temporal
-    command:
-    - "/temporal"
-    - "server"
-    - "start-dev"
-    - "--namespace"
-    - "default"
-    - "--ip"
-    - "0.0.0.0"
-    - "--db-filename"
-    - "/data/temporal.db"
+    image: temporalio/auto-setup:1.22.0
     ports:
       - 7233:7233
-      - 8233:8233
+    environment:
+      DB: mysql8
+      MYSQL_SEEDS: temporal-db
+      MYSQL_USER: root
+      MYSQL_PWD: testmysql
+      DBNAME: temporal
+      VISIBILITY_DBNAME: "temporalvisibility"
+      DEFAULT_NAMESPACE: default
+      DEFAULT_NAMESPACE_RETENTION: 3d
+      SKIP_ADD_CUSTOM_SEARCH_ATTRIBUTES: true
+      TEMPORAL_ADDRESS: temporal:7233
     healthcheck:
-      test: /temporal operator namespace list
+      test: temporal operator namespace list
       interval: 5s
       timeout: 5s
       retries: 10
       start_period: 2s
+    depends_on:
+      temporal-db:
+        condition: service_healthy
     volumes:
       - temporal_data:/data
+
+  temporal-setup-search:
+    image: temporalio/admin-tools:1.22.0
+    environment:
+      TEMPORAL_ADDRESS: temporal:7233
+    entrypoint: bash -c 'temporal operator search-attribute create --name ManuscriptId --type Text && temporal operator search-attribute create --name DocmapURL --type Text'
+    depends_on:
+      temporal:
+        condition: service_healthy
+
+  temporal-ui:
+    image: temporalio/ui:2.19.0
+    ports:
+      - 8233:8233
+    environment:
+      TEMPORAL_ADDRESS: temporal:7233
+      TEMPORAL_UI_PORT: 8233
+    healthcheck:
+      test: curl http://localhost:8233 -I
+    depends_on:
+      temporal:
+        condition: service_healthy
 
   yarn:
     build:
@@ -74,6 +113,8 @@ services:
       createbucket:
         condition: service_completed_successfully
       yarn:
+        condition: service_completed_successfully
+      temporal-setup-search:
         condition: service_completed_successfully
       temporal:
         condition: service_healthy
@@ -222,5 +263,6 @@ services:
 volumes:
   minio_storage:
   mongodb_data:
+  mysql_data:
   temporal_data:
   node_modules:
