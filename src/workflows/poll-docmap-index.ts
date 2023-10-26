@@ -16,5 +16,5 @@ export async function pollDocMapIndex(docMapIndexUrl: string, sleepTime: string 
   const { hashes: newHashes } = await importWf.result();
 
   await sleep(sleepTime);
-  await continueAsNew<typeof pollDocMapIndex>(docMapIndexUrl, sleepTime, newHashes);
+  await continueAsNew<typeof pollDocMapIndex>(docMapIndexUrl, sleepTime, hashes.concat(newHashes));
 }
