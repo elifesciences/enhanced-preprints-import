@@ -9,7 +9,7 @@ import { Context } from '@temporalio/activity';
 import { VersionedReviewedPreprint } from '@elifesciences/docmap-ts';
 import {
   S3File,
-  constructEPPS3FilePath,
+  constructEPPVersionS3FilePath,
   getEPPS3Client,
   getMecaS3Client, parseS3Path, sharedS3,
 } from '../S3Bucket';
@@ -33,7 +33,7 @@ export const copySourcePreprintToEPP = async (version: VersionedReviewedPreprint
   const sourceBucketAndPath = `${source.Bucket}/${source.Key}`;
 
   // copy MECA
-  const destination = constructEPPS3FilePath('content.meca', version);
+  const destination = constructEPPVersionS3FilePath('content.meca', version);
 
   if (!sharedS3()) {
     const mecaS3Connection = getMecaS3Client();

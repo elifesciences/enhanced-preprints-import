@@ -8,7 +8,7 @@ import * as fs from 'fs';
 import { Context } from '@temporalio/activity';
 import { Readable } from 'stream';
 import decompress from 'decompress';
-import { constructEPPS3FilePath, getEPPS3Client, streamToFile } from '../S3Bucket';
+import { constructEPPVersionS3FilePath, getEPPS3Client, streamToFile } from '../S3Bucket';
 import { NonRetryableError } from '../errors';
 
 export type MecaFile = {
@@ -51,7 +51,7 @@ export const extractMeca = async (version: VersionedReviewedPreprint): Promise<M
   const tmpDirectory = await mkdtemp(`${tmpdir()}/epp_content`);
 
   const s3 = getEPPS3Client();
-  const source = constructEPPS3FilePath('content.meca', version);
+  const source = constructEPPVersionS3FilePath('content.meca', version);
 
   Context.current().heartbeat('Getting object');
   const getObjectCommandInput: GetObjectCommandInput = {
@@ -156,7 +156,7 @@ export const extractMeca = async (version: VersionedReviewedPreprint): Promise<M
     }
 
     const s3UploadConnection = getEPPS3Client();
-    const s3Path = constructEPPS3FilePath(remoteFileName, version);
+    const s3Path = constructEPPVersionS3FilePath(remoteFileName, version);
     Context.current().heartbeat(`Uploading ${localFile.type} ${localFile.fileName} (${localFile.id}) to ${s3Path.Key}`);
     const fileStream = fs.createReadStream(localFile.localPath);
     await s3UploadConnection.send(new PutObjectCommand({

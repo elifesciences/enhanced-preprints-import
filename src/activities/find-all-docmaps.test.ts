@@ -10,7 +10,11 @@ import { filterDocmapIndex } from './find-all-docmaps';
 jest.mock('axios');
 const mockS3Client = mockClient(S3Client);
 jest.mock('../config', () => ({
-  config: { eppS3: { webIdentityTokenFile: '' } },
+  config: {
+    eppS3: { webIdentityTokenFile: '' },
+    eppBucketName: 'test-bucket', // This is the default bucket name to store files in S3
+    eppBucketPrefix: 'automation/', // This is the default prefix to give to files in S3
+  },
 }));
 
 describe('parse-docmap-activity', () => {
@@ -67,7 +71,7 @@ describe('parse-docmap-activity', () => {
     mockS3Client.on(GetObjectCommand).rejects('Not found');
 
     // Act
-    const result = await filterDocmapIndex('http://somewhere.not.real/docmap/index', 's3://test-bucket/state-file.json');
+    const result = await filterDocmapIndex('http://somewhere.not.real/docmap/index', 'state-file.json');
 
     // Assert
     expect(result).toBeDefined();
@@ -76,7 +80,7 @@ describe('parse-docmap-activity', () => {
 
     expect(mockS3Client.commandCalls(PutObjectCommand)[0].args[0].input).toStrictEqual({
       Bucket: 'test-bucket',
-      Key: 'state-file.json',
+      Key: 'automation/state/state-file.json',
       Body: '[]',
     });
   });
@@ -95,7 +99,7 @@ describe('parse-docmap-activity', () => {
     mockS3Client.on(GetObjectCommand).rejects('Not found');
 
     // Act
-    const result = await filterDocmapIndex('http://somewhere.not.real/docmap/index', 's3://test-bucket/state-file.json');
+    const result = await filterDocmapIndex('http://somewhere.not.real/docmap/index', 'state-file.json');
 
     // Assert
     expect(result).toStrictEqual([{
@@ -106,7 +110,7 @@ describe('parse-docmap-activity', () => {
 
     expect(mockS3Client.commandCalls(PutObjectCommand)[0].args[0].input).toStrictEqual({
       Bucket: 'test-bucket',
-      Key: 'state-file.json',
+      Key: 'automation/state/state-file.json',
       Body: JSON.stringify([{
         docMapId: mockId,
         docMapHash: mockedHash,
@@ -143,7 +147,7 @@ describe('parse-docmap-activity', () => {
     });
 
     // Act
-    const result = await filterDocmapIndex('http://somewhere.not.real/docmap/index', 's3://test-bucket/state-file.json');
+    const result = await filterDocmapIndex('http://somewhere.not.real/docmap/index', 'state-file.json');
 
     // Assert
     expect(result).toBeDefined();

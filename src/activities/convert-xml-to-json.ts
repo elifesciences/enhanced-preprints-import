@@ -12,7 +12,7 @@ import {
   PutObjectCommandOutput,
 } from '@aws-sdk/client-s3';
 import {
-  constructEPPS3FilePath, getEPPS3Client, getPrefixlessKey, S3File,
+  constructEPPVersionS3FilePath, getEPPS3Client, getPrefixlessKey, S3File,
 } from '../S3Bucket';
 import { MecaFiles } from './extract-meca';
 import { config } from '../config';
@@ -43,7 +43,7 @@ export const convertXmlToJson = async (version: VersionedReviewedPreprint, mecaF
   fs.mkdirSync(path.dirname(localXmlFilePath), { recursive: true });
 
   const s3 = getEPPS3Client();
-  const source = constructEPPS3FilePath(mecaFiles.article.path, version);
+  const source = constructEPPVersionS3FilePath(mecaFiles.article.path, version);
   const object = await s3.send(new GetObjectCommand(source));
 
   const xml = await object.Body?.transformToString();
@@ -76,13 +76,13 @@ export const convertXmlToJson = async (version: VersionedReviewedPreprint, mecaF
     const oldPath = path.join(tmpDirectory, mecaFile.path);
 
     // this is where the path would be relative to the S3 root directory + meca path
-    const newPath = getPrefixlessKey(constructEPPS3FilePath(mecaFile.path, version));
+    const newPath = getPrefixlessKey(constructEPPVersionS3FilePath(mecaFile.path, version));
 
     return json.replaceAll(oldPath, newPath);
   }, converted);
 
   // Upload destination in S3
-  const destination = constructEPPS3FilePath('article.json', version);
+  const destination = constructEPPVersionS3FilePath('article.json', version);
   const result = await s3.send(new PutObjectCommand({
     Bucket: destination.Bucket,
     Key: destination.Key,
