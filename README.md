@@ -12,12 +12,12 @@ The monitoring and scheduling of the import workflows are handled by a [temporal
 
 # Getting started
 
-Ensure you have docker and docker-compose (v2 tested). Also install [`tctl`](https://github.com/temporalio/tctl) to start and control jobs
+Ensure you have docker and docker-compose (v2 tested). Also install [`temporal`](https://github.com/temporalio/cli) to start and control jobs
 
 - clone the repo
 - run `yarn`
 - run `docker compose up` to start temporalite and the worker in "watch" mode
-- run `tctl n desc` to list namespaces, you should see default namespace listed, and not any other error.
+- run `temporal operator namespace list` to list namespaces, you should see default namespace listed, and not any other error.
 
 The `docker compose` workflow above will restart the worker when your mounted filesystem changes.
 
@@ -26,7 +26,7 @@ The `docker compose` workflow above will restart the worker when your mounted fi
 To run an import workflow, run:
 
 ```shell
-tctl wf run -tq epp -wt importDocmaps -wid docmap-index-import -i '"http://mock-datahub/enhanced-preprints/docmaps/v1/index"' -i '[]'
+temporal workflow execute --type importDocmaps -t epp -w import-docmap-test -i '"http://mock-datahub/enhanced-preprints/docmaps/v1/index"'
 ```
 
 This will kick of a full import for a docmap index from eLife's API.
@@ -37,35 +37,28 @@ To re-run the whole process, you will first need to remove the containers **and*
 docker compose down --volumes
 ```
 
-## Run a looped import workflow
+## Run a import workflow with saved state
 
-To run a looped import workflow, run:
-
-```shell
-tctl wf run -tq epp -wt pollDocMapIndex -wid docmap-index-poll -i '"http://mock-datahub/enhanced-preprints/docmaps/v1/index"'
-```
-
-This will kick of a full import for a docmap index from eLife's API, then loop itself every hour (see next command to change this), skipping docmaps that have no changes.
-
-To change the sleep time, add a semantic time parameter to the `-i` inputs, for example `1 minute` or `5 minutes`:
+To run a import workflow that only imports docmaps that are new or have changed since a previous run (or to store a first run), start an importDocmap with a state file name as the second parameter:
 
 ```shell
-tctl wf run -tq epp -wt pollDocMapIndex -wid docmap-index-poll -i '"http://mock-datahub/enhanced-preprints/docmaps/v1/index"' -i '"1 minute"'
+temporal workflow execute --type importDocmaps -t epp -w import-docmap-test -i '"http://mock-datahub/enhanced-preprints/docmaps/v1/index"' -i '"state.json"'
 ```
 
-## Run without mocked services
+This will read in previously seen (and hashed) docmaps from the S3 bucket in config, skipping any it has seen before.
 
-Alternatively, run the following `docker compose` to avoid the overriding mocked services.
+
+## Run an import workflow with saved state to a schedule
+
+To kick of a full import for a docmap index from eLife's API, then loop itself every hour (see next command to change this), skipping docmaps that have no changes.
+
+To change the sleep time, add a semantic time parameter to the `--interval` inputs, for example `1 minute` or `5 minutes`:
 
 ```shell
-docker compose -f docker-compose.yaml up
+temporal schedule create --schedule-id import-docmaps -w import-docmaps -t epp --workflow-type importDocmaps -i '"http://mock-datahub/enhanced-preprints/docmaps/v1/index"' -i '"import-docmaps.json"' --overlap-policy Skip --interval '1m'
 ```
 
-Then you can use the following tctl command instead:
-
-```shell
-tctl wf run -tq epp -wt importDocmaps -wid docmap-index-import -i '"https://data-hub-api.elifesciences.org/enhanced-preprints/docmaps/v2/index"' -i '[]'
-```
+You can then view these runs on the dashboard.
 
 ## Run with a local instance of the API
 
@@ -101,11 +94,13 @@ Then run docker-compose with the base, override and s3 configs, like below:
 docker-compose -f docker-compose.yaml -f docker-compose.override.yaml -f docker-compose.s3.yaml up
 ```
 
-Finally, you can run the `tctl` command to extract a slice of the Docmap index (so you don't index **all** Docmaps in your local environment), where the third argument is the start index and the last argument is the end index:
+Finally, you can run the `temporal` command to extract a slice of the Docmap index (so you don't index **all** Docmaps in your local environment), where the third argument is the start index (zero-indexed) and the last argument is the end index (not included):
 
 ```shell
-tctl wf run -tq epp -wt importDocmaps -wid docmap-index-import -i '"https://data-hub-api.elifesciences.org/enhanced-preprints/docmaps/v2/index"' -i '[]' -i 5 -i 30
+temporal workflow execute --type importDocmaps -t epp -w import-docmap-test -i '"http://mock-datahub/enhanced-preprints/docmaps/v1/index"' -i '' -i 5 -i 30
 ```
+
+read [`Array.prototype.slice()`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/slice) docs for how to use the two params.
 
 ## Run with "real" S3 as a destination
 
