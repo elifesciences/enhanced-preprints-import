@@ -21,8 +21,8 @@ const {
 
 export type Hash = { hash: string, idHash: string };
 
-export async function importDocmaps(docMapIndexUrl: string, s3StateFileUrl?: string, limit?: number): Promise<ImportMessage> {
-  const docMapIdHashes = await filterDocmapIndex(docMapIndexUrl, s3StateFileUrl, limit);
+export async function importDocmaps(docMapIndexUrl: string, s3StateFileUrl?: string, start?: number, end?: number): Promise<ImportMessage> {
+  const docMapIdHashes = await filterDocmapIndex(docMapIndexUrl, s3StateFileUrl, start, end);
 
   if (docMapIdHashes.length === 0) {
     return {

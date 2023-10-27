@@ -19,7 +19,7 @@ type DocMapWithHashes = {
   docMapHashes: DocMapHashes,
 };
 
-export const filterDocmapIndex = async (docMapIndex: string, s3StateFile?: string, limit?: number): Promise<DocMapHashes[]> => {
+export const filterDocmapIndex = async (docMapIndex: string, s3StateFile?: string, start?: number, end?: number): Promise<DocMapHashes[]> => {
   const docmapHashes: DocMapHashes[] = [];
 
   if (s3StateFile) {
@@ -48,7 +48,7 @@ export const filterDocmapIndex = async (docMapIndex: string, s3StateFile?: strin
     },
   }))
     .filter((docMapWithHashes) => !docmapHashes.some((hash) => hash.docMapHash === docMapWithHashes.docMapHashes.docMapHash))
-    .slice(0, limit);
+    .slice(start, end);
 
   if (s3StateFile) {
     docmapHashes.push(...importableDocmapsWithHashes.map((docMapWithHashes) => ({
