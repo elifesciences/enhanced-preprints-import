@@ -2,7 +2,7 @@ import axios from 'axios';
 import { DocMap } from '@elifesciences/docmap-ts';
 import { MD5 } from 'object-hash';
 import { GetObjectCommand, PutObjectCommand } from '@aws-sdk/client-s3';
-import { constructEPPStateS3FilePath, getEPPS3Client, parseS3Path } from '../S3Bucket';
+import { constructEPPStateS3FilePath, getEPPS3Client } from '../S3Bucket';
 
 type DocMapIndex = {
   docmaps: DocMap[],
