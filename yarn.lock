@@ -1149,6 +1149,16 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@aws-sdk/util-stream-node@npm:^3.374.0":
+  version: 3.374.0
+  resolution: "@aws-sdk/util-stream-node@npm:3.374.0"
+  dependencies:
+    "@smithy/util-stream-node": ^1.0.2
+    tslib: ^2.5.0
+  checksum: 464155ee2ca366ac56efe784c31806b550d4cb3d1eef9ff75a90e61e7bff956ff730484eb4dcdc9369094fa3a6583d22ff8796b6782fd841eaa9026c74d99cee
+  languageName: node
+  linkType: hard
+
 "@aws-sdk/util-uri-escape@npm:3.310.0":
   version: 3.310.0
   resolution: "@aws-sdk/util-uri-escape@npm:3.310.0"
@@ -3342,6 +3352,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@sinonjs/commons@npm:^1.7.0":
+  version: 1.8.6
+  resolution: "@sinonjs/commons@npm:1.8.6"
+  dependencies:
+    type-detect: 4.0.8
+  checksum: 7d3f8c1e85f30cd4e83594fc19b7a657f14d49eb8d95a30095631ce15e906c869e0eff96c5b93dffea7490c00418b07f54582ba49c6560feb2a8c34c0b16832d
+  languageName: node
+  linkType: hard
+
 "@sinonjs/commons@npm:^2.0.0":
   version: 2.0.0
   resolution: "@sinonjs/commons@npm:2.0.0"
@@ -3357,6 +3376,126 @@ __metadata:
   dependencies:
     "@sinonjs/commons": ^2.0.0
   checksum: c62aa98e7cefda8dedc101ce227abc888dc46b8ff9706c5f0a8dfd9c3ada97d0a5611384738d9ba0b26b59f99c2ba24efece8e779bb08329e9e87358fa309824
+  languageName: node
+  linkType: hard
+
+"@sinonjs/fake-timers@npm:^9.1.2":
+  version: 9.1.2
+  resolution: "@sinonjs/fake-timers@npm:9.1.2"
+  dependencies:
+    "@sinonjs/commons": ^1.7.0
+  checksum: 7d3aef54e17c1073101cb64d953157c19d62a40e261a30923fa1ee337b049c5f29cc47b1f0c477880f42b5659848ba9ab897607ac8ea4acd5c30ddcfac57fca6
+  languageName: node
+  linkType: hard
+
+"@sinonjs/samsam@npm:^7.0.1":
+  version: 7.0.1
+  resolution: "@sinonjs/samsam@npm:7.0.1"
+  dependencies:
+    "@sinonjs/commons": ^2.0.0
+    lodash.get: ^4.4.2
+    type-detect: ^4.0.8
+  checksum: 291efb158d54c67dee23ddabcb28873d22063449b692aaa3b2a4f1826d2f79d38695574063c92e9c17573cc805cd6acbf0ab0c66c9f3aed7afd0f12a2b905615
+  languageName: node
+  linkType: hard
+
+"@sinonjs/text-encoding@npm:^0.7.1":
+  version: 0.7.2
+  resolution: "@sinonjs/text-encoding@npm:0.7.2"
+  checksum: fe690002a32ba06906cf87e2e8fe84d1590294586f2a7fd180a65355b53660c155c3273d8011a5f2b77209b819aa7306678ae6e4aea0df014bd7ffd4bbbcf1ab
+  languageName: node
+  linkType: hard
+
+"@smithy/abort-controller@npm:^1.1.0":
+  version: 1.1.0
+  resolution: "@smithy/abort-controller@npm:1.1.0"
+  dependencies:
+    "@smithy/types": ^1.2.0
+    tslib: ^2.5.0
+  checksum: 4299368f0b7dbeb8ffba00632b191ec39113fa9b9d29c3ff33c54d5a8663d42d769aa5d79ecd656fe8d09ccb23a7351095305524c27c5650ec7f96a312e5e522
+  languageName: node
+  linkType: hard
+
+"@smithy/is-array-buffer@npm:^1.1.0":
+  version: 1.1.0
+  resolution: "@smithy/is-array-buffer@npm:1.1.0"
+  dependencies:
+    tslib: ^2.5.0
+  checksum: 39b2a177b5d98f1adb2e44c363be2f4f335b698e9803f5ffb4c6d32e5d51543f29daf90b9ee99d8833446561dfe1b8dc3464852970b90bb6c00655a425fc3ac2
+  languageName: node
+  linkType: hard
+
+"@smithy/node-http-handler@npm:^1.1.0":
+  version: 1.1.0
+  resolution: "@smithy/node-http-handler@npm:1.1.0"
+  dependencies:
+    "@smithy/abort-controller": ^1.1.0
+    "@smithy/protocol-http": ^1.2.0
+    "@smithy/querystring-builder": ^1.1.0
+    "@smithy/types": ^1.2.0
+    tslib: ^2.5.0
+  checksum: dd0e00e96a552891ffa50c696b2c71d650515e589ccbaabc9053a8f2e4ed18c122040feea27196267ebf55bffaa3f25e5801cefebdfe96c886d0555c141c98b4
+  languageName: node
+  linkType: hard
+
+"@smithy/protocol-http@npm:^1.2.0":
+  version: 1.2.0
+  resolution: "@smithy/protocol-http@npm:1.2.0"
+  dependencies:
+    "@smithy/types": ^1.2.0
+    tslib: ^2.5.0
+  checksum: 39548762da6dbd301d36ef67709ef73ef6f9a4c9bdcc3fafa5d5625eec7dfa71db72898d3eb219a368a79ea5e368a08189519a7512d48e0cdc9db7089c8e9618
+  languageName: node
+  linkType: hard
+
+"@smithy/querystring-builder@npm:^1.1.0":
+  version: 1.1.0
+  resolution: "@smithy/querystring-builder@npm:1.1.0"
+  dependencies:
+    "@smithy/types": ^1.2.0
+    "@smithy/util-uri-escape": ^1.1.0
+    tslib: ^2.5.0
+  checksum: 53aa5244a12056f31da12ed65ffb22877b69abd86246d534ba50ac9c0a9dbe134256e40dbc79dc1bc59e153a7d90f97496c7c9ed0d422dffebd03ebb8b389d20
+  languageName: node
+  linkType: hard
+
+"@smithy/types@npm:^1.2.0":
+  version: 1.2.0
+  resolution: "@smithy/types@npm:1.2.0"
+  dependencies:
+    tslib: ^2.5.0
+  checksum: 376a1402d356a8dddd804af66ff2d273e57e332a3e9537a98039b47572684aae044d5fcd879ac6eee5cc08640ea00fbef0725a6a16026db5fb8d189473d44fe6
+  languageName: node
+  linkType: hard
+
+"@smithy/util-buffer-from@npm:^1.1.0":
+  version: 1.1.0
+  resolution: "@smithy/util-buffer-from@npm:1.1.0"
+  dependencies:
+    "@smithy/is-array-buffer": ^1.1.0
+    tslib: ^2.5.0
+  checksum: 73b145d6a11754cb95d9fc21264dd7623855cb768b42db4465232b878c148d8b6c968c8d77bd836f28d0ce4c855f30814848e8533764ee587c6c7c0176e7582b
+  languageName: node
+  linkType: hard
+
+"@smithy/util-stream-node@npm:^1.0.2":
+  version: 1.1.0
+  resolution: "@smithy/util-stream-node@npm:1.1.0"
+  dependencies:
+    "@smithy/node-http-handler": ^1.1.0
+    "@smithy/types": ^1.2.0
+    "@smithy/util-buffer-from": ^1.1.0
+    tslib: ^2.5.0
+  checksum: dcecf9f406e1affcd792f388ae29e0d3b56fb3417becb71d36bd3a6e4d71b9c80405b8694e201f9d5cca38f42d79f7c05d4cdd8929536482b8f0bbeea8faa85d
+  languageName: node
+  linkType: hard
+
+"@smithy/util-uri-escape@npm:^1.1.0":
+  version: 1.1.0
+  resolution: "@smithy/util-uri-escape@npm:1.1.0"
+  dependencies:
+    tslib: ^2.5.0
+  checksum: 17f02106e1d9875d4ab3b56e1fd7fffceec94a4632f265d3f6cc1d812d0ee208d9db3c3e0fd14025ea5993b503e84c0e3fda291ec4fb87719473e5e5116fb899
   languageName: node
   linkType: hard
 
@@ -4202,6 +4341,22 @@ __metadata:
   version: 7.5.0
   resolution: "@types/semver@npm:7.5.0"
   checksum: 0a64b9b9c7424d9a467658b18dd70d1d781c2d6f033096a6e05762d20ebbad23c1b69b0083b0484722aabf35640b78ccc3de26368bcae1129c87e9df028a22e2
+  languageName: node
+  linkType: hard
+
+"@types/sinon@npm:^10.0.10":
+  version: 10.0.20
+  resolution: "@types/sinon@npm:10.0.20"
+  dependencies:
+    "@types/sinonjs__fake-timers": "*"
+  checksum: 7322771345c202b90057f8112e0d34b7339e5ae1827fb1bfe385fc9e38ed6a2f18b4c66e88d27d98c775f7f74fb1167c0c14f61ca64155786534541e6c6eb05f
+  languageName: node
+  linkType: hard
+
+"@types/sinonjs__fake-timers@npm:*":
+  version: 8.1.4
+  resolution: "@types/sinonjs__fake-timers@npm:8.1.4"
+  checksum: f53fcb5cc6c77e064f8bf0772ddd82d5bbc8264167182cdb7209600d3580e09e71ca313925e6e8a3de0faad10518a8f803db8555762bca5a100cf5bcb5e13170
   languageName: node
   linkType: hard
 
@@ -5175,6 +5330,17 @@ __metadata:
     fastq: ^1.6.1
     queue-microtask: ^1.1.2
   checksum: 9a0aa7208441f5abe49c12741ad7f127283ec749b25f0b941a1c84e8f41e958b86b56a1c6baff5a7b5ae5e713a919f1128702dbcf80a6b17e7dc5b095c85b3bd
+  languageName: node
+  linkType: hard
+
+"aws-sdk-client-mock@npm:^3.0.0":
+  version: 3.0.0
+  resolution: "aws-sdk-client-mock@npm:3.0.0"
+  dependencies:
+    "@types/sinon": ^10.0.10
+    sinon: ^14.0.2
+    tslib: ^2.1.0
+  checksum: 6298de923260bc824d0c2788196f8839a20da8d64ed82e662913f19417ab872c6cb4c029c5f8f2782da0a4c16e37a8ac077da0bdb19c4e0c82707cf286f7c5d3
   languageName: node
   linkType: hard
 
@@ -7118,6 +7284,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"diff@npm:^5.0.0":
+  version: 5.1.0
+  resolution: "diff@npm:5.1.0"
+  checksum: c7bf0df7c9bfbe1cf8a678fd1b2137c4fb11be117a67bc18a0e03ae75105e8533dbfb1cda6b46beb3586ef5aed22143ef9d70713977d5fb1f9114e21455fba90
+  languageName: node
+  linkType: hard
+
 "dir-glob@npm:^2.0.0":
   version: 2.2.2
   resolution: "dir-glob@npm:2.2.2"
@@ -7312,6 +7485,7 @@ __metadata:
   dependencies:
     "@aws-sdk/client-s3": ^3.310.0
     "@aws-sdk/credential-providers": ^3.310.0
+    "@aws-sdk/util-stream-node": ^3.374.0
     "@elifesciences/docmap-ts": "https://github.com/elifesciences/docmap-ts#v0.0.32"
     "@stencila/encoda": 1.0.1
     "@stencila/schema": ^1.18.0
@@ -7329,6 +7503,7 @@ __metadata:
     "@types/object-hash": ^3.0.2
     "@typescript-eslint/eslint-plugin": 6.1.0
     "@typescript-eslint/parser": ^6.0.0
+    aws-sdk-client-mock: ^3.0.0
     axios: ^1.2.2
     decompress: ^4.2.1
     eslint: 8.52.0
@@ -10102,6 +10277,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"isarray@npm:0.0.1":
+  version: 0.0.1
+  resolution: "isarray@npm:0.0.1"
+  checksum: 49191f1425681df4a18c2f0f93db3adb85573bcdd6a4482539d98eac9e705d8961317b01175627e860516a2fc45f8f9302db26e5a380a97a520e272e2a40a8d4
+  languageName: node
+  linkType: hard
+
 "isarray@npm:^2.0.5":
   version: 2.0.5
   resolution: "isarray@npm:2.0.5"
@@ -11139,6 +11321,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"just-extend@npm:^4.0.2":
+  version: 4.2.1
+  resolution: "just-extend@npm:4.2.1"
+  checksum: ff9fdede240fad313efeeeb68a660b942e5586d99c0058064c78884894a2690dc09bba44c994ad4e077e45d913fef01a9240c14a72c657b53687ac58de53b39c
+  languageName: node
+  linkType: hard
+
 "jwa@npm:^1.4.1":
   version: 1.4.1
   resolution: "jwa@npm:1.4.1"
@@ -11335,6 +11524,13 @@ __metadata:
   version: 4.3.0
   resolution: "lodash.camelcase@npm:4.3.0"
   checksum: cb9227612f71b83e42de93eccf1232feeb25e705bdb19ba26c04f91e885bfd3dd5c517c4a97137658190581d3493ea3973072ca010aab7e301046d90740393d1
+  languageName: node
+  linkType: hard
+
+"lodash.get@npm:^4.4.2":
+  version: 4.4.2
+  resolution: "lodash.get@npm:4.4.2"
+  checksum: e403047ddb03181c9d0e92df9556570e2b67e0f0a930fcbbbd779370972368f5568e914f913e93f3b08f6d492abc71e14d4e9b7a18916c31fa04bd2306efe545
   languageName: node
   linkType: hard
 
@@ -12055,6 +12251,19 @@ __metadata:
   version: 1.0.5
   resolution: "nice-try@npm:1.0.5"
   checksum: 0b4af3b5bb5d86c289f7a026303d192a7eb4417231fe47245c460baeabae7277bcd8fd9c728fb6bd62c30b3e15cd6620373e2cf33353b095d8b403d3e8a15aff
+  languageName: node
+  linkType: hard
+
+"nise@npm:^5.1.2":
+  version: 5.1.5
+  resolution: "nise@npm:5.1.5"
+  dependencies:
+    "@sinonjs/commons": ^2.0.0
+    "@sinonjs/fake-timers": ^10.0.2
+    "@sinonjs/text-encoding": ^0.7.1
+    just-extend: ^4.0.2
+    path-to-regexp: ^1.7.0
+  checksum: c763dc62c5796cafa5c9268e14a5b34db6e6fa2f1dbc57a891fe5d7ea632a87868e22b5bb34965006f984630793ea11368351e94971163228d9e20b2e88edce8
   languageName: node
   linkType: hard
 
@@ -12837,6 +13046,15 @@ __metadata:
     lru-cache: ^9.1.1 || ^10.0.0
     minipass: ^5.0.0 || ^6.0.2 || ^7.0.0
   checksum: e2557cff3a8fb8bc07afdd6ab163a92587884f9969b05bbbaf6fe7379348bfb09af9ed292af12ed32398b15fb443e81692047b786d1eeb6d898a51eb17ed7d90
+  languageName: node
+  linkType: hard
+
+"path-to-regexp@npm:^1.7.0":
+  version: 1.8.0
+  resolution: "path-to-regexp@npm:1.8.0"
+  dependencies:
+    isarray: 0.0.1
+  checksum: 709f6f083c0552514ef4780cb2e7e4cf49b0cc89a97439f2b7cc69a608982b7690fb5d1720a7473a59806508fc2dae0be751ba49f495ecf89fd8fbc62abccbcd
   languageName: node
   linkType: hard
 
@@ -14256,6 +14474,20 @@ __metadata:
   languageName: node
   linkType: hard
 
+"sinon@npm:^14.0.2":
+  version: 14.0.2
+  resolution: "sinon@npm:14.0.2"
+  dependencies:
+    "@sinonjs/commons": ^2.0.0
+    "@sinonjs/fake-timers": ^9.1.2
+    "@sinonjs/samsam": ^7.0.1
+    diff: ^5.0.0
+    nise: ^5.1.2
+    supports-color: ^7.2.0
+  checksum: de7730cd7785a457e42f9a93e955780c870296036a13816e3c0c5648360afae82fdc748e36c854cf26fb8abd117855a7211aee49265c334fa61439aae17a1b72
+  languageName: node
+  linkType: hard
+
 "sisteransi@npm:^1.0.5":
   version: 1.0.5
   resolution: "sisteransi@npm:1.0.5"
@@ -14774,7 +15006,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"supports-color@npm:^7.1.0":
+"supports-color@npm:^7.1.0, supports-color@npm:^7.2.0":
   version: 7.2.0
   resolution: "supports-color@npm:7.2.0"
   dependencies:
@@ -15425,7 +15657,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"type-detect@npm:4.0.8":
+"type-detect@npm:4.0.8, type-detect@npm:^4.0.8":
   version: 4.0.8
   resolution: "type-detect@npm:4.0.8"
   checksum: 62b5628bff67c0eb0b66afa371bd73e230399a8d2ad30d852716efcc4656a7516904570cd8631a49a3ce57c10225adf5d0cbdcb47f6b0255fe6557c453925a15

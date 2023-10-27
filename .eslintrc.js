@@ -13,5 +13,6 @@ module.exports = {
     "no-only-tests/no-only-tests": ["error", {
       "focus": ["only"]
     }],
+    "import/no-extraneous-dependencies": ["error", {"devDependencies": ["src/**/*.test.ts"]}]
   }
 };
