@@ -50,19 +50,32 @@ export const filterDocmapIndex = async (docMapIndex: string, s3StateFile?: strin
     .filter((docMapWithHashes) => !docmapHashes.some((hash) => hash.docMapHash === docMapWithHashes.docMapHashes.docMapHash))
     .slice(start, end);
 
-  if (s3StateFile) {
-    docmapHashes.push(...importableDocmapsWithHashes.map((docMapWithHashes) => ({
-      ...docMapWithHashes.docMapHashes,
-    })));
+  return importableDocmapsWithHashes.map((docMapsWithHashes) => docMapsWithHashes.docMapHashes);
+};
 
+export const mergeDocmapState = async (newDocmapHashes: DocMapHashes[], s3StateFile?: string): Promise<boolean> => {
+  const docmapHashes = [];
+  if (s3StateFile) {
     const s3 = getEPPS3Client();
+    try {
+      const source = constructEPPStateS3FilePath(s3StateFile);
+      const retreivedDocmapHashes = JSON.parse(await s3.send(new GetObjectCommand({
+        Bucket: source.Bucket,
+        Key: source.Key,
+      })).then((obj) => obj.Body?.transformToString() ?? '')) as DocMapHashes[];
+      docmapHashes.push(...retreivedDocmapHashes);
+    } catch (err) {
+      // nothing added to docmapHashes
+    }
+    docmapHashes.push(...newDocmapHashes);
+
     const destination = constructEPPStateS3FilePath(s3StateFile);
     s3.send(new PutObjectCommand({
       Bucket: destination.Bucket,
       Key: destination.Key,
       Body: JSON.stringify(docmapHashes),
     }));
+    return true;
   }
-
-  return importableDocmapsWithHashes.map((docMapsWithHashes) => docMapsWithHashes.docMapHashes);
+  return false;
 };

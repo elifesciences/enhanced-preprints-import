@@ -10,6 +10,7 @@ import { ImportMessage } from '../types';
 
 const {
   filterDocmapIndex,
+  mergeDocmapState,
 } = proxyActivities<typeof activities>({
   startToCloseTimeout: '1 minute',
   retry: {
@@ -39,6 +40,8 @@ export async function importDocmaps(docMapIndexUrl: string, s3StateFileUrl?: str
     // makes sure there is only one workflow running, this new one.
     workflowIdReusePolicy: WorkflowIdReusePolicy.WORKFLOW_ID_REUSE_POLICY_TERMINATE_IF_RUNNING,
   })));
+
+  await mergeDocmapState(docMapIdHashes, s3StateFileUrl);
 
   return {
     status: 'SUCCESS',
