@@ -2,7 +2,9 @@ import { Readable } from 'stream';
 import axios from 'axios';
 import { mocked } from 'jest-mock';
 import { MD5 } from 'object-hash';
-import { GetObjectCommand, NoSuchKey, PutObjectCommand, S3Client } from '@aws-sdk/client-s3';
+import {
+  GetObjectCommand, NoSuchKey, PutObjectCommand, S3Client,
+} from '@aws-sdk/client-s3';
 import { mockClient } from 'aws-sdk-client-mock';
 import { sdkStreamMixin } from '@aws-sdk/util-stream-node';
 import { filterDocmapIndex, mergeDocmapState } from './find-all-docmaps';
