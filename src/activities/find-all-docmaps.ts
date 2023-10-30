@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { DocMap } from '@elifesciences/docmap-ts';
 import { MD5 } from 'object-hash';
-import { GetObjectCommand, PutObjectCommand } from '@aws-sdk/client-s3';
+import { GetObjectCommand, NoSuchKey, PutObjectCommand } from '@aws-sdk/client-s3';
 import { constructEPPStateS3FilePath, getEPPS3Client } from '../S3Bucket';
 
 type DocMapIndex = {
@@ -33,6 +33,9 @@ export const filterDocmapIndex = async (docMapIndex: string, s3StateFile?: strin
 
       docmapHashes.push(...retreivedDocmapHashes);
     } catch (err) {
+      if (!(err instanceof NoSuchKey)) {
+        throw err;
+      }
       // nothing added to docmapHashes
     }
   }
