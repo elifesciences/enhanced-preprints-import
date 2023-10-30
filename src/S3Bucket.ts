@@ -62,10 +62,14 @@ export type S3File = {
   Key: string,
 };
 
-export const constructEPPS3FilePath = (filename: string, version: VersionedReviewedPreprint): S3File => ({
+const constructEPPS3FilePath = (filename: string): S3File => ({
   Bucket: config.eppBucketName,
-  Key: `${config.eppBucketPrefix}${version.id}/v${version.versionIdentifier}/${filename}`,
+  Key: `${config.eppBucketPrefix}${filename}`,
 });
+
+export const constructEPPStateS3FilePath = (stateFileName: string): S3File => constructEPPS3FilePath(`state/${stateFileName}`);
+
+export const constructEPPVersionS3FilePath = (filename: string, version: VersionedReviewedPreprint): S3File => constructEPPS3FilePath(`${version.id}/v${version.versionIdentifier}/${filename}`);
 
 export const getPrefixlessKey = (file: S3File): string => file.Key.replace(new RegExp(`^${config.eppBucketPrefix}`), '');
 
