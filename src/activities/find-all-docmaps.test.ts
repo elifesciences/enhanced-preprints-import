@@ -2,7 +2,7 @@ import { Readable } from 'stream';
 import axios from 'axios';
 import { mocked } from 'jest-mock';
 import { MD5 } from 'object-hash';
-import { GetObjectCommand, PutObjectCommand, S3Client } from '@aws-sdk/client-s3';
+import { GetObjectCommand, NoSuchKey, PutObjectCommand, S3Client } from '@aws-sdk/client-s3';
 import { mockClient } from 'aws-sdk-client-mock';
 import { sdkStreamMixin } from '@aws-sdk/util-stream-node';
 import { filterDocmapIndex, mergeDocmapState } from './find-all-docmaps';
@@ -72,7 +72,37 @@ describe('docmap-filter', () => {
         data: { docmaps: [{ id: mockId }] },
         status: 200,
       }));
-      mockS3Client.on(GetObjectCommand).rejects('Not found');
+      mockS3Client.on(GetObjectCommand).rejects(new NoSuchKey({
+        $metadata: {},
+        message: 'No Such Key',
+      }));
+
+      // Act
+      const result = await filterDocmapIndex('http://somewhere.not.real/docmap/index', 'state-file.json');
+
+      // Assert
+      expect(result).toStrictEqual([{
+        docMapId: mockId,
+        docMapHash: mockedHash,
+        docMapIdHash: mockedIdHash,
+      }]);
+    });
+
+    it('returns new docmaps (that are not hashed in the state file)', async () => {
+      // Arrange
+      const mockId = 'fake-docmap';
+      const mockedHash = MD5({ id: mockId });
+      const mockedIdHash = MD5(mockId);
+      const mockedGet = mocked(axios.get);
+      // @ts-ignore
+      mockedGet.mockImplementation(() => Promise.resolve({
+        data: { docmaps: [{ id: mockId }] },
+        status: 200,
+      }));
+      mockS3Client.on(GetObjectCommand).rejects(new NoSuchKey({
+        $metadata: {},
+        message: 'No Such Key',
+      }));
 
       // Act
       const result = await filterDocmapIndex('http://somewhere.not.real/docmap/index', 'state-file.json');
@@ -124,7 +154,10 @@ describe('docmap-filter', () => {
 
   describe('mergeDocmapState', () => {
     it('creates a new state file', async () => {
-      mockS3Client.on(GetObjectCommand).rejects('Not found');
+      mockS3Client.on(GetObjectCommand).rejects(new NoSuchKey({
+        $metadata: {},
+        message: 'No Such Key',
+      }));
 
       // Act
       const result = await mergeDocmapState([], 'state-file.json');
@@ -143,7 +176,10 @@ describe('docmap-filter', () => {
       const mockId = 'fake-docmap';
       const mockedHash = MD5({ id: mockId });
       const mockedIdHash = MD5(mockId);
-      mockS3Client.on(GetObjectCommand).rejects('Not found');
+      mockS3Client.on(GetObjectCommand).rejects(new NoSuchKey({
+        $metadata: {},
+        message: 'No Such Key',
+      }));
 
       // Act
       const result = await mergeDocmapState([{
