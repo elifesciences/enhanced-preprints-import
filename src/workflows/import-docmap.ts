@@ -7,6 +7,7 @@ import {
 import type * as activities from '../activities/index';
 import { importContent } from './import-content';
 import { useWorkflowState } from '../hooks/useWorkflowState';
+import { ImportDocmapMessage } from '../types';
 
 const { parseDocMap } = proxyActivities<typeof activities>({
   startToCloseTimeout: '1 minute',
@@ -31,13 +32,7 @@ const {
 
 export const store = useWorkflowState(workflowInfo().workflowId, true);
 
-type ImportDocmapOutput = {
-  id: string,
-  versionIdentifier: string,
-  result: string,
-};
-
-export async function importDocmap(url: string): Promise<ImportDocmapOutput[]> {
+export async function importDocmap(url: string): Promise<ImportDocmapMessage> {
   upsertSearchAttributes({
     DocmapURL: [url],
   });
@@ -47,7 +42,7 @@ export async function importDocmap(url: string): Promise<ImportDocmapOutput[]> {
     ManuscriptId: [result.id],
   });
 
-  return Promise.all(
+  const results = await Promise.all(
     result.versions.map(async (version) => {
       const importContentResult = await executeChild(importContent, {
         args: [version],
@@ -75,4 +70,8 @@ export async function importDocmap(url: string): Promise<ImportDocmapOutput[]> {
       };
     }),
   );
+
+  return {
+    results,
+  };
 }

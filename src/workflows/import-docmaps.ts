@@ -2,11 +2,12 @@ import {
   ParentClosePolicy,
   WorkflowIdReusePolicy,
   proxyActivities,
-  executeChild,
+  startChild,
+
 } from '@temporalio/workflow';
 import type * as activities from '../activities/index';
 import { importDocmap } from './import-docmap';
-import { ImportMessage } from '../types';
+import { ImportDocmapsMessage } from '../types';
 
 const {
   filterDocmapIndex,
@@ -22,17 +23,18 @@ const {
 
 export type Hash = { hash: string, idHash: string };
 
-export async function importDocmaps(docMapIndexUrl: string, s3StateFileUrl?: string, start?: number, end?: number): Promise<ImportMessage> {
+export async function importDocmaps(docMapIndexUrl: string, s3StateFileUrl?: string, start?: number, end?: number): Promise<ImportDocmapsMessage> {
   const docMapIdHashes = await filterDocmapIndex(docMapIndexUrl, s3StateFileUrl, start, end);
 
   if (docMapIdHashes.length === 0) {
     return {
       status: 'SKIPPED',
       message: 'No new docmaps to import',
+      results: [],
     };
   }
 
-  await Promise.all(docMapIdHashes.map(async (docMapIdHash) => executeChild(importDocmap, {
+  const importWorkflows = await Promise.all(docMapIdHashes.map(async (docMapIdHash) => startChild(importDocmap, {
     args: [docMapIdHash.docMapId], // id contains the canonical URL of the docmap
     workflowId: `docmap-${docMapIdHash.docMapIdHash}`,
     // allows child workflows to outlive this workflow
@@ -43,8 +45,11 @@ export async function importDocmaps(docMapIndexUrl: string, s3StateFileUrl?: str
 
   await mergeDocmapState(docMapIdHashes, s3StateFileUrl);
 
+  const results = await Promise.all(importWorkflows.map((importWorkflow) => importWorkflow.result()));
+
   return {
     status: 'SUCCESS',
     message: `Importing ${docMapIdHashes.length} docmaps`,
+    results,
   };
 }
