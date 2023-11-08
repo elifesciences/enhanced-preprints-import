@@ -210,7 +210,7 @@ services:
       - 3000:3000
 
   app:
-    image: ghcr.io/elifesciences/enhanced-preprints-client:master-0d4f39e9-20231108.0335
+    image: ghcr.io/elifesciences/enhanced-preprints-client:master-13c9bf18-20231108.0733
     healthcheck:
       test: sh -c 'apk add curl; curl http://app:3000/'
       interval: 5s
