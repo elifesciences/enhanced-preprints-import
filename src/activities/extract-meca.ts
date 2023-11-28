@@ -47,7 +47,7 @@ type ManifestItem = {
   instance: ManifestItemInstance[],
 };
 
-export const extractMeca = async (version: VersionedReviewedPreprint): Promise<MecaFiles> => {
+export const extractMeca = async (version: VersionedReviewedPreprint, sourceUuid: string): Promise<MecaFiles> => {
   const tmpDirectory = await mkdtemp(`${tmpdir()}/epp_content`);
 
   const s3 = getEPPS3Client();
@@ -175,6 +175,14 @@ export const extractMeca = async (version: VersionedReviewedPreprint): Promise<M
     articleUploadPromise,
     ...supportingFilesUploads,
   ]);
+
+  // Create source.txt in S3 with sourceUuid as its content
+  const s3PathForSourceTxt = constructEPPVersionS3FilePath('source.txt', version);
+  await s3.send(new PutObjectCommand({
+    Bucket: s3PathForSourceTxt.Bucket,
+    Key: s3PathForSourceTxt.Key,
+    Body: sourceUuid,
+  }));
 
   // Delete tmpDirectory
   fs.rmSync(tmpDirectory, { recursive: true, force: true });

@@ -17,7 +17,8 @@ import {
 type CopySourcePreprintToEPPOutput = {
   result: CopyObjectCommandOutput,
   path: S3File,
-  type: 'COPY' | 'GETANDPUT'
+  type: 'COPY' | 'GETANDPUT',
+  uuid: string,
 };
 
 export const copySourcePreprintToEPP = async (version: VersionedReviewedPreprint): Promise<CopySourcePreprintToEPPOutput> => {
@@ -27,6 +28,7 @@ export const copySourcePreprintToEPP = async (version: VersionedReviewedPreprint
   if (s3Url === undefined) {
     throw Error(`Cannot import content - no s3 URL found in content strings [${version.preprint.content?.join(',')}]`);
   }
+  const s3Filename = (s3Url.split('/').pop() ?? '').split('.').shift() ?? '';
 
   // extract bucket and Path for S3 client
   const source = parseS3Path(s3Url);
@@ -60,6 +62,7 @@ export const copySourcePreprintToEPP = async (version: VersionedReviewedPreprint
       result: fileInfo,
       path: destination,
       type: 'GETANDPUT',
+      uuid: s3Filename,
     };
   }
 
@@ -76,5 +79,6 @@ export const copySourcePreprintToEPP = async (version: VersionedReviewedPreprint
     result: fileInfo,
     path: destination,
     type: 'COPY',
+    uuid: s3Filename,
   };
 };
