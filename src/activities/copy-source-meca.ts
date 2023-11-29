@@ -18,7 +18,6 @@ type CopySourcePreprintToEPPOutput = {
   result: CopyObjectCommandOutput,
   path: S3File,
   type: 'COPY' | 'GETANDPUT',
-  uuid: string,
 };
 
 export const copySourcePreprintToEPP = async (version: VersionedReviewedPreprint): Promise<CopySourcePreprintToEPPOutput> => {
@@ -29,6 +28,13 @@ export const copySourcePreprintToEPP = async (version: VersionedReviewedPreprint
     throw Error(`Cannot import content - no s3 URL found in content strings [${version.preprint.content?.join(',')}]`);
   }
   const s3Filename = (s3Url.split('/').pop() ?? '').split('.').shift() ?? '';
+  // Create source.txt in S3 with sourceUuid as its content
+  const s3PathForSourceTxt = constructEPPVersionS3FilePath('source.txt', version);
+  await s3Connection.send(new PutObjectCommand({
+    Bucket: s3PathForSourceTxt.Bucket,
+    Key: s3PathForSourceTxt.Key,
+    Body: s3Filename,
+  }));
 
   // extract bucket and Path for S3 client
   const source = parseS3Path(s3Url);
@@ -62,7 +68,6 @@ export const copySourcePreprintToEPP = async (version: VersionedReviewedPreprint
       result: fileInfo,
       path: destination,
       type: 'GETANDPUT',
-      uuid: s3Filename,
     };
   }
 
@@ -79,6 +84,5 @@ export const copySourcePreprintToEPP = async (version: VersionedReviewedPreprint
     result: fileInfo,
     path: destination,
     type: 'COPY',
-    uuid: s3Filename,
   };
 };
