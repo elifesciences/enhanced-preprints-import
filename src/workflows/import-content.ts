@@ -55,10 +55,10 @@ export async function importContent(version: VersionedReviewedPreprint): Promise
     return 'No content to import';
   }
 
-  const { path: mecaPath, uuid: sourceUuid } = await copySourcePreprintToEPP(version);
+  const { path: mecaPath } = await copySourcePreprintToEPP(version);
 
   // Extract Meca
-  const mecaFiles = await extractMeca(version, sourceUuid);
+  const mecaFiles = await extractMeca(version);
 
   const { path: jsonContentFile, xsltLogs } = await convertXmlToJson(version, mecaFiles);
 
