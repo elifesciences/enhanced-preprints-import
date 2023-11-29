@@ -17,7 +17,7 @@ import {
 type CopySourcePreprintToEPPOutput = {
   result: CopyObjectCommandOutput,
   path: S3File,
-  type: 'COPY' | 'GETANDPUT'
+  type: 'COPY' | 'GETANDPUT',
 };
 
 export const copySourcePreprintToEPP = async (version: VersionedReviewedPreprint): Promise<CopySourcePreprintToEPPOutput> => {
@@ -27,6 +27,15 @@ export const copySourcePreprintToEPP = async (version: VersionedReviewedPreprint
   if (s3Url === undefined) {
     throw Error(`Cannot import content - no s3 URL found in content strings [${version.preprint.content?.join(',')}]`);
   }
+
+  // Create source.txt in S3 with s3Filename as its content
+  const s3Filename = (s3Url.split('/').pop() ?? '').split('.').shift() ?? '';
+  const s3PathForSourceTxt = constructEPPVersionS3FilePath('source.txt', version);
+  await s3Connection.send(new PutObjectCommand({
+    Bucket: s3PathForSourceTxt.Bucket,
+    Key: s3PathForSourceTxt.Key,
+    Body: s3Filename,
+  }));
 
   // extract bucket and Path for S3 client
   const source = parseS3Path(s3Url);
