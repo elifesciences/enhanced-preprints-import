@@ -27,8 +27,9 @@ export const copySourcePreprintToEPP = async (version: VersionedReviewedPreprint
   if (s3Url === undefined) {
     throw Error(`Cannot import content - no s3 URL found in content strings [${version.preprint.content?.join(',')}]`);
   }
+
+  // Create source.txt in S3 with s3Filename as its content
   const s3Filename = (s3Url.split('/').pop() ?? '').split('.').shift() ?? '';
-  // Create source.txt in S3 with sourceUuid as its content
   const s3PathForSourceTxt = constructEPPVersionS3FilePath('source.txt', version);
   await s3Connection.send(new PutObjectCommand({
     Bucket: s3PathForSourceTxt.Bucket,
