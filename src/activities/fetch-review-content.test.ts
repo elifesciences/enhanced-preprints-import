@@ -62,7 +62,7 @@ describe('fetch-review-content', () => {
       },
     };
 
-    const env = new MockActivityEnvironment({ attempt: 2 });
+    const env = new MockActivityEnvironment();
     const result = await env.run(fetchReviewContent, versionData);
     expect(result).toStrictEqual({
       evaluationSummary: {
@@ -111,7 +111,7 @@ describe('fetch-review-content', () => {
       },
     };
 
-    const env = new MockActivityEnvironment({ attempt: 2 });
+    const env = new MockActivityEnvironment();
     const result = await env.run(fetchReviewContent, versionData);
     expect(result).toStrictEqual({
       reviews: [{
@@ -119,5 +119,30 @@ describe('fetch-review-content', () => {
         text: '<h1>Review</h1><p>Review content</p>',
       }],
     });
+  });
+
+  it('does not fetch content from unrecognised URLs', async () => {
+    const versionData: VersionedReviewedPreprint = {
+      id: 'testid',
+      doi: 'testdoi',
+      versionIdentifier: '1',
+      preprint: {
+        id: 'testpreprintid',
+        doi: 'testpreprintdoi',
+      },
+      peerReview: {
+        reviews: [{
+          ...mockReview,
+          contentUrls: [
+            'http://review-content.mockedapi/reviewId1/content',
+            'http://review-content.mockedapi/hypothesis:reviewId1',
+            'http://review-content.mockedapi/reviewId1',
+          ],
+        }],
+      },
+    };
+
+    const env = new MockActivityEnvironment();
+    await expect(env.run(fetchReviewContent, versionData)).rejects.toThrow('Could not resolve evaluation content URLs to content');
   });
 });
