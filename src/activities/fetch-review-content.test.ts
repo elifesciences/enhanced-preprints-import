@@ -1,4 +1,3 @@
-import { Context } from '@temporalio/activity';
 import { MockActivityEnvironment } from '@temporalio/testing';
 import axios from 'axios';
 import { mocked } from 'jest-mock';
