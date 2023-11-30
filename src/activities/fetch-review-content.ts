@@ -64,8 +64,8 @@ export const fetchReviewContent = async (version: VersionedReviewedPreprint): Pr
   reviews = await Promise.all(version.peerReview.reviews.map(mapEvaluation));
 
   return {
-    evaluationSummary,
+    ...evaluationSummary ? { evaluationSummary } : {},
+    ...authorResponse ? { authorResponse } : {},
     reviews,
-    authorResponse,
   };
 };
