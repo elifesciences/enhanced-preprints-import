@@ -35,7 +35,7 @@ const mapEvaluation = async (evaluation: Evaluation): Promise<EPPEvaluation> => 
   participants: evaluation.participants.map<EPPParticipant>((participant): EPPParticipant => ({
     name: participant.name,
     role: participant.role,
-    institution: [participant.institution.name, participant.institution.location].filter((v) => v).join(', '),
+    institution: participant.institution.name,
   })),
   reviewType: evaluation.reviewType,
   text: await fetchEvaluationContent(evaluation),
