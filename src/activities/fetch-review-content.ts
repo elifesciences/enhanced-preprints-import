@@ -5,7 +5,7 @@ import axios from 'axios';
 type EPPParticipant = {
   name: string;
   role: string;
-  institution: string;
+  institution?: string;
 };
 type EPPEvaluation = {
   date: Date;
@@ -35,7 +35,7 @@ const mapEvaluation = async (evaluation: Evaluation): Promise<EPPEvaluation> => 
   participants: evaluation.participants.map<EPPParticipant>((participant): EPPParticipant => ({
     name: participant.name,
     role: participant.role,
-    institution: participant.institution.name,
+    ...(participant.institution ? { institution: participant.institution.name } : {}),
   })),
   reviewType: evaluation.reviewType,
   text: await fetchEvaluationContent(evaluation),
