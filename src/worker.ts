@@ -34,7 +34,14 @@ async function run() {
     activities,
   });
 
+  const newWorker = await Worker.create({
+    connection,
+    workflowsPath: require.resolve('./workflows'),
+    taskQueue: 'import-docmaps',
+  });
+
   await worker.run();
+  await newWorker.run();
 }
 
 run().catch((err) => {
