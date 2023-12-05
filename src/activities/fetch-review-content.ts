@@ -5,7 +5,7 @@ import axios from 'axios';
 type EPPParticipant = {
   name: string;
   role: string;
-  institution: string;
+  institution?: string;
 };
 type EPPEvaluation = {
   date: Date;
@@ -29,6 +29,18 @@ export const fetchEvaluationContent = async (evaluation: Evaluation): Promise<st
   throw Error('Could not resolve evaluation content URLs to content');
 };
 
+const mapEvaluation = async (evaluation: Evaluation): Promise<EPPEvaluation> => ({
+  date: evaluation.date,
+  doi: evaluation.doi,
+  participants: evaluation.participants.map<EPPParticipant>((participant): EPPParticipant => ({
+    name: participant.name,
+    role: participant.role,
+    ...(participant.institution ? { institution: participant.institution.name } : {}),
+  })),
+  reviewType: evaluation.reviewType,
+  text: await fetchEvaluationContent(evaluation),
+});
+
 export const fetchReviewContent = async (version: VersionedReviewedPreprint): Promise<EPPPeerReview | undefined> => {
   let reviews: EPPEvaluation[] = [];
   let authorResponse: EPPEvaluation | undefined;
@@ -40,38 +52,20 @@ export const fetchReviewContent = async (version: VersionedReviewedPreprint): Pr
 
   Context.current().heartbeat('Fetching "evaluation summary"');
   if (version.peerReview.evaluationSummary) {
-    evaluationSummary = {
-      date: version.peerReview.evaluationSummary.date,
-      doi: version.peerReview.evaluationSummary.doi,
-      participants: version.peerReview.evaluationSummary.participants,
-      reviewType: version.peerReview.evaluationSummary.reviewType,
-      text: await fetchEvaluationContent(version.peerReview.evaluationSummary),
-    };
+    evaluationSummary = await mapEvaluation(version.peerReview.evaluationSummary);
   }
 
   Context.current().heartbeat('Fetching "author response"');
   if (version.peerReview.authorResponse) {
-    authorResponse = {
-      date: version.peerReview.authorResponse.date,
-      doi: version.peerReview.authorResponse.doi,
-      participants: version.peerReview.authorResponse.participants,
-      reviewType: version.peerReview.authorResponse.reviewType,
-      text: await fetchEvaluationContent(version.peerReview.authorResponse),
-    };
+    authorResponse = await mapEvaluation(version.peerReview.authorResponse);
   }
 
   Context.current().heartbeat('Fetching "peer reviews"');
-  reviews = await Promise.all(version.peerReview.reviews.map(async (review) => ({
-    date: review.date,
-    doi: review.doi,
-    participants: review.participants,
-    reviewType: review.reviewType,
-    text: await fetchEvaluationContent(review),
-  })));
+  reviews = await Promise.all(version.peerReview.reviews.map(mapEvaluation));
 
   return {
-    evaluationSummary,
+    ...evaluationSummary ? { evaluationSummary } : {},
+    ...authorResponse ? { authorResponse } : {},
     reviews,
-    authorResponse,
   };
 };
