@@ -125,7 +125,7 @@ services:
     environment:
       EPP_SERVER_URI: http://api:3000
       TEMPORAL_SERVER: temporal:7233
-      TASK_QUEUE_NAME: task1
+      TASK_QUEUE_NAME: epp
 
       # EPP S3 bucket
       S3_ENDPOINT: http://minio:9000
@@ -152,7 +152,7 @@ services:
       - ./src:/app/src
       - node_modules:/app/node_modules
 
-  new-worker:
+  docmaps-worker:
     build:
       context: .
       target: worker
@@ -172,7 +172,7 @@ services:
     environment:
       EPP_SERVER_URI: http://api:3000
       TEMPORAL_SERVER: temporal:7233
-      TASK_QUEUE_NAME: task2
+      TEMPORAL_TASK_QUEUE: import-docmaps
 
       # EPP S3 bucket
       S3_ENDPOINT: http://minio:9000
@@ -190,7 +190,7 @@ services:
       - yarn
       - start:worker:dev
     healthcheck:
-      test: curl -s http://new-worker:9464/metrics  | grep 'temporal_worker_start{namespace="default",service_name="temporal-core-sdk",task_queue="epp"}'  | grep 1
+      test: curl -s http://docmaps-worker:9464/metrics  | grep 'temporal_worker_start{namespace="default",service_name="temporal-core-sdk",task_queue="import-docmaps"}'  | grep 1
       interval: 5s
       timeout: 5s
       retries: 10
