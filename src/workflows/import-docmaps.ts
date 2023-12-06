@@ -41,7 +41,7 @@ export async function importDocmaps(docMapIndexUrl: string, s3StateFileUrl?: str
     parentClosePolicy: ParentClosePolicy.PARENT_CLOSE_POLICY_ABANDON,
     // makes sure there is only one workflow running, this new one.
     workflowIdReusePolicy: WorkflowIdReusePolicy.WORKFLOW_ID_REUSE_POLICY_TERMINATE_IF_RUNNING,
-    taskQueue: 'import-docmaps'
+    taskQueue: process.env.TASK_QUEUE_NAME,
   })));
 
   await mergeDocmapState(docMapIdHashes, s3StateFileUrl);
