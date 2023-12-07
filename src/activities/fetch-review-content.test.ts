@@ -70,7 +70,7 @@ describe('fetch-review-content', () => {
         participants: [{
           name: 'Reviewing Editor',
           role: 'senior-editor',
-          institution: 'Monsters University',
+          institution: 'Monsters University, Monstropolis',
         }],
         text: '<h1>Review</h1><p>Review content</p>',
       },
