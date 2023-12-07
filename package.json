@@ -51,7 +51,7 @@
   },
   "scripts": {
     "start:worker": "ts-node src/worker.ts",
-    "start:worker:dev": "nodemon src/worker.ts",
+    "start:worker:dev": "nodemon --signal SIGKILL src/worker.ts",
     "test": "jest",
     "lint": "eslint --ext .ts src/"
   }
