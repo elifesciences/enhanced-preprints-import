@@ -125,6 +125,7 @@ services:
     environment:
       EPP_SERVER_URI: http://api:3000
       TEMPORAL_SERVER: temporal:7233
+      TASK_QUEUE_NAME: epp
 
       # EPP S3 bucket
       S3_ENDPOINT: http://minio:9000
@@ -143,6 +144,53 @@ services:
       - start:worker:dev
     healthcheck:
       test: curl -s http://worker:9464/metrics  | grep 'temporal_worker_start{namespace="default",service_name="temporal-core-sdk",task_queue="epp"}'  | grep 1
+      interval: 5s
+      timeout: 5s
+      retries: 10
+      start_period: 2s
+    volumes:
+      - ./src:/app/src
+      - node_modules:/app/node_modules
+
+  docmaps-worker:
+    build:
+      context: .
+      target: worker
+    depends_on:
+      createbucket:
+        condition: service_completed_successfully
+      yarn:
+        condition: service_completed_successfully
+      temporal-setup-search:
+        condition: service_completed_successfully
+      temporal:
+        condition: service_healthy
+      xslt:
+        condition: service_healthy
+      api:
+        condition: service_healthy
+    environment:
+      EPP_SERVER_URI: http://api:3000
+      TEMPORAL_SERVER: temporal:7233
+      TEMPORAL_TASK_QUEUE: import-docmaps
+
+      # EPP S3 bucket
+      S3_ENDPOINT: http://minio:9000
+      AWS_ACCESS_KEY_ID: minio
+      AWS_SECRET_ACCESS_KEY: miniotest
+      BUCKET_NAME: epp
+
+      # Meca S3 Bucket (on minio)
+      MECA_S3_ENDPOINT: http://minio:9000
+      MECA_AWS_ACCESS_KEY_ID: minio
+      MECA_AWS_SECRET_ACCESS_KEY: miniotest
+      XSLT_TRANSFORM_ADDRESS: http://xslt:80
+    restart: on-failure
+    command:
+      - yarn
+      - start:worker:dev
+    healthcheck:
+      test: curl -s http://docmaps-worker:9464/metrics  | grep 'temporal_worker_start{namespace="default",service_name="temporal-core-sdk",task_queue="import-docmaps"}'  | grep 1
       interval: 5s
       timeout: 5s
       retries: 10
