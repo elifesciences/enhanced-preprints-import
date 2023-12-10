@@ -74,7 +74,7 @@ services:
       - temporal_data:/data
 
   temporal-setup-search:
-    image: temporalio/admin-tools:1.22.2
+    image: temporalio/admin-tools:1.22.3
     environment:
       TEMPORAL_ADDRESS: temporal:7233
     entrypoint: bash -c 'temporal operator search-attribute create --name ManuscriptId --type Text && temporal operator search-attribute create --name DocmapURL --type Text'
