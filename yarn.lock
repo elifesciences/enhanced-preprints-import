@@ -4146,6 +4146,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@tsconfig/node18@npm:^18.0.0":
+  version: 18.2.2
+  resolution: "@tsconfig/node18@npm:18.2.2"
+  checksum: 1c4b04b570e33de14bf518492e077079db2dcfba738c8d40c6ff916d94c9410246f4cb56f0802d9771423862140bf714c35d4a5f6cec2446d851cf61d3f8f9df
+  languageName: node
+  linkType: hard
+
 "@types/babel__core@npm:^7.1.14":
   version: 7.1.20
   resolution: "@types/babel__core@npm:7.1.20"
@@ -7590,7 +7597,7 @@ __metadata:
     "@temporalio/testing": ^1.7.4
     "@temporalio/worker": ^1.7.4
     "@temporalio/workflow": ^1.7.4
-    "@tsconfig/node18": ^1.0.1
+    "@tsconfig/node18": ^18.0.0
     "@types/decompress": ^4.2.5
     "@types/eslint": 8.44.8
     "@types/jest": ^29.2.5
