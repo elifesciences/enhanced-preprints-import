@@ -4139,6 +4139,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@tsconfig/node16@npm:^1.0.4":
+  version: 1.0.4
+  resolution: "@tsconfig/node16@npm:1.0.4"
+  checksum: 202319785901f942a6e1e476b872d421baec20cf09f4b266a1854060efbf78cde16a4d256e8bc949d31e6cd9a90f1e8ef8fb06af96a65e98338a2b6b0de0a0ff
+  languageName: node
+  linkType: hard
+
 "@tsconfig/node18@npm:^1.0.1":
   version: 1.0.1
   resolution: "@tsconfig/node18@npm:1.0.1"
@@ -4402,10 +4409,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/node@npm:^18.11.9":
-  version: 18.15.11
-  resolution: "@types/node@npm:18.15.11"
-  checksum: 977b4ad04708897ff0eb049ecf82246d210939c82461922d20f7d2dcfd81bbc661582ba3af28869210f7e8b1934529dcd46bff7d448551400f9d48b9d3bddec3
+"@types/node@npm:^16.18.68":
+  version: 16.18.68
+  resolution: "@types/node@npm:16.18.68"
+  checksum: 094ae9ed80eed2af4bd34d551467e307f2ecb6efb0f8b872feebfb9da5ea4b446c5883c9abe2349f8ea2b78bdacd8726a946c27c2a246676c4c330e41ccb9284
   languageName: node
   linkType: hard
 
@@ -7590,11 +7597,11 @@ __metadata:
     "@temporalio/testing": ^1.7.4
     "@temporalio/worker": ^1.7.4
     "@temporalio/workflow": ^1.7.4
-    "@tsconfig/node18": ^1.0.1
+    "@tsconfig/node16": ^1.0.4
     "@types/decompress": ^4.2.5
     "@types/eslint": 8.44.8
     "@types/jest": ^29.2.5
-    "@types/node": ^18.11.9
+    "@types/node": ^16.18.68
     "@types/object-hash": ^3.0.2
     "@typescript-eslint/eslint-plugin": 6.1.0
     "@typescript-eslint/parser": ^6.0.0

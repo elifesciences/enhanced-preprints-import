@@ -53,6 +53,6 @@ export const sendVersionToEpp = async (versionJSON: EnhancedArticle): Promise<bo
     }
     return result;
   } catch (error: any) {
-    throw new Error(`Failed to import version to EPP: ${error.response.data.message}`);
+    throw new Error(`Failed to import version to EPP: ${error.response.data.message}`, { cause: error });
   }
 };
