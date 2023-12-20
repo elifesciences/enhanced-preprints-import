@@ -2,7 +2,7 @@ import axios from 'axios';
 import {
   BlockContent, CreativeWorkTypes, InlineContent, Node, Organization, Person,
 } from '@stencila/schema';
-import { Context } from '@temporalio/activity';
+import { ApplicationFailure, Context } from '@temporalio/activity';
 import { config } from '../config';
 import { EPPPeerReview } from './fetch-review-content';
 
@@ -53,6 +53,6 @@ export const sendVersionToEpp = async (versionJSON: EnhancedArticle): Promise<bo
     }
     return result;
   } catch (error: any) {
-    throw new Error(`Failed to import version to EPP: ${error.response.data.message}`, { cause: error });
+    throw new ApplicationFailure(`Failed to import version to EPP: ${error.response.data.message}`, 'epp-server', null, null, error);
   }
 };
