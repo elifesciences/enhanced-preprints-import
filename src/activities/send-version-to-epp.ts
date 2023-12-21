@@ -53,6 +53,12 @@ export const sendVersionToEpp = async (versionJSON: EnhancedArticle): Promise<bo
     }
     return result;
   } catch (error: any) {
-    throw new ApplicationFailure(`Failed to import version to EPP: ${error.response.data.message}`, 'epp-server', null, null, error);
+    throw new ApplicationFailure(
+      `Failed to import version to EPP: ${error.response.data.message}`,
+      'epp-server',
+      undefined,
+      error.response.data,
+      error,
+    );
   }
 };
