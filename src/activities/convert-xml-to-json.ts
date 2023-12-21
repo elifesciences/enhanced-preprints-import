@@ -22,7 +22,7 @@ type TransformXmlResponse = {
 };
 
 type TransformXmlToJsonResponse = {
-  xml: string,
+  json: string,
   version: string,
 };
 
@@ -86,7 +86,7 @@ export const convertXmlToJson = async (version: VersionedReviewedPreprint, mecaF
     const newPath = getPrefixlessKey(constructEPPVersionS3FilePath(mecaFile.path, version));
 
     return json.replaceAll(oldPath, newPath);
-  }, transformedJsonResponse.xml);
+  }, transformedJsonResponse.json);
 
   // Upload destination in S3
   const destination = constructEPPVersionS3FilePath('article.json', version);
