@@ -7,9 +7,7 @@ import {
 import { mockClient } from 'aws-sdk-client-mock';
 import { sdkStreamMixin } from '@aws-sdk/util-stream-node';
 import { filterDocmapIndex, mergeDocmapState } from './find-all-docmaps';
-import { createHash } from 'crypto';
 import { createDocMapHash } from '../utils/create-docmap-hash';
-import { DocMap } from '@elifesciences/docmap-ts';
 
 jest.mock('axios');
 const mockS3Client = mockClient(S3Client);
