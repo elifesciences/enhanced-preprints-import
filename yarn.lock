@@ -4416,6 +4416,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/object-hash@npm:^3.0.2":
+  version: 3.0.6
+  resolution: "@types/object-hash@npm:3.0.6"
+  checksum: 2c7979d4e540af817b99c09fb4c2fed1c0b0e14342df474d8dcde4165a82c440b038341fd66fe998d9f86acdd5cccc65ba8092315e39e7c2114f945fa70aaa56
+  languageName: node
+  linkType: hard
+
 "@types/responselike@npm:^1.0.0":
   version: 1.0.0
   resolution: "@types/responselike@npm:1.0.0"
@@ -7595,6 +7602,7 @@ __metadata:
     "@types/eslint": 8.56.0
     "@types/jest": ^29.2.5
     "@types/node": ^16.18.68
+    "@types/object-hash": ^3.0.2
     "@typescript-eslint/eslint-plugin": 6.1.0
     "@typescript-eslint/parser": ^6.0.0
     aws-sdk-client-mock: ^3.0.0
@@ -7612,6 +7620,7 @@ __metadata:
     jest: 29.7.0
     jest-mock: ^29.3.1
     nodemon: ^3.0.0
+    object-hash: ^3.0.0
     ts-jest: 29.1.1
     ts-node: 10.9.2
     typescript: 5.3.3
@@ -12587,6 +12596,13 @@ __metadata:
   version: 4.1.1
   resolution: "object-assign@npm:4.1.1"
   checksum: fcc6e4ea8c7fe48abfbb552578b1c53e0d194086e2e6bbbf59e0a536381a292f39943c6e9628af05b5528aa5e3318bb30d6b2e53cadaf5b8fe9e12c4b69af23f
+  languageName: node
+  linkType: hard
+
+"object-hash@npm:^3.0.0":
+  version: 3.0.0
+  resolution: "object-hash@npm:3.0.0"
+  checksum: 80b4904bb3857c52cc1bfd0b52c0352532ca12ed3b8a6ff06a90cd209dfda1b95cee059a7625eb9da29537027f68ac4619363491eedb2f5d3dddbba97494fd6c
   languageName: node
   linkType: hard
 

@@ -7,9 +7,7 @@ import {
 import { mockClient } from 'aws-sdk-client-mock';
 import { sdkStreamMixin } from '@aws-sdk/util-stream-node';
 import { filterDocmapIndex, mergeDocmapState } from './find-all-docmaps';
-import { createHash } from 'crypto';
 import { createDocMapHash } from '../utils/create-docmap-hash';
-import { DocMap } from '@elifesciences/docmap-ts';
 
 jest.mock('axios');
 const mockS3Client = mockClient(S3Client);
@@ -22,9 +20,7 @@ jest.mock('../config', () => ({
 }));
 
 describe('docmap-filter', () => {
-  const mockId = 'fake-docmap';
-  const mockedHash = 'fce9d372cab6bb01073a1868b3a2749d';
-  const mockedIdHash = '4e9eeaf1649334fa428ea6c4f4343849';
+  const mockHashes = createDocMapHash({ id: 'fake-docmap'});
 
   beforeEach(() => {
     mockS3Client.reset();
@@ -63,8 +59,8 @@ describe('docmap-filter', () => {
       expect(result?.length).toStrictEqual(1);
       expect(result?.[0].docMapId).toStrictEqual('fake-docmap');
       expect(result?.length).toStrictEqual(1);
-      expect(result?.[0].docMapHash).toStrictEqual(mockedHash);
-      expect(result?.[0].docMapIdHash).toStrictEqual(mockedIdHash);
+      expect(result?.[0].docMapHash).toStrictEqual(mockHashes.docMapHash);
+      expect(result?.[0].docMapIdHash).toStrictEqual(mockHashes.docMapIdHash);
     });
 
     it('returns new docmaps (that are not hashed in the state file)', async () => {
@@ -72,7 +68,7 @@ describe('docmap-filter', () => {
       const mockedGet = mocked(axios.get);
       // @ts-ignore
       mockedGet.mockImplementation(() => Promise.resolve({
-        data: { docmaps: [{ id: mockId }] },
+        data: { docmaps: [{ id: mockHashes.docMapId }] },
         status: 200,
       }));
       mockS3Client.on(GetObjectCommand).rejects(new NoSuchKey({
@@ -85,9 +81,9 @@ describe('docmap-filter', () => {
 
       // Assert
       expect(result).toStrictEqual([{
-        docMapId: mockId,
-        docMapHash: mockedHash,
-        docMapIdHash: mockedIdHash,
+        docMapId: mockHashes.docMapId,
+        docMapHash: mockHashes.docMapHash,
+        docMapIdHash: mockHashes.docMapIdHash,
       }]);
     });
 
@@ -96,7 +92,7 @@ describe('docmap-filter', () => {
       const mockedGet = mocked(axios.get);
       // @ts-ignore
       mockedGet.mockImplementation(() => Promise.resolve({
-        data: { docmaps: [{ id: mockId }] },
+        data: { docmaps: [{ id: mockHashes.docMapId }] },
         status: 200,
       }));
       mockS3Client.on(GetObjectCommand).rejects(new NoSuchKey({
@@ -109,9 +105,9 @@ describe('docmap-filter', () => {
 
       // Assert
       expect(result).toStrictEqual([{
-        docMapId: mockId,
-        docMapHash: mockedHash,
-        docMapIdHash: mockedIdHash,
+        docMapId: mockHashes.docMapId,
+        docMapHash: mockHashes.docMapHash,
+        docMapIdHash: mockHashes.docMapIdHash,
       }]);
     });
 
@@ -120,16 +116,16 @@ describe('docmap-filter', () => {
       const mockedGet = mocked(axios.get);
       // @ts-ignore
       mockedGet.mockImplementation(() => Promise.resolve({
-        data: { docmaps: [{ id: mockId }] },
+        data: { docmaps: [{ id: mockHashes.docMapId }] },
         status: 200,
       }));
 
       const stream = new Readable();
       stream.push(JSON.stringify([
         {
-          docMapId: mockId,
-          docMapHash: mockedHash,
-          docMapIdHash: mockedIdHash,
+          docMapId: mockHashes.docMapId,
+          docMapHash: mockHashes.docMapHash,
+          docMapIdHash: mockHashes.docMapIdHash,
         },
       ]));
       stream.push(null);
@@ -176,9 +172,9 @@ describe('docmap-filter', () => {
 
       // Act
       const result = await mergeDocmapState([{
-        docMapId: mockId,
-        docMapHash: mockedHash,
-        docMapIdHash: mockedIdHash,
+        docMapId: mockHashes.docMapId,
+        docMapHash: mockHashes.docMapHash,
+        docMapIdHash: mockHashes.docMapIdHash,
       }], 'state-file.json');
 
       // Assert
@@ -188,9 +184,9 @@ describe('docmap-filter', () => {
         Bucket: 'test-bucket',
         Key: 'automation/state/state-file.json',
         Body: JSON.stringify([{
-          docMapId: mockId,
-          docMapHash: mockedHash,
-          docMapIdHash: mockedIdHash,
+          docMapId: mockHashes.docMapId,
+          docMapHash: mockHashes.docMapHash,
+          docMapIdHash: mockHashes.docMapIdHash,
         }]),
       });
     });
