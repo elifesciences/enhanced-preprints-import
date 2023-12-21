@@ -167,6 +167,8 @@ services:
         condition: service_healthy
       xslt:
         condition: service_healthy
+      encoda:
+        condition: service_healthy
       api:
         condition: service_healthy
     environment:
@@ -184,7 +186,10 @@ services:
       MECA_S3_ENDPOINT: http://minio:9000
       MECA_AWS_ACCESS_KEY_ID: minio
       MECA_AWS_SECRET_ACCESS_KEY: miniotest
+
+      # other services
       XSLT_TRANSFORM_ADDRESS: http://xslt:80
+      ENCODA_TRANSFORM_ADDRESS: http://encoda:3000
     restart: on-failure
     command:
       - yarn
@@ -242,6 +247,19 @@ services:
     restart: always
     ports:
       - 3004:80
+
+  ## ENCODA XSLT
+  encoda:
+    image: ghcr.io/elifesciences/enhanced-preprints-encoda:master-f949f23d-20231221.0746
+    healthcheck:
+      test: "wget --post-data '<test></test>' -O - http://localhost:3000/"
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 3s
+    restart: always
+    ports:
+      - 3005:3000
 
   ## EPP API
   api:
