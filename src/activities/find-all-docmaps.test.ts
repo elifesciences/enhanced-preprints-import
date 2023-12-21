@@ -1,13 +1,13 @@
 import { Readable } from 'stream';
 import axios from 'axios';
 import { mocked } from 'jest-mock';
-import { MD5 } from 'object-hash';
 import {
   GetObjectCommand, NoSuchKey, PutObjectCommand, S3Client,
 } from '@aws-sdk/client-s3';
 import { mockClient } from 'aws-sdk-client-mock';
 import { sdkStreamMixin } from '@aws-sdk/util-stream-node';
 import { filterDocmapIndex, mergeDocmapState } from './find-all-docmaps';
+import { createDocMapHash } from '../utils/create-docmap-hash';
 
 jest.mock('axios');
 const mockS3Client = mockClient(S3Client);
@@ -20,6 +20,10 @@ jest.mock('../config', () => ({
 }));
 
 describe('docmap-filter', () => {
+  const mockId = 'fake-docmap';
+  const mockedHash = 'fce9d372cab6bb01073a1868b3a2749d';
+  const mockedIdHash = '4e9eeaf1649334fa428ea6c4f4343849';
+
   beforeEach(() => {
     mockS3Client.reset();
   });
@@ -42,8 +46,6 @@ describe('docmap-filter', () => {
     it('returns docmaps found in index', async () => {
       // Arrange
       const mockedGet = mocked(axios.get);
-      const mockedHash = MD5({ id: 'fake-docmap' });
-      const mockedIdHash = MD5('fake-docmap');
 
       // @ts-ignore
       mockedGet.mockImplementation(() => Promise.resolve({
@@ -65,9 +67,6 @@ describe('docmap-filter', () => {
 
     it('returns new docmaps (that are not hashed in the state file)', async () => {
       // Arrange
-      const mockId = 'fake-docmap';
-      const mockedHash = MD5({ id: mockId });
-      const mockedIdHash = MD5(mockId);
       const mockedGet = mocked(axios.get);
       // @ts-ignore
       mockedGet.mockImplementation(() => Promise.resolve({
@@ -92,9 +91,6 @@ describe('docmap-filter', () => {
 
     it('returns new docmaps (that are not hashed in the state file)', async () => {
       // Arrange
-      const mockId = 'fake-docmap';
-      const mockedHash = MD5({ id: mockId });
-      const mockedIdHash = MD5(mockId);
       const mockedGet = mocked(axios.get);
       // @ts-ignore
       mockedGet.mockImplementation(() => Promise.resolve({
@@ -119,8 +115,6 @@ describe('docmap-filter', () => {
 
     it('skips existing docmaps (that are hashed in the state file)', async () => {
       // Arrange
-      const mockId = 'fake-docmap';
-
       const mockedGet = mocked(axios.get);
       // @ts-ignore
       mockedGet.mockImplementation(() => Promise.resolve({
@@ -128,8 +122,6 @@ describe('docmap-filter', () => {
         status: 200,
       }));
 
-      const mockedHash = MD5({ id: mockId });
-      const mockedIdHash = MD5(mockId);
       const stream = new Readable();
       stream.push(JSON.stringify([
         {
@@ -175,9 +167,6 @@ describe('docmap-filter', () => {
     });
 
     it('creates a new state file with a docmap hash', async () => {
-      const mockId = 'fake-docmap';
-      const mockedHash = MD5({ id: mockId });
-      const mockedIdHash = MD5(mockId);
       mockS3Client.on(GetObjectCommand).rejects(new NoSuchKey({
         $metadata: {},
         message: 'No Such Key',
@@ -206,15 +195,9 @@ describe('docmap-filter', () => {
 
     it('merges docmaps into exsiting state file', async () => {
       // Arrange
-      const mockDocmap1Id = 'fake-docmap1';
-      const mockDocmap1Hash = MD5({ id: mockDocmap1Id });
-      const mockDocmap1IdHash = MD5(mockDocmap1Id);
+      const mockDocmap1Hashes = createDocMapHash({ id: 'fake-docmap1' });
       const stream = new Readable();
-      stream.push(JSON.stringify([{
-        docMapId: mockDocmap1Id,
-        docMapHash: mockDocmap1Hash,
-        docMapIdHash: mockDocmap1IdHash,
-      }]));
+      stream.push(JSON.stringify([mockDocmap1Hashes]));
       stream.push(null);
       const sdkStream = sdkStreamMixin(stream);
       mockS3Client.on(GetObjectCommand).resolves({
@@ -222,14 +205,8 @@ describe('docmap-filter', () => {
       });
 
       // Act
-      const mockDocmap2Id = 'fake-docmap2';
-      const mockDocmap2Hash = MD5({ id: mockDocmap2Id });
-      const mockDocmap2IdHash = MD5(mockDocmap2Id);
-      const result = await mergeDocmapState([{
-        docMapId: mockDocmap2Id,
-        docMapHash: mockDocmap2Hash,
-        docMapIdHash: mockDocmap2IdHash,
-      }], 'state-file.json');
+      const mockDocmap2Hashes = createDocMapHash({ id: 'fake-docmap1' });
+      const result = await mergeDocmapState([mockDocmap2Hashes], 'state-file.json');
 
       // Assert
       expect(result).toStrictEqual(true);
@@ -237,18 +214,7 @@ describe('docmap-filter', () => {
       expect(mockS3Client.commandCalls(PutObjectCommand)[0].args[0].input).toStrictEqual({
         Bucket: 'test-bucket',
         Key: 'automation/state/state-file.json',
-        Body: JSON.stringify([
-          {
-            docMapId: mockDocmap1Id,
-            docMapHash: mockDocmap1Hash,
-            docMapIdHash: mockDocmap1IdHash,
-          },
-          {
-            docMapId: mockDocmap2Id,
-            docMapHash: mockDocmap2Hash,
-            docMapIdHash: mockDocmap2IdHash,
-          },
-        ]),
+        Body: JSON.stringify([mockDocmap1Hashes, mockDocmap2Hashes]),
       });
     });
   });

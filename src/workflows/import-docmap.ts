@@ -4,10 +4,12 @@ import {
   upsertSearchAttributes,
   workflowInfo,
 } from '@temporalio/workflow';
+import { DocMap } from '@elifesciences/docmap-ts';
 import type * as activities from '../activities/index';
 import { importContent } from './import-content';
 import { useWorkflowState } from '../hooks/useWorkflowState';
 import { ImportDocmapMessage } from '../types';
+import { createDocMapHash } from '../utils/create-docmap-hash';
 
 const { parseDocMap } = proxyActivities<typeof activities>({
   startToCloseTimeout: '1 minute',
@@ -36,7 +38,13 @@ export async function importDocmap(url: string): Promise<ImportDocmapMessage> {
   upsertSearchAttributes({
     DocmapURL: [url],
   });
-  const result = await fetchDocMap(url).then((docMap) => parseDocMap(docMap));
+  const docmapJson = await fetchDocMap(url);
+
+  // calculate docmap hashes, to verify the docmap hasn't changed
+  const docmap = JSON.parse(docmapJson);
+  const hashes = createDocMapHash(docmap as DocMap);
+
+  const result = await parseDocMap(docmapJson);
 
   upsertSearchAttributes({
     ManuscriptId: [result.id],
@@ -73,5 +81,6 @@ export async function importDocmap(url: string): Promise<ImportDocmapMessage> {
 
   return {
     results,
+    hashes,
   };
 }
