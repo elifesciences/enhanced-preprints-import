@@ -9,7 +9,6 @@ import type * as activities from '../activities/index';
 import { importContent } from './import-content';
 import { useWorkflowState } from '../hooks/useWorkflowState';
 import { ImportDocmapMessage } from '../types';
-import { createDocMapHash } from '../utils/create-docmap-hash';
 
 const { parseDocMap } = proxyActivities<typeof activities>({
   startToCloseTimeout: '1 minute',
@@ -17,11 +16,11 @@ const { parseDocMap } = proxyActivities<typeof activities>({
     maximumAttempts: 1,
   },
 });
-
 const {
   generateVersionJson,
   fetchDocMap,
   sendVersionToEpp,
+  createDocMapHash,
 } = proxyActivities<typeof activities>({
   startToCloseTimeout: '1 minute',
   retry: {
@@ -42,7 +41,7 @@ export async function importDocmap(url: string): Promise<ImportDocmapMessage> {
 
   // calculate docmap hashes, to verify the docmap hasn't changed
   const docmap = JSON.parse(docmapJson);
-  const hashes = createDocMapHash(docmap as DocMap);
+  const hashes = await createDocMapHash(docmap as DocMap);
 
   const result = await parseDocMap(docmapJson);
 

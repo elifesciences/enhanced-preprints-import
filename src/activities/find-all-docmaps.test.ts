@@ -7,7 +7,7 @@ import {
 import { mockClient } from 'aws-sdk-client-mock';
 import { sdkStreamMixin } from '@aws-sdk/util-stream-node';
 import { filterDocmapIndex, mergeDocmapState } from './find-all-docmaps';
-import { createDocMapHash } from '../utils/create-docmap-hash';
+import { createDocMapHash } from './create-docmap-hash';
 
 jest.mock('axios');
 const mockS3Client = mockClient(S3Client);
@@ -195,7 +195,7 @@ describe('docmap-filter', () => {
 
     it('merges docmaps into exsiting state file', async () => {
       // Arrange
-      const mockDocmap1Hashes = createDocMapHash({ id: 'fake-docmap1' });
+      const mockDocmap1Hashes = await createDocMapHash({ id: 'fake-docmap1' });
       const stream = new Readable();
       stream.push(JSON.stringify([mockDocmap1Hashes]));
       stream.push(null);
@@ -205,7 +205,7 @@ describe('docmap-filter', () => {
       });
 
       // Act
-      const mockDocmap2Hashes = createDocMapHash({ id: 'fake-docmap1' });
+      const mockDocmap2Hashes = await createDocMapHash({ id: 'fake-docmap1' });
       const result = await mergeDocmapState([mockDocmap2Hashes], 'state-file.json');
 
       // Assert
