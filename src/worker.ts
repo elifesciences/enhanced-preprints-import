@@ -6,10 +6,7 @@ import { config } from './config';
 
 async function run() {
   // setup logging
-  const logger = new DefaultLogger('DEBUG', ({ level, message }) => {
-    // eslint-disable-next-line no-console
-    console.log(`Custom logger: ${level} — ${message}`);
-  });
+  const logger = new DefaultLogger('DEBUG');
   Runtime.install({
     logger,
     telemetryOptions: {
