@@ -61,11 +61,17 @@ export const sendVersionToEpp = async (payloadFile: S3File): Promise<{ result: b
       version,
     };
   } catch (error: any) {
+    // remove the original payload from the error
+    // eslint-disable-next-line no-underscore-dangle
+    delete error.response.data.error._original;
+    // It's still probably pretty large for Temporal to accept, so at least log it
+    // eslint-disable-next-line no-console
+    console.log(JSON.stringify(error.response.data));
     throw new ApplicationFailure(
       `Failed to import version to EPP: ${error.response.data.message}`,
       'epp-server',
       undefined,
-      error.response.data,
+      [error.response.data.error],
       error,
     );
   }
