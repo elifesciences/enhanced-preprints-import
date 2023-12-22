@@ -66,10 +66,10 @@ export async function importDocmap(url: string): Promise<ImportDocmapMessage> {
           result: importContentResult,
         };
       }
-      const versionJson = await generateVersionJson({
+      const payloadFile = await generateVersionJson({
         importContentResult, msid: result.id, version, manuscript: result.manuscript,
       });
-      await sendVersionToEpp(versionJson);
+      await sendVersionToEpp(payloadFile);
       return {
         id: version.id,
         versionIdentifier: version.versionIdentifier,
