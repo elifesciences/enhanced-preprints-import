@@ -4,6 +4,7 @@ import {
   upsertSearchAttributes,
   workflowInfo,
 } from '@temporalio/workflow';
+import { DocMap } from '@elifesciences/docmap-ts';
 import type * as activities from '../activities/index';
 import { importContent } from './import-content';
 import { useWorkflowState } from '../hooks/useWorkflowState';
@@ -15,11 +16,11 @@ const { parseDocMap } = proxyActivities<typeof activities>({
     maximumAttempts: 1,
   },
 });
-
 const {
   generateVersionJson,
   fetchDocMap,
   sendVersionToEpp,
+  createDocMapHash,
 } = proxyActivities<typeof activities>({
   startToCloseTimeout: '1 minute',
   retry: {
@@ -36,7 +37,13 @@ export async function importDocmap(url: string): Promise<ImportDocmapMessage> {
   upsertSearchAttributes({
     DocmapURL: [url],
   });
-  const result = await fetchDocMap(url).then((docMap) => parseDocMap(docMap));
+  const docmapJson = await fetchDocMap(url);
+
+  // calculate docmap hashes, to verify the docmap hasn't changed
+  const docmap = JSON.parse(docmapJson);
+  const hashes = await createDocMapHash(docmap as DocMap);
+
+  const result = await parseDocMap(docmapJson);
 
   upsertSearchAttributes({
     ManuscriptId: [result.id],
@@ -59,10 +66,10 @@ export async function importDocmap(url: string): Promise<ImportDocmapMessage> {
           result: importContentResult,
         };
       }
-      const versionJson = await generateVersionJson({
+      const payloadFile = await generateVersionJson({
         importContentResult, msid: result.id, version, manuscript: result.manuscript,
       });
-      await sendVersionToEpp(versionJson);
+      await sendVersionToEpp(payloadFile);
       return {
         id: version.id,
         versionIdentifier: version.versionIdentifier,
@@ -73,5 +80,6 @@ export async function importDocmap(url: string): Promise<ImportDocmapMessage> {
 
   return {
     results,
+    hashes,
   };
 }

@@ -1,23 +1,8 @@
 import axios from 'axios';
-import { DocMap } from '@elifesciences/docmap-ts';
-import { MD5 } from 'object-hash';
 import { GetObjectCommand, NoSuchKey, PutObjectCommand } from '@aws-sdk/client-s3';
 import { constructEPPStateS3FilePath, getEPPS3Client } from '../S3Bucket';
-
-type DocMapIndex = {
-  docmaps: DocMap[],
-};
-
-type DocMapHashes = {
-  docMapId: string,
-  docMapHash: string,
-  docMapIdHash: string,
-};
-
-type DocMapWithHashes = {
-  docMap: DocMap,
-  docMapHashes: DocMapHashes,
-};
+import { DocMapHashes, DocMapIndex, DocMapWithHashes } from '../types';
+import { createDocMapHash } from './create-docmap-hash';
 
 export const filterDocmapIndex = async (docMapIndex: string, s3StateFile?: string, start?: number, end?: number): Promise<DocMapHashes[]> => {
   const docmapHashes: DocMapHashes[] = [];
@@ -42,14 +27,10 @@ export const filterDocmapIndex = async (docMapIndex: string, s3StateFile?: strin
 
   const { data: result } = await axios.get<DocMapIndex>(docMapIndex);
 
-  const importableDocmapsWithHashes = result.docmaps.map<DocMapWithHashes>((docMap) => ({
+  const importableDocmapsWithHashes = (await Promise.all(result.docmaps.map<Promise<DocMapWithHashes>>(async (docMap) => ({
     docMap,
-    docMapHashes: {
-      docMapId: docMap.id,
-      docMapHash: MD5(docMap),
-      docMapIdHash: MD5(docMap.id),
-    },
-  }))
+    docMapHashes: await createDocMapHash(docMap),
+  }))))
     .filter((docMapWithHashes) => !docmapHashes.some((hash) => hash.docMapHash === docMapWithHashes.docMapHashes.docMapHash))
     .slice(start, end);
 

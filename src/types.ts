@@ -1,3 +1,5 @@
+import { DocMap } from '@elifesciences/docmap-ts';
+
 export type ImportDocmapsMessage = {
   status: 'SUCCESS' | 'SKIPPED'
   message: string;
@@ -10,4 +12,20 @@ export type ImportDocmapMessage = {
     versionIdentifier: string,
     result: string,
   }[]
+  hashes: DocMapHashes,
+};
+
+export type DocMapIndex = {
+  docmaps: DocMap[],
+};
+
+export type DocMapHashes = {
+  docMapId: string,
+  docMapHash: string,
+  docMapIdHash: string,
+};
+
+export type DocMapWithHashes = {
+  docMap: DocMap,
+  docMapHashes: DocMapHashes,
 };

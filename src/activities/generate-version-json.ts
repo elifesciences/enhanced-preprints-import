@@ -1,8 +1,8 @@
 import { Article } from '@stencila/schema';
-import { GetObjectCommand, GetObjectCommandInput } from '@aws-sdk/client-s3';
+import { GetObjectCommand, GetObjectCommandInput, PutObjectCommand } from '@aws-sdk/client-s3';
 import { Context } from '@temporalio/activity';
 import { Manuscript, VersionedReviewedPreprint } from '@elifesciences/docmap-ts/dist/docmap-parser';
-import { getEPPS3Client } from '../S3Bucket';
+import { S3File, constructEPPVersionS3FilePath, getEPPS3Client } from '../S3Bucket';
 import { EnhancedArticle } from './send-version-to-epp';
 import { ImportContentOutput } from '../workflows/import-content';
 import { NonRetryableError } from '../errors';
@@ -23,7 +23,7 @@ type GenerateVersionJson = (
   {
     importContentResult, msid, version, manuscript,
   }: { importContentResult: ImportContentOutput, msid: string, version: VersionedReviewedPreprint, manuscript?: Manuscript }
-) => Promise<EnhancedArticle>;
+) => Promise<S3File>;
 
 export const generateVersionJson: GenerateVersionJson = async ({
   importContentResult, msid, version, manuscript,
@@ -69,5 +69,13 @@ export const generateVersionJson: GenerateVersionJson = async ({
     license: version.license,
   };
 
-  return versionJSON;
+  Context.current().heartbeat('storing generated EPP JSON');
+  const destination = constructEPPVersionS3FilePath('payload.json', version);
+  s3.send(new PutObjectCommand({
+    Bucket: destination.Bucket,
+    Key: destination.Key,
+    Body: JSON.stringify(versionJSON),
+  }));
+
+  return destination;
 };

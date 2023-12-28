@@ -2,9 +2,11 @@ import axios from 'axios';
 import {
   BlockContent, CreativeWorkTypes, InlineContent, Node, Organization, Person,
 } from '@stencila/schema';
-import { Context } from '@temporalio/activity';
+import { ApplicationFailure, Context } from '@temporalio/activity';
+import { GetObjectCommand } from '@aws-sdk/client-s3';
 import { config } from '../config';
 import { EPPPeerReview } from './fetch-review-content';
+import { S3File, getEPPS3Client } from '../S3Bucket';
 
 export type Content = Array<Node> | Node;
 
@@ -42,17 +44,35 @@ type EPPImportResponse = {
   message: string,
 };
 
-export const sendVersionToEpp = async (versionJSON: EnhancedArticle): Promise<boolean> => {
-  const versionImportUri = `${config.eppServerUri}/preprints`;
-
+export const sendVersionToEpp = async (payloadFile: S3File): Promise<{ result: boolean, version: EnhancedArticle }> => {
+  Context.current().heartbeat('Fetching article JSON');
+  const s3 = getEPPS3Client();
+  const versionJSON: string = await s3.send(new GetObjectCommand(payloadFile)).then((obj) => obj.Body?.transformToString() ?? '');
+  const version = JSON.parse(versionJSON);
   try {
     Context.current().heartbeat('Sending version data to EPP');
-    const { result, message } = await axios.post<EPPImportResponse>(versionImportUri, versionJSON).then(async (response) => response.data);
+    const versionImportUri = `${config.eppServerUri}/preprints`;
+    const { result, message } = await axios.post<EPPImportResponse>(versionImportUri, version).then(async (response) => response.data);
     if (!result) {
       throw new Error(`Failed to import version to EPP: ${message}`);
     }
-    return result;
+    return {
+      result,
+      version,
+    };
   } catch (error: any) {
-    throw new Error(`Failed to import version to EPP: ${error.response.data.message}`);
+    // remove the original payload from the error
+    // eslint-disable-next-line no-underscore-dangle
+    delete error.response.data.error._original;
+    // It's still probably pretty large for Temporal to accept, so at least log it
+    // eslint-disable-next-line no-console
+    console.log(JSON.stringify(error.response.data));
+    throw new ApplicationFailure(
+      `Failed to import version to EPP: ${error.response.data.message}`,
+      'epp-server',
+      undefined,
+      [error.response.data.error],
+      error,
+    );
   }
 };
