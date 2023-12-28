@@ -25,11 +25,20 @@ export type Hash = { hash: string, idHash: string };
 
 export async function importDocmaps(docMapIndexUrl: string, s3StateFileUrl?: string, start?: number, end?: number): Promise<ImportDocmapsMessage> {
   const docMapIdHashes = await filterDocmapIndex(docMapIndexUrl, s3StateFileUrl, start, end);
+  const sampleDocmapsThreshold = 10;
 
   if (docMapIdHashes.length === 0) {
     return {
       status: 'SKIPPED',
       message: 'No new docmaps to import',
+      results: [],
+    };
+  }
+
+  if (docMapIdHashes.length > sampleDocmapsThreshold) {
+    return {
+      status: 'SKIPPED',
+      message: 'Too many docmap changes. Continue?',
       results: [],
     };
   }
