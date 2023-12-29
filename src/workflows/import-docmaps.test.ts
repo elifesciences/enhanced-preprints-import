@@ -13,7 +13,7 @@ describe('importDocmaps', () => {
     await testEnv?.teardown();
   });
 
-  it('should create importdocmap workflows if the number of docmap changes are below a threshold', async() => {
+  it('should not create importdocmap workflows if the number of docmap changes are 0', async() => {
     const worker = await Worker.create({
       connection: testEnv.nativeConnection,
       taskQueue: 'test-epp',
@@ -30,8 +30,9 @@ describe('importDocmaps', () => {
         args: ['http://test-docmaps.com']
       })
     );
-    expect(result).toEqual('fooooo');
+    expect(result.status).toEqual('SKIPPED');
   });
+  it.todo('should create importdocmap workflows if the number of docmap changes are below a threshold'); 
   it.todo('should not create importdocmap workflows if the number of docmap changes are above a threshold');
   it.todo('should progress importdocmap workflows if it gets an approval signal');
   it.todo('should not progress importdocmap workflows if it gets a rejection signal');
