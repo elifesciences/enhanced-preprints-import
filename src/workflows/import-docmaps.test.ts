@@ -69,7 +69,43 @@ describe('importDocmaps', () => {
       })
     );
     expect(result.status).toEqual('NOT APPROVED');
+  });
+  it('should progress importdocmap workflows if it gets an approval signal', async() => {
+    const worker = await Worker.create({
+      connection: testEnv.nativeConnection,
+      taskQueue: 'test-epp',
+      workflowsPath: require.resolve('./'),
+      activities: {
+        filterDocmapIndex: () => [],
+        mergeDocmapState: () => false,
+      }
+    });
+    const result = await worker.runUntil(
+      testEnv.client.workflow.execute(importDocmaps, {
+        workflowId: 'import-docmaps',
+        taskQueue: 'test-epp',
+        args: ['http://test-docmaps.com']
+      })
+    );
+    expect(result.status).toEqual('SUCCESS');
+  });
+  it('should cancel importdocmap workflows if it gets a rejection signal', async() => {
+    const worker = await Worker.create({
+      connection: testEnv.nativeConnection,
+      taskQueue: 'test-epp',
+      workflowsPath: require.resolve('./'),
+      activities: {
+        filterDocmapIndex: () => [],
+        mergeDocmapState: () => false,
+      }
+    });
+    const result = await worker.runUntil(
+      testEnv.client.workflow.execute(importDocmaps, {
+        workflowId: 'import-docmaps',
+        taskQueue: 'test-epp',
+        args: ['http://test-docmaps.com']
+      })
+    );
+    expect(result.status).toEqual('NOT APPROVED');
   }); 
-  it.todo('should progress importdocmap workflows if it gets an approval signal');
-  it.todo('should not progress importdocmap workflows if it gets a rejection signal');
 });
