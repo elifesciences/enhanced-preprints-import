@@ -31,8 +31,6 @@ const {
   },
 });
 
-export const store = useWorkflowState(workflowInfo().workflowId, true);
-
 export async function importDocmap(url: string): Promise<ImportDocmapMessage> {
   upsertSearchAttributes({
     DocmapURL: [url],
