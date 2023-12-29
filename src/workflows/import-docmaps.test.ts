@@ -8,12 +8,12 @@ describe('importDocmaps', () => {
   beforeAll(async () => {
     testEnv = await TestWorkflowEnvironment.createTimeSkipping();
   });
-  
+
   afterAll(async () => {
     await testEnv?.teardown();
   });
 
-  it('should not create importdocmap workflows if the number of docmap changes are 0', async() => {
+  it('should not create importdocmap workflows if the number of docmap changes are 0', async () => {
     const worker = await Worker.create({
       connection: testEnv.nativeConnection,
       taskQueue: 'test-epp',
@@ -21,51 +21,50 @@ describe('importDocmaps', () => {
       activities: {
         filterDocmapIndex: () => [],
         mergeDocmapState: () => false,
-      }
+      },
     });
     const result = await worker.runUntil(
       testEnv.client.workflow.execute(importDocmaps, {
         workflowId: 'import-docmaps',
         taskQueue: 'test-epp',
-        args: ['http://test-docmaps.com']
-      })
+        args: ['http://test-docmaps.com'],
+      }),
     );
     expect(result.status).toEqual('SKIPPED');
   });
 
-  it('should create importdocmap workflows if the number of docmap changes are below a threshold', async() => {
+  it('should create importdocmap workflows if the number of docmap changes are below a threshold', async () => {
     const worker = await Worker.create({
       connection: testEnv.nativeConnection,
       taskQueue: 'test-epp',
       workflowsPath: require.resolve('./'),
       activities: {
-        filterDocmapIndex: () => 
-          [
-            {
-              "docMapId": "https://data-hub-api.elifesciences.org/enhanced-preprints/docmaps/v2/by-publisher/elife/get-by-manuscript-id?manuscript_id=95532",
-              "docMapHash": "1ae42bb3a79509c586fcdd51fe71db18",
-              "docMapIdHash": "cee3357ed3c51fcf2b6aed5da789788a"
-            },
-            {
-              "docMapId": "https://data-hub-api.elifesciences.org/enhanced-preprints/docmaps/v2/by-publisher/elife/get-by-manuscript-id?manuscript_id=91472",
-              "docMapHash": "c4a0c59fcb30509b26a682bac39f4db9",
-              "docMapIdHash": "17efcefe7b0882f75c7494939858d4fb"
-            }
+        filterDocmapIndex: () => [
+          {
+            docMapId: 'https://data-hub-api.elifesciences.org/enhanced-preprints/docmaps/v2/by-publisher/elife/get-by-manuscript-id?manuscript_id=95532',
+            docMapHash: '1ae42bb3a79509c586fcdd51fe71db18',
+            docMapIdHash: 'cee3357ed3c51fcf2b6aed5da789788a',
+          },
+          {
+            docMapId: 'https://data-hub-api.elifesciences.org/enhanced-preprints/docmaps/v2/by-publisher/elife/get-by-manuscript-id?manuscript_id=91472',
+            docMapHash: 'c4a0c59fcb30509b26a682bac39f4db9',
+            docMapIdHash: '17efcefe7b0882f75c7494939858d4fb',
+          },
         ],
         mergeDocmapState: () => true,
-      }
+      },
     });
     const result = await worker.runUntil(
       testEnv.client.workflow.execute(importDocmaps, {
         workflowId: 'import-docmaps',
         taskQueue: 'test-epp',
-        args: ['http://test-docmaps.com']
-      })
+        args: ['http://test-docmaps.com'],
+      }),
     );
     expect(result.status).toEqual('SKIPPED');
-  }); 
+  });
 
-  it.todo('should not create importdocmap workflows if the number of docmap changes are above a threshold', async() => {
+  it('should not create importdocmap workflows if the number of docmap changes are above a threshold', async () => {
     const worker = await Worker.create({
       connection: testEnv.nativeConnection,
       taskQueue: 'test-epp',
@@ -73,18 +72,18 @@ describe('importDocmaps', () => {
       activities: {
         filterDocmapIndex: () => [],
         mergeDocmapState: () => false,
-      }
+      },
     });
     const result = await worker.runUntil(
       testEnv.client.workflow.execute(importDocmaps, {
         workflowId: 'import-docmaps',
         taskQueue: 'test-epp',
-        args: ['http://test-docmaps.com']
-      })
+        args: ['http://test-docmaps.com'],
+      }),
     );
     expect(result.status).toEqual('NOT APPROVED');
   });
-  it.todo('should progress importdocmap workflows if it gets an approval signal', async() => {
+  it('should progress importdocmap workflows if it gets an approval signal', async () => {
     const worker = await Worker.create({
       connection: testEnv.nativeConnection,
       taskQueue: 'test-epp',
@@ -92,18 +91,18 @@ describe('importDocmaps', () => {
       activities: {
         filterDocmapIndex: () => [],
         mergeDocmapState: () => false,
-      }
+      },
     });
     const result = await worker.runUntil(
       testEnv.client.workflow.execute(importDocmaps, {
         workflowId: 'import-docmaps',
         taskQueue: 'test-epp',
-        args: ['http://test-docmaps.com']
-      })
+        args: ['http://test-docmaps.com'],
+      }),
     );
     expect(result.status).toEqual('SUCCESS');
   });
-  it.todo('should cancel importdocmap workflows if it gets a rejection signal', async() => {
+  it('should cancel importdocmap workflows if it gets a rejection signal', async () => {
     const worker = await Worker.create({
       connection: testEnv.nativeConnection,
       taskQueue: 'test-epp',
@@ -111,15 +110,15 @@ describe('importDocmaps', () => {
       activities: {
         filterDocmapIndex: () => [],
         mergeDocmapState: () => false,
-      }
+      },
     });
     const result = await worker.runUntil(
       testEnv.client.workflow.execute(importDocmaps, {
         workflowId: 'import-docmaps',
         taskQueue: 'test-epp',
-        args: ['http://test-docmaps.com']
-      })
+        args: ['http://test-docmaps.com'],
+      }),
     );
     expect(result.status).toEqual('NOT APPROVED');
-  }); 
+  });
 });

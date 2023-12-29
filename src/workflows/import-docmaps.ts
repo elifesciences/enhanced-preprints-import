@@ -37,7 +37,7 @@ export async function importDocmaps(docMapIndexUrl: string, s3StateFileUrl?: str
   }
 
   if (docMapIdHashes.length > sampleDocmapsThreshold) {
-    let approval:boolean | null = null;
+    const approval: boolean | null = null;
     await condition(() => typeof approval === 'boolean');
     if (!approval) {
       return {
