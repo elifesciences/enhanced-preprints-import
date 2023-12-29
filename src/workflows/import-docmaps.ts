@@ -1,6 +1,7 @@
 import {
   ParentClosePolicy,
   WorkflowIdReusePolicy,
+  condition,
   proxyActivities,
   startChild,
 
@@ -36,11 +37,15 @@ export async function importDocmaps(docMapIndexUrl: string, s3StateFileUrl?: str
   }
 
   if (docMapIdHashes.length > sampleDocmapsThreshold) {
-    return {
-      status: 'SKIPPED',
-      message: 'Too many docmap changes. Continue?',
-      results: [],
-    };
+    let approval:boolean | null = null;
+    await condition(() => typeof approval === 'boolean');
+    if (!approval) {
+      return {
+        status: 'NOT APPROVED',
+        message: 'Large import not approved',
+        results: [],
+      };
+    }
   }
 
   const importWorkflows = await Promise.all(docMapIdHashes.map(async (docMapIdHash) => startChild(importDocmap, {
