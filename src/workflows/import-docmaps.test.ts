@@ -18,6 +18,10 @@ describe('importDocmaps', () => {
       connection: testEnv.nativeConnection,
       taskQueue: 'test-epp',
       workflowsPath: require.resolve('./'),
+      activities: {
+        filterDocmapIndex: () => [],
+        mergeDocmapState: () => false,
+      }
     });
     const result = await worker.runUntil(
       testEnv.client.workflow.execute(importDocmaps, {
