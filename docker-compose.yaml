@@ -129,7 +129,6 @@ services:
       TEMPORAL_SERVER: temporal:7233
       TASK_QUEUE_NAME: epp
 
-
       # EPP S3 bucket
       S3_ENDPOINT: http://minio:9000
       AWS_ACCESS_KEY_ID: minio
@@ -161,7 +160,6 @@ services:
   docmaps-worker:
     extends:
       service: worker
-
     environment:
       TEMPORAL_TASK_QUEUE: import-docmaps
     healthcheck:
