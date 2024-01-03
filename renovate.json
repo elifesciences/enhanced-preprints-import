@@ -17,8 +17,9 @@
     {
       "matchPackageNames": [
         "ghcr.io/elifesciences/epp-image-server",
-        "ghcr.io/elifesciences/enhanced-preprints",
-        "ghcr.io/elifesciences/enhanced-preprints-client"
+        "ghcr.io/elifesciences/enhanced-preprints-server",
+        "ghcr.io/elifesciences/enhanced-preprints-client",
+        "ghcr.io/elifesciences/enhanced-preprints-biorxiv-xslt-api"
       ],
       "versioning": "regex:^master-(.*)-(?<minor>[\\d]+)\\.(?<patch>[\\d]+)$",
       "automerge": true

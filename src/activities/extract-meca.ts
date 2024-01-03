@@ -123,7 +123,7 @@ export const extractMeca = async (version: VersionedReviewedPreprint): Promise<M
 
   // get other content that represent the article
   const otherArticleInstances: LocalMecaFile[] = await Promise.all(items.filter((item) => item.type === 'article' && item.mimeType !== 'application/xml').map((item) => prepareLocalMecaFile(item, tmpDirectory)));
-  const supportingFiles: LocalMecaFile[] = await Promise.all(items.filter((item) => ['figure', 'fig', 'equation', 'inlineequation', 'inlinefigure', 'table', 'supplement', 'video'].includes(item.type))
+  const supportingFiles: LocalMecaFile[] = await Promise.all(items.filter((item) => ['figure', 'fig', 'equation', 'display-equation', 'inlineequation', 'inline-equation', 'inlinefigure', 'table', 'supplement', 'video'].includes(item.type))
     .map((item) => prepareLocalMecaFile(item, tmpDirectory)));
   supportingFiles.push(...otherArticleInstances);
 
@@ -133,7 +133,9 @@ export const extractMeca = async (version: VersionedReviewedPreprint): Promise<M
     'figure',
     'fig',
     'equation',
+    'display-equation',
     'inlineequation',
+    'inline-equation',
     'inlinefigure',
     'table',
     'supplement',
