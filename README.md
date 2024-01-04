@@ -125,3 +125,10 @@ You can combine the s3 source and destination to allow for retrieval from s3 sou
 ```shell
 docker-compose -f docker-compose.yaml -f docker-compose.override.yaml -f docker-compose.s3.yaml -f docker-compose.s3-epp.yaml up
 ```
+
+
+## Runing tests with docker
+To run the tests with docker (especially useful if they are not working localy) use the following command:
+```shell
+docker compose -f docker-compose.tests.yaml run tests
+```

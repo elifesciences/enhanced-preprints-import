@@ -1,0 +1,9 @@
+version: '3.4'
+services:
+  tests:
+    build:
+      context: .
+      target: tests
+    command: yarn test
+    volumes:
+      - ./src:/app/src
