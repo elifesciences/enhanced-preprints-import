@@ -8,7 +8,7 @@ import { ImportDocmapsMessage } from '../types';
 const {
   filterDocmapIndex,
   mergeDocmapState,
-  createImportDocmapWorkflow
+  createImportDocmapWorkflow,
 } = proxyActivities<typeof activities>({
   startToCloseTimeout: '1 minute',
   retry: {

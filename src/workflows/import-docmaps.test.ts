@@ -108,13 +108,13 @@ describe('importDocmaps', () => {
 
   it('should not create importdocmap workflows if the number of docmap changes are 0', async () => {
     filterDocmapIndexMock.mockResolvedValueOnce([]);
-    const result = await testEnv.client.workflow.execute(importDocmaps, {
+
+    const result = await worker.runUntil(testEnv.client.workflow.execute(importDocmaps, {
       workflowId: 'import-zero-docmaps',
       taskQueue: 'test-epp',
       args: ['http://test-docmaps.com'],
-    });
-    console.log(result);
-    
+    }));
+
     expect(result?.status).toEqual('SKIPPED');
   });
 
