@@ -73,6 +73,40 @@ const longDocmapList = [
   },
 ];
 
+const importDocmapValue = [{
+  "results": [
+    {
+      "id": "95532",
+      "versionIdentifier": "1",
+      "result": "Sent to EPP"
+    }
+  ],
+  "hashes": {
+    "docMapId": "https://data-hub-api.elifesciences.org/enhanced-preprints/docmaps/v2/by-publisher/elife/get-by-manuscript-id?manuscript_id=95532",
+    "docMapHash": "1f479fcd64a34479c587781ab3f9f0b7",
+    "docMapIdHash": "cee3357ed3c51fcf2b6aed5da789788a"
+  }
+},
+{
+  "results": [
+    {
+      "id": "91472",
+      "versionIdentifier": "1",
+      "result": "Sent to EPP"
+    },
+    {
+      "id": "91472",
+      "versionIdentifier": "2",
+      "result": "Sent to EPP"
+    }
+  ],
+  "hashes": {
+    "docMapId": "https://data-hub-api.elifesciences.org/enhanced-preprints/docmaps/v2/by-publisher/elife/get-by-manuscript-id?manuscript_id=91472",
+    "docMapHash": "c4a0c59fcb30509b26a682bac39f4db9",
+    "docMapIdHash": "17efcefe7b0882f75c7494939858d4fb"
+  }
+}]
+
 describe('importDocmaps', () => {
   let testEnv: TestWorkflowEnvironment;
   beforeAll(async () => {
@@ -84,6 +118,8 @@ describe('importDocmaps', () => {
 
   const filterDocmapIndexMock = jest.fn();
   const mergeDocmapStateMock = jest.fn();
+  const createImportDocmapWorkflowMock = jest.fn();
+
   let worker: Worker;
   beforeEach(async () => {
     worker = await Worker.create({
@@ -93,6 +129,7 @@ describe('importDocmaps', () => {
       activities: {
         filterDocmapIndex: filterDocmapIndexMock,
         mergeDocmapState: mergeDocmapStateMock,
+        createImportDocmapWorkflow: createImportDocmapWorkflowMock,
       },
     });
   });
@@ -104,6 +141,7 @@ describe('importDocmaps', () => {
     }
     filterDocmapIndexMock.mockReset();
     mergeDocmapStateMock.mockReset();
+    createImportDocmapWorkflowMock.mockReset();
   });
 
   it('should not create importdocmap workflows if the number of docmap changes are 0', async () => {
@@ -121,12 +159,13 @@ describe('importDocmaps', () => {
   it('should create importdocmap workflows if the number of docmap changes are below a threshold', async () => {
     filterDocmapIndexMock.mockResolvedValueOnce(shortDocmapList);
     mergeDocmapStateMock.mockResolvedValueOnce(false);
+    createImportDocmapWorkflowMock.mockResolvedValueOnce(importDocmapValue);
 
-    const result = await testEnv.client.workflow.execute(importDocmaps, {
+    const result = await worker.runUntil(testEnv.client.workflow.execute(importDocmaps, {
       workflowId: 'import-short-docmaps',
       taskQueue: 'test-epp',
       args: ['http://test-docmaps.com'],
-    });
+    }));
 
     expect(result?.status).toEqual('SUCCESS');
     expect(result?.results.length).toEqual(2);
