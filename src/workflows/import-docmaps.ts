@@ -1,18 +1,14 @@
 import {
-  ParentClosePolicy,
-  WorkflowIdReusePolicy,
   condition,
   proxyActivities,
-  startChild,
-
 } from '@temporalio/workflow';
 import type * as activities from '../activities/index';
-import { importDocmap } from './import-docmap';
 import { ImportDocmapsMessage } from '../types';
 
 const {
   filterDocmapIndex,
   mergeDocmapState,
+  createImportDocmapWorkflow
 } = proxyActivities<typeof activities>({
   startToCloseTimeout: '1 minute',
   retry: {
@@ -48,15 +44,7 @@ export async function importDocmaps(docMapIndexUrl: string, s3StateFileUrl?: str
     }
   }
 
-  const importWorkflows = await Promise.all(docMapIdHashes.map(async (docMapIdHash) => startChild(importDocmap, {
-    args: [docMapIdHash.docMapId], // id contains the canonical URL of the docmap
-    workflowId: `docmap-${docMapIdHash.docMapIdHash}`,
-    // allows child workflows to outlive this workflow
-    parentClosePolicy: ParentClosePolicy.PARENT_CLOSE_POLICY_ABANDON,
-    // makes sure there is only one workflow running, this new one.
-    workflowIdReusePolicy: WorkflowIdReusePolicy.WORKFLOW_ID_REUSE_POLICY_TERMINATE_IF_RUNNING,
-    taskQueue: 'import-docmaps',
-  })));
+  const importWorkflows = await Promise.all(docMapIdHashes.map(async (docMapIdHash) => createImportDocmapWorkflow(docMapIdHash)));
 
   await mergeDocmapState(docMapIdHashes, s3StateFileUrl);
 

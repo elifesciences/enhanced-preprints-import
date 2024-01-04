@@ -113,6 +113,8 @@ describe('importDocmaps', () => {
       taskQueue: 'test-epp',
       args: ['http://test-docmaps.com'],
     });
+    console.log(result);
+    
     expect(result?.status).toEqual('SKIPPED');
   });
 
