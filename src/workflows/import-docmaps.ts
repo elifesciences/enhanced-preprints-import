@@ -8,7 +8,7 @@ import { ImportDocmapsMessage } from '../types';
 const {
   filterDocmapIndex,
   mergeDocmapState,
-  createImportDocmapWorkflow,
+  createImportDocmapWorkflow
 } = proxyActivities<typeof activities>({
   startToCloseTimeout: '1 minute',
   retry: {
@@ -45,7 +45,8 @@ export async function importDocmaps(docMapIndexUrl: string, s3StateFileUrl?: str
   }
 
   const importWorkflows = await Promise.all(docMapIdHashes.map(async (docMapIdHash) => createImportDocmapWorkflow(docMapIdHash)));
-
+  console.log(importWorkflows);
+  
   await mergeDocmapState(docMapIdHashes, s3StateFileUrl);
 
   const results = await Promise.all(importWorkflows.map((importWorkflow) => importWorkflow.result()));

@@ -73,7 +73,8 @@ const longDocmapList = [
   },
 ];
 
-const importDocmapValue = [{
+const importDocmapValue = {
+  result : () => ({
   "results": [
     {
       "id": "95532",
@@ -86,27 +87,8 @@ const importDocmapValue = [{
     "docMapHash": "1f479fcd64a34479c587781ab3f9f0b7",
     "docMapIdHash": "cee3357ed3c51fcf2b6aed5da789788a"
   }
-},
-{
-  "results": [
-    {
-      "id": "91472",
-      "versionIdentifier": "1",
-      "result": "Sent to EPP"
-    },
-    {
-      "id": "91472",
-      "versionIdentifier": "2",
-      "result": "Sent to EPP"
-    }
-  ],
-  "hashes": {
-    "docMapId": "https://data-hub-api.elifesciences.org/enhanced-preprints/docmaps/v2/by-publisher/elife/get-by-manuscript-id?manuscript_id=91472",
-    "docMapHash": "c4a0c59fcb30509b26a682bac39f4db9",
-    "docMapIdHash": "17efcefe7b0882f75c7494939858d4fb"
-  }
-}]
-
+})
+}
 describe('importDocmaps', () => {
   let testEnv: TestWorkflowEnvironment;
   beforeAll(async () => {
