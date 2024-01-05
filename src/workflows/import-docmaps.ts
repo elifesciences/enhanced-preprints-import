@@ -1,6 +1,8 @@
 import {
   condition,
+  defineSignal,
   proxyActivities,
+  setHandler,
 } from '@temporalio/workflow';
 import type * as activities from '../activities/index';
 import { ImportDocmapsMessage } from '../types';
@@ -20,7 +22,11 @@ const {
 
 export type Hash = { hash: string, idHash: string };
 
+const approvalSignal = defineSignal<[boolean]>('approval');
+
 export async function importDocmaps(docMapIndexUrl: string, s3StateFileUrl?: string, start?: number, end?: number): Promise<ImportDocmapsMessage> {
+  let approval: boolean | null = null;
+  setHandler(approvalSignal, (approvalValue: boolean) => {approval = approvalValue});
   const docMapIdHashes = await filterDocmapIndex(docMapIndexUrl, s3StateFileUrl, start, end);
   const sampleDocmapsThreshold = 10;
 
@@ -33,7 +39,6 @@ export async function importDocmaps(docMapIndexUrl: string, s3StateFileUrl?: str
   }
 
   if (docMapIdHashes.length > sampleDocmapsThreshold) {
-    const approval: boolean | null = null;
     await condition(() => typeof approval === 'boolean');
     if (!approval) {
       return {
