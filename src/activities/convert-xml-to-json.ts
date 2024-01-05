@@ -7,7 +7,10 @@ import * as fs from 'fs';
 import axios from 'axios';
 import { Context } from '@temporalio/activity';
 import {
+  CopyObjectCommand,
   GetObjectCommand,
+  HeadObjectCommand,
+  NotFound,
   PutObjectCommand,
   PutObjectCommandOutput,
 } from '@aws-sdk/client-s3';
@@ -36,6 +39,33 @@ export const transformXML = async (xmlInput: string): Promise<TransformResponse>
   return transformedResponse.data;
 };
 
+const copySourceXmlToKnownPath = async (source: S3File, version: VersionedReviewedPreprint) => {
+  const s3 = getEPPS3Client();
+
+  const sourceBucketAndPath = `${source.Bucket}/${source.Key}`;
+  const sourceXMLDestination = constructEPPVersionS3FilePath('article-source.xml', version);
+
+  let destinationETag;
+  try {
+    const destinationExistsResult = await s3.send(new HeadObjectCommand({
+      Bucket: sourceXMLDestination.Bucket,
+      Key: sourceXMLDestination.Key,
+    }));
+    destinationETag = destinationExistsResult.ETag;
+    console.info('convertXmlToJson - Source XML Destination exists - will compare ETag. ', source);
+  } catch (e) {
+    if (!(e instanceof NotFound)) {
+      throw e;
+    }
+  }
+  s3.send(new CopyObjectCommand({
+    Bucket: sourceXMLDestination.Bucket,
+    Key: sourceXMLDestination.Key,
+    CopySource: sourceBucketAndPath,
+    CopySourceIfNoneMatch: destinationETag,
+  }));
+};
+
 export const convertXmlToJson = async (version: VersionedReviewedPreprint, mecaFiles: MecaFiles): Promise<ConvertXmlToJsonOutput> => {
   const tmpDirectory = await mkdtemp(`${tmpdir()}/epp_json`);
   const localXmlFilePath = `${tmpDirectory}/${mecaFiles.article.path}`;
@@ -44,6 +74,9 @@ export const convertXmlToJson = async (version: VersionedReviewedPreprint, mecaF
 
   const s3 = getEPPS3Client();
   const source = constructEPPVersionS3FilePath(mecaFiles.article.path, version);
+
+  await copySourceXmlToKnownPath(source, version);
+
   const object = await s3.send(new GetObjectCommand(source));
 
   const xml = await object.Body?.transformToString();
