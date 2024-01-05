@@ -102,6 +102,7 @@ describe('importDocmaps', () => {
   const mergeDocmapStateMock = jest.fn();
 
   let worker: Worker;
+  let docmapWorker: Worker;
   beforeEach(async () => {
     worker = await Worker.create({
       connection: testEnv.nativeConnection,
@@ -112,10 +113,28 @@ describe('importDocmaps', () => {
         mergeDocmapState: mergeDocmapStateMock,
       },
     });
+
+    docmapWorker = await Worker.create({
+      connection: testEnv.nativeConnection,
+      taskQueue: 'import-docmaps',
+      workflowsPath: require.resolve('./'),
+      activities: {
+        fetchDocMap: () => {},
+        createDocMapHash: () => {},
+        parseDocMap: () => {},
+      },
+    });
+    docmapWorker.run();
   });
   afterEach(async () => {
     try {
       worker.shutdown();
+    } catch (e) {
+      // Ignore
+    }
+
+    try {
+      docmapWorker.shutdown();
     } catch (e) {
       // Ignore
     }
