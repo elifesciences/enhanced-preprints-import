@@ -52,6 +52,15 @@ export const convertXmlToJson = async (version: VersionedReviewedPreprint, mecaF
   }
 
   const transformedXML = await transformXML(xml);
+
+  // store the transformed XML for downstream processing
+  const transformedXMLDestination = constructEPPVersionS3FilePath('article-transformed.xml', version);
+  await s3.send(new PutObjectCommand({
+    Bucket: transformedXMLDestination.Bucket,
+    Key: transformedXMLDestination.Key,
+    Body: transformedXML.xml,
+  }));
+
   fs.writeFileSync(localXmlFilePath, transformedXML.xml);
 
   const converted = await convert(
