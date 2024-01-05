@@ -34,7 +34,7 @@ Thanks
 
 Who can help: @fred-atherden, @nlisgo, @scottaubrey
 
-- [ ] Manuscript is available for preview (https://prod--epp.elifesciences.org/preview/%%msid%%/v%%version%%)
+- [ ] Manuscript is available for preview (https://prod--epp.elifesciences.org/previews/%%msid%%v%%version%%)
     - [ ] Trigger import for staging: https://prod--epp.elifesciences.org/import
     - [ ] Sync data folder with s3://prod-elife-epp-data/data
     - [ ] Trigger import for staging: https://staging--epp.elifesciences.org/import
