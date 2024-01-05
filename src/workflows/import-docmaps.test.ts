@@ -100,7 +100,6 @@ describe('importDocmaps', () => {
 
   const filterDocmapIndexMock = jest.fn();
   const mergeDocmapStateMock = jest.fn();
-  const createImportDocmapWorkflowMock = jest.fn();
 
   let worker: Worker;
   beforeEach(async () => {
@@ -111,7 +110,6 @@ describe('importDocmaps', () => {
       activities: {
         filterDocmapIndex: filterDocmapIndexMock,
         mergeDocmapState: mergeDocmapStateMock,
-        createImportDocmapWorkflow: createImportDocmapWorkflowMock,
       },
     });
   });
@@ -123,7 +121,6 @@ describe('importDocmaps', () => {
     }
     filterDocmapIndexMock.mockReset();
     mergeDocmapStateMock.mockReset();
-    createImportDocmapWorkflowMock.mockReset();
   });
 
   it('should not create importdocmap workflows if the number of docmap changes are 0', async () => {
@@ -141,7 +138,6 @@ describe('importDocmaps', () => {
   it('should create importdocmap workflows if the number of docmap changes are below a threshold', async () => {
     filterDocmapIndexMock.mockResolvedValueOnce(shortDocmapList);
     mergeDocmapStateMock.mockResolvedValueOnce(false);
-    createImportDocmapWorkflowMock.mockResolvedValueOnce(importDocmapValue);
 
     const result = await worker.runUntil(testEnv.client.workflow.execute(importDocmaps, {
       workflowId: 'import-short-docmaps',

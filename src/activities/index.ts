@@ -8,4 +8,3 @@ export { generateVersionJson } from './generate-version-json';
 export { parseDocMap } from './parse-docmap';
 export { sendVersionToEpp } from './send-version-to-epp';
 export { createDocMapHash } from './create-docmap-hash';
-export { createImportDocmapWorkflow } from './create-import-docmap-workflow';
