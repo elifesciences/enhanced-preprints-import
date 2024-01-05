@@ -10,7 +10,7 @@ import { ImportDocmapsMessage } from '../types';
 const {
   filterDocmapIndex,
   mergeDocmapState,
-  createImportDocmapWorkflow
+  createImportDocmapWorkflow,
 } = proxyActivities<typeof activities>({
   startToCloseTimeout: '1 minute',
   retry: {
@@ -26,7 +26,7 @@ const approvalSignal = defineSignal<[boolean]>('approval');
 
 export async function importDocmaps(docMapIndexUrl: string, s3StateFileUrl?: string, start?: number, end?: number): Promise<ImportDocmapsMessage> {
   let approval: boolean | null = null;
-  setHandler(approvalSignal, (approvalValue: boolean) => {approval = approvalValue});
+  setHandler(approvalSignal, (approvalValue: boolean) => { approval = approvalValue; });
   const docMapIdHashes = await filterDocmapIndex(docMapIndexUrl, s3StateFileUrl, start, end);
   const sampleDocmapsThreshold = 10;
 
@@ -51,7 +51,7 @@ export async function importDocmaps(docMapIndexUrl: string, s3StateFileUrl?: str
 
   const importWorkflows = await Promise.all(docMapIdHashes.map(async (docMapIdHash) => createImportDocmapWorkflow(docMapIdHash)));
   console.log(importWorkflows);
-  
+
   await mergeDocmapState(docMapIdHashes, s3StateFileUrl);
 
   const results = await Promise.all(importWorkflows.map((importWorkflow) => importWorkflow.result()));
