@@ -59,7 +59,7 @@ const copySourceXmlToKnownPath = async (source: S3File, version: VersionedReview
     }
   }
   try {
-    s3.send(new CopyObjectCommand({
+    await s3.send(new CopyObjectCommand({
       Bucket: sourceXMLDestination.Bucket,
       Key: sourceXMLDestination.Key,
       CopySource: sourceBucketAndPath,
