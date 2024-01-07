@@ -58,12 +58,18 @@ const copySourceXmlToKnownPath = async (source: S3File, version: VersionedReview
       throw e;
     }
   }
-  s3.send(new CopyObjectCommand({
-    Bucket: sourceXMLDestination.Bucket,
-    Key: sourceXMLDestination.Key,
-    CopySource: sourceBucketAndPath,
-    CopySourceIfNoneMatch: destinationETag,
-  }));
+  try {
+    s3.send(new CopyObjectCommand({
+      Bucket: sourceXMLDestination.Bucket,
+      Key: sourceXMLDestination.Key,
+      CopySource: sourceBucketAndPath,
+      CopySourceIfNoneMatch: destinationETag,
+    }));
+  } catch (e: any) {
+    if (!(e.Code && e.Code === 'PreconditionFailed')) {
+      throw e;
+    }
+  }
 };
 
 export const convertXmlToJson = async (version: VersionedReviewedPreprint, mecaFiles: MecaFiles): Promise<ConvertXmlToJsonOutput> => {
