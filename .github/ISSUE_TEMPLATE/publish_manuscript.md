@@ -6,6 +6,12 @@ labels:
 assignees: 
 ---
 
+MSID: %%msid%%
+
+Version: %%version%%
+
+Preprint DOI: https://doi.org/%%preprint-doi%%
+
 ## Step 1. Awaiting reviews
 
 **Editorial to post reviews via hypothesis**
