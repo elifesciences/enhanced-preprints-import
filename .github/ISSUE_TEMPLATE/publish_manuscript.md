@@ -1,167 +1,68 @@
 ---
 name: Publish manuscript
 about: Use this template for tracking publication of manuscripts.
-title: "MSID: %%msid%% Version: %%version%% DOI: %%doi-suffix%%"
+title: "MSID: %%msid%% Version: %%version%% DOI: %%preprint-doi%%"
 labels: 
 assignees: 
 ---
 
-[PLACE MANUSCRIPT AND EDITOR DETAILS HERE WHEN AVAILABLE] See step 3
+## Step 1. Awaiting reviews
 
-[PLACE PDF URL HERE WHEN AVAILABLE] See step 7
+Editorial to post reviews via hypothesis
 
-## Step 1. Inform bioRxiv
+Useful links:
+- DocMap: https://data-hub-api.elifesciences.org/enhanced-preprints/docmaps/v2/by-publisher/elife/get-by-manuscript-id?manuscript_id=%%msid%%
+- New model tracking: https://docs.google.com/spreadsheets/d/1_fHaoOy7hjyocptKtVJRijeNpUY4hBS7Ck_aVmx6ZJk/
+- Reviews on sciety: https://sciety.org/articles/activity/%%preprint-doi%%
 
-Who can help: @QueenKraken, @nlisgo, @scottaubrey
+For trouble shooting (e.g. no Docmaps available):
+- DocMap issue addressing: https://miro.com/app/board/uXjVNCwK6EI=/
+- Explore DataHub DocMaps API: https://lookerstudio.google.com/reporting/4c2f0368-babb-4beb-b5b3-497e7e7b0f08/page/ejphD
+- Unmatched submissions and preprints: https://lookerstudio.google.com/u/0/reporting/9f86204f-3bf7-477c-9b18-5c5ef141bf69/page/p_gxi57ha93c
+- Unmatched manuscripts spreadsheet: https://docs.google.com/spreadsheets/d/15QcK8w-ssB7109RQEDtFpJPZ0J5HTGxoHa_2TtpMBbg/edit#gid=1336081641
 
-- [ ] Manuscript is in data hub index (https://data-hub-api.elifesciences.org/enhanced-preprints/docmaps/v2/by-publisher/elife/get-by-manuscript-id?manuscript_id=%%msid%%)
 
-or (only one should be ticked. remove other from description.)
+## Step 2. Preview reviewed preprint
 
-- [ ] Confirmed with Ted at bioRxiv that MECA archive is available
+Production QC content ahead of publication
 
-Send the following email to Ted and wait for his reply.
+Instructions:
+- QC preview: https://prod--epp.elifesciences.org/previews/%%msid%%v%%version%%
+- Update ticket with any problems (add `blocked` label)
+- Add publication date and time to https://docs.google.com/spreadsheets/d/1amAlKvdLcaDp5W8Z8g77NmkwbMF5n_u89ArSqPMO8jg
+- Move card to next column
+- (At end of the day post link in [#enhanced-preprint](https://elifesciences.slack.com/archives/C03EVJSUA77) and ask for PDF to be generated) 
 
-```
-Hi Ted,
+Useful links:
+- Preprint DOI :  https://doi.org/%%preprint-doi%%
+- Confirm reviews returned by EPP: https://prod--epp.elifesciences.org/api/reviewed-preprints/%%msid%%/v%%version%%/reviews
+- To update the MECA path in the docmap: https://docs.google.com/spreadsheets/d/1mctCQuNFBjSn97Lihy7_vBO6z7-N-oqyLv4clyi6zHg
 
-Please can you prepare the preprint MECA for %%doi-prefix%%/%%doi-suffix%%%%doi-suffix2%%
 
-Thanks
-```
+## Step 3: Awaiting search reindex
 
-## Step 2. Create preview of manuscript
-
-Who can help: @fred-atherden, @nlisgo, @scottaubrey
-
-- [ ] Manuscript is available for preview (https://prod--epp.elifesciences.org/previews/%%msid%%v%%version%%)
-    - [ ] Trigger import for staging: https://prod--epp.elifesciences.org/import
-    - [ ] Sync data folder with s3://prod-elife-epp-data/data
-    - [ ] Trigger import for staging: https://staging--epp.elifesciences.org/import
-    - [ ] Sync data folder with s3://staging-elife-epp-data/data
-    - [ ] Pull request created to [enhanced-preprint-data](https://github.com/elifesciences/enhanced-preprints-data/pulls)
-    - [ ] Post link to pull request below
-
-Pull request: [PLACE LINK TO PULL REQUEST HERE]
-
-Detailed instructions: https://github.com/elifesciences/enhanced-preprints-data#add-a-manuscript
-
-## Step 3: Awaiting public reviews and QC
-
-Who can help: Production team
-
-- [ ] QC passed or QC not needed
-
-Who can help: Editorial team
-
-- [ ] Public reviews available on sciety (https://sciety.org/articles/activity/%%doi-prefix%%/%%doi-suffix%%)
-- [ ] Manuscript and editor details at the top of this issue (Supplied by Editorial team)
-- [ ] Reviews returned by EPP - https://prod--epp.elifesciences.org/api/reviewed-preprints/%%msid%%/v%%version%%/reviews
-
-<details>
-<summary>Example</summary>
-
-```
-"msas": "Genetics and Genomics", "Neuroscience"
-"msid": "84628"
-"version": "1"
-"preprintDoi": "10.1101/2022.10.28.514241"
-"articleType": "Reviewed Preprint"
-"status": "Published from the original preprint after peer review and assessment by eLife."
-
-"Reviewed Preprint posted": "2023-01-02"
-"Sent for peer review": "2022-10-28"
-"Posted to bioRxiv": "2022-11-21" (link: "Go to bioRxiv": "https://www.biorxiv.org/content/10.1101/2022.10.28.514241v1")
-
-Editors:
-Reviewing Editor
-Michael B Eisen
-University of California, Berkeley, United States
-Senior Editor
-Michael B Eisen
-University of California, Berkeley, United States
-```
-
-</details>
-
-## Step 4: Modify manuscripts.json (no PDF)
-
-- [ ] Reviewed preprint is published to EPP (https://elifesciences.org/reviewed-preprints/%%msid%%)
-    - [ ] Pull request created to [enhanced-preprint-client](https://github.com/elifesciences/enhanced-preprints-client/pulls)
-    - [ ] Pull request switched to "Ready for review"
-    - [ ] Post link to pull request below
-- [ ] Request that a doi be registered
-    - [ ] Post link to [#enhanced-preprint](https://elifesciences.slack.com/archives/C03EVJSUA77) comment below
-
-Pull request: [PLACE LINK TO PULL REQUEST HERE]
-[#enhanced-preprint](https://elifesciences.slack.com/archives/C03EVJSUA77) comment thread: [PLACE LINK TO COMMENT HERE]
-
-<details>
-<summary>Instructions to modify manuscripts.json</summary>
-
-- Visit: https://github.com/elifesciences/enhanced-preprints-client/actions/workflows/publish-manuscript.yaml
-- Click: Run workflow
-- Complete the form and click "Run workflow"
-- A successful run should result in a new pull request at https://github.com/elifesciences/enhanced-preprints-client/pulls
-- Open the pull request and click the "Ready for review" button to trigger tests
-- Once the tests pass and you are happy with the changes the PR can be merged
-
-Example pull request: https://github.com/elifesciences/enhanced-preprints-client/pull/334/files
-
-Once the pull request is merged in it should be available a few minutes later.
-
-</details>
-
-### Request that a doi
-
-Post the following in [#enhanced-preprint](https://elifesciences.slack.com/archives/C03EVJSUA77):
-
-```
-@Fred can you register a doi for https://elifesciences.org/reviewed-preprints/%%msid%%
-```
-
-## Step 5: Awaiting search reindex
-
-- [ ] Reviewed preprint is avaliable on journal homepage (https://elifesciences.org)
+- This step adds the reviewed preprint to the homepage: https://elifesciences.org
 
 The search reindex is triggered once an hour. We need the reviewed preprint to be indexed as the search application serves the journal homepage.
 
-<details>
-<summary>Additional info</summary>
+Useful links:
+- Jenkins pipeline to reindex search can be triggered sooner or monitored here: https://alfred.elifesciences.org/job/process/job/process-reindex-reviewed-preprints/
 
-If needed, the jenkins pipeline to reindex search can be triggered sooner.
 
-https://alfred.elifesciences.org/job/process/job/process-reindex-reviewed-preprints/
+## Step 4: Published! PDF requested
 
-</details>
+- Waiting for PDF to be generated
 
-## Step 6: Published! Request PDF generation
+Useful links:
+- PDF tracking: https://docs.google.com/spreadsheets/d/106_XeDjmuBae7gexOTNzg60lapeqjl2aRn9DzupGyS8/
 
-- [ ] Post the link to the PDF url at the top of the issue
-    - [ ] Post link to [#enhanced-preprint](https://elifesciences.slack.com/archives/C03EVJSUA77) comment below
-
-[#enhanced-preprint](https://elifesciences.slack.com/archives/C03EVJSUA77) comment thread: [PLACE LINK TO COMMENT HERE]
-
-Post the following to the [#enhanced-preprint](https://elifesciences.slack.com/archives/C03EVJSUA77) on slack:
-
-```
-@Ryan Dix-Peek please can you generate a PDF for https://elifesciences.org/reviewed-preprints/%%msid%%
-```
-
-## Step 7: Introduce PDF to data folder and git repo
-
-- [ ] PDF is avaliable at https://github.com/elifesciences/enhanced-preprints-data/raw/master/data/%%msid%%/v%%version%%/%%msid%%-v%%version%%.pdf
+## Step 5: Introduce PDF to data folder and git repo
 
 Detailed instructions: https://github.com/elifesciences/enhanced-preprints-data#add-a-pdf
 
-## Step 8: Add PDF url to manuscripts.json
+## Step 6: Add PDF url to manuscripts.json
 
-- [ ] Reviewed preprint PDF is available for download (https://prod--epp.elifesciences.org/reviewed-preprints/%%msid%%)
-    - [ ] Pull request created to [enhanced-preprint-client](https://github.com/elifesciences/enhanced-preprints-client/pulls)
-    - [ ] Pull request switched to "Ready for review"
-    - [ ] Post link to pull request below
-
-[PLACE LINK TO PULL REQUEST HERE]
+- Pull request created to [enhanced-preprint-client](https://github.com/elifesciences/enhanced-preprints-client/pulls)
 
 <details>
 <summary>Instructions to add PDF url to manuscripts.json</summary>

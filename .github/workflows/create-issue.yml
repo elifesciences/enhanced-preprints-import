@@ -10,14 +10,9 @@ on:
         description: "Manuscript version (default: 1)"
         default: "1"
         required: true
-      doi-prefix:
-        description: "DOI prefix (default: 10.1101)"
-        default: "10.1101"
-      doi-suffix:
-        description: "DOI suffix (e.g. 2021.06.21.449261)"
+      preprint-doi:
+        description: "Preprint DOI (e.g.: 10.1101/2021.06.21.449261)"
         required: true
-      doi-suffix2:
-        description: "DOI suffix2 (e.g. v1)"
 
 jobs:
   create-doi-issue:
@@ -44,9 +39,7 @@ jobs:
       with:
         _input-text: "${{ steps.extract.outputs.title }}"
         _format-key: '%%key%%'
-        doi-prefix: "${{ github.event.inputs.doi-prefix }}"
-        doi-suffix: "${{ github.event.inputs.doi-suffix }}"
-        doi-suffix2: "${{ github.event.inputs.doi-suffix2 }}"
+        preprint-doi: "${{ github.event.inputs.preprint-doi }}"
         msid: "${{ github.event.inputs.msid }}"
         version: "${{ github.event.inputs.versionManuscript }}"
 
@@ -55,9 +48,7 @@ jobs:
       with:
         _input-text: "${{ steps.extract.outputs.body }}"
         _format-key: '%%key%%'
-        doi-prefix: "${{ github.event.inputs.doi-prefix }}"
-        doi-suffix: "${{ github.event.inputs.doi-suffix }}"
-        doi-suffix2: "${{ github.event.inputs.doi-suffix2 }}"
+        preprint-doi: "${{ github.event.inputs.preprint-doi }}"
         msid: "${{ github.event.inputs.msid }}"
         version: "${{ github.event.inputs.versionManuscript }}"
         repo: "${{ github.repository }}"
