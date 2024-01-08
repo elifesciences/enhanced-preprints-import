@@ -23,15 +23,22 @@ const {
   },
 });
 
+type ImportArgs = {
+  docMapIndexUrl: string,
+  s3StateFileUrl?: string,
+  docMapThreshold?: number,
+  start?: number,
+  end?: number,
+};
+
 export type Hash = { hash: string, idHash: string };
 
 const approvalSignal = defineSignal<[boolean]>('approval');
 
-export async function importDocmaps(docMapIndexUrl: string, s3StateFileUrl?: string, start?: number, end?: number): Promise<ImportDocmapsMessage> {
+export async function importDocmaps({ docMapIndexUrl, s3StateFileUrl, docMapThreshold, start, end }: ImportArgs): Promise<ImportDocmapsMessage> {
   let approval: boolean | null = null;
   setHandler(approvalSignal, (approvalValue: boolean) => { approval = approvalValue; });
   const docMapIdHashes = await filterDocmapIndex(docMapIndexUrl, s3StateFileUrl, start, end);
-  const sampleDocmapsThreshold = 10;
 
   if (docMapIdHashes.length === 0) {
     return {
@@ -41,7 +48,7 @@ export async function importDocmaps(docMapIndexUrl: string, s3StateFileUrl?: str
     };
   }
 
-  if (docMapIdHashes.length > sampleDocmapsThreshold) {
+  if (docMapThreshold && docMapIdHashes.length > docMapThreshold) {
     await condition(() => typeof approval === 'boolean');
     if (!approval) {
       return {
