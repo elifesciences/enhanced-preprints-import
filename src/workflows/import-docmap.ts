@@ -7,7 +7,6 @@ import {
 import { DocMap } from '@elifesciences/docmap-ts';
 import type * as activities from '../activities/index';
 import { importContent } from './import-content';
-import { useWorkflowState } from '../hooks/useWorkflowState';
 import { ImportDocmapMessage } from '../types';
 
 const { parseDocMap } = proxyActivities<typeof activities>({
@@ -30,8 +29,6 @@ const {
     nonRetryableErrorTypes: ['NonRetryableError'],
   },
 });
-
-export const store = useWorkflowState(workflowInfo().workflowId, true);
 
 export async function importDocmap(url: string): Promise<ImportDocmapMessage> {
   upsertSearchAttributes({

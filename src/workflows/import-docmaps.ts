@@ -1,13 +1,15 @@
 import {
   ParentClosePolicy,
   WorkflowIdReusePolicy,
+  condition,
+  defineSignal,
   proxyActivities,
+  setHandler,
   startChild,
-
 } from '@temporalio/workflow';
 import type * as activities from '../activities/index';
-import { importDocmap } from './import-docmap';
 import { ImportDocmapsMessage } from '../types';
+import { importDocmap } from './import-docmap';
 
 const {
   filterDocmapIndex,
@@ -21,9 +23,23 @@ const {
   },
 });
 
+type ImportArgs = {
+  docMapIndexUrl: string,
+  s3StateFileUrl?: string,
+  docMapThreshold?: number,
+  start?: number,
+  end?: number,
+};
+
 export type Hash = { hash: string, idHash: string };
 
-export async function importDocmaps(docMapIndexUrl: string, s3StateFileUrl?: string, start?: number, end?: number): Promise<ImportDocmapsMessage> {
+const approvalSignal = defineSignal<[boolean]>('approval');
+
+export async function importDocmaps({
+  docMapIndexUrl, s3StateFileUrl, docMapThreshold, start, end,
+}: ImportArgs): Promise<ImportDocmapsMessage> {
+  let approval: boolean | null = null;
+  setHandler(approvalSignal, (approvalValue: boolean) => { approval = approvalValue; });
   const docMapIdHashes = await filterDocmapIndex(docMapIndexUrl, s3StateFileUrl, start, end);
 
   if (docMapIdHashes.length === 0) {
@@ -32,6 +48,17 @@ export async function importDocmaps(docMapIndexUrl: string, s3StateFileUrl?: str
       message: 'No new docmaps to import',
       results: [],
     };
+  }
+
+  if (docMapThreshold && docMapIdHashes.length > docMapThreshold) {
+    await condition(() => typeof approval === 'boolean');
+    if (!approval) {
+      return {
+        status: 'NOT APPROVED',
+        message: 'Large import not approved',
+        results: [],
+      };
+    }
   }
 
   const importWorkflows = await Promise.all(docMapIdHashes.map(async (docMapIdHash) => startChild(importDocmap, {
