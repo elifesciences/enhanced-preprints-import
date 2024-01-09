@@ -37,6 +37,14 @@ To re-run the whole process, you will first need to remove the containers **and*
 docker compose down --volumes
 ```
 
+## Run a import workflow with a specified threshold
+
+To prevent large reimport of docmaps that would cause content becoming unpublished, you can specify an optional numeric threshold for docmap changes that are allowed.
+
+```shell
+temporal workflow execute --type importDocmaps -t epp -w import-docmap-test -i '{ "docMapIndexUrl": "http://mock-datahub/enhanced-preprints/docmaps/v1/index", "docMapThreshold": 2 }'
+```
+
 ## Run a import workflow with saved state
 
 To run a import workflow that only imports docmaps that are new or have changed since a previous run (or to store a first run), start an importDocmap with a state file name as the second parameter:
