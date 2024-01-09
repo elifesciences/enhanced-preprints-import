@@ -35,7 +35,9 @@ export type Hash = { hash: string, idHash: string };
 
 const approvalSignal = defineSignal<[boolean]>('approval');
 
-export async function importDocmaps({ docMapIndexUrl, s3StateFileUrl, docMapThreshold, start, end }: ImportArgs): Promise<ImportDocmapsMessage> {
+export async function importDocmaps({
+  docMapIndexUrl, s3StateFileUrl, docMapThreshold, start, end,
+}: ImportArgs): Promise<ImportDocmapsMessage> {
   let approval: boolean | null = null;
   setHandler(approvalSignal, (approvalValue: boolean) => { approval = approvalValue; });
   const docMapIdHashes = await filterDocmapIndex(docMapIndexUrl, s3StateFileUrl, start, end);
