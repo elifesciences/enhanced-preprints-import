@@ -35,7 +35,7 @@ Preprint DOI: https://doi.org/%%preprint-doi%%
 **Instructions:**
 - QC preview: https://prod--epp.elifesciences.org/previews/%%msid%%v%%version%%
 - Update ticket with any problems (add `blocked` label)
-- Add publication date and time to https://docs.google.com/spreadsheets/d/1amAlKvdLcaDp5W8Z8g77NmkwbMF5n_u89ArSqPMO8jg
+- When QC OK, add `QC OK` label to ticket and add publication date and time to https://docs.google.com/spreadsheets/d/1amAlKvdLcaDp5W8Z8g77NmkwbMF5n_u89ArSqPMO8jg
 - Move card to next column
 - (At end of the day post link in [#enhanced-preprint](https://elifesciences.slack.com/archives/C03EVJSUA77) and ask for PDF to be generated) 
 
@@ -64,28 +64,8 @@ The search reindex is triggered once an hour. We need the reviewed preprint to b
 
 ## Step 5: Introduce PDF to data folder and git repo
 
-Detailed instructions: https://github.com/elifesciences/enhanced-preprints-data#add-a-pdf
+Upload PDF to relevent folder in git repo https://github.com/elifesciences/enhanced-preprints-data/
 
-## Step 6: Add PDF url to manuscripts.json
-
-**Pull request created to [enhanced-preprint-client](https://github.com/elifesciences/enhanced-preprints-client/pulls)**
-
-<details>
-<summary>Instructions to add PDF url to manuscripts.json</summary>
-
-- Visit: https://github.com/elifesciences/enhanced-preprints-client/actions/workflows/add-pdf-url-to-manuscript.yaml
-- Click: Run workflow
-- Complete the form and click "Run workflow"
-- A successful run should result in a new pull request at https://github.com/elifesciences/enhanced-preprints-client/pulls
-- Open the pull request and click the "Ready for review" button to trigger tests
-- Once the tests pass and you are happy with the changes the PR can be merged
-
-Example pull request: https://github.com/elifesciences/enhanced-preprints-client/pull/397/files
-
-Once the pull request is merged in it should be available a few minutes later.
-
-</details>
-
-## Step 9: Done!
+## Step 6: Done!
 
 - [ ] Kettle is on!
