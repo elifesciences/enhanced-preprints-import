@@ -28,7 +28,7 @@
     "@temporalio/testing": "^1.7.4",
     "@tsconfig/node16": "^1.0.4",
     "@types/decompress": "^4.2.5",
-    "@types/eslint": "8.56.1",
+    "@types/eslint": "8.56.2",
     "@types/jest": "^29.2.5",
     "@types/node": "^16.18.68",
     "@typescript-eslint/eslint-plugin": "6.1.0",

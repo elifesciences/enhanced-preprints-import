@@ -4251,13 +4251,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/eslint@npm:8.56.1":
-  version: 8.56.1
-  resolution: "@types/eslint@npm:8.56.1"
+"@types/eslint@npm:8.56.2":
+  version: 8.56.2
+  resolution: "@types/eslint@npm:8.56.2"
   dependencies:
     "@types/estree": "*"
     "@types/json-schema": "*"
-  checksum: 1a4c7334c2f0cfead7b9d25c574c7b3d0b44242958703caa868ed38990a96b5d96477e6fceb7be54fbadd6fb61c97b778b9df58531ced3ec4b022d3e54254dc3
+  checksum: 38e054971596f5c0413f66a62dc26b10e0a21ac46ceacb06fbf8cfb838d20820787209b17218b3916e4c23d990ff77cfdb482d655cac0e0d2b837d430fcc5db8
   languageName: node
   linkType: hard
 
@@ -7592,7 +7592,7 @@ __metadata:
     "@temporalio/workflow": ^1.7.4
     "@tsconfig/node16": ^1.0.4
     "@types/decompress": ^4.2.5
-    "@types/eslint": 8.56.1
+    "@types/eslint": 8.56.2
     "@types/jest": ^29.2.5
     "@types/node": ^16.18.68
     "@typescript-eslint/eslint-plugin": 6.1.0
