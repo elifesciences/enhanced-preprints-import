@@ -50,12 +50,13 @@ export async function importDocmaps({
   let approval: boolean | null = null;
   const docMapIdHashes: DocMapHashes[] = [];
   setHandler(approvalSignal, (approvalValue: boolean) => { approval = approvalValue; });
-  setHandler(thresholdQuery, () => (thresholdMet(docMapIdHashes, docMapThreshold)
-    ? {
-      awaitingApproval: docMapIdHashes.length,
-      docMapUrls: docMapIdHashes.map(({ docMapId }) => docMapId),
-    }
-    : null
+  setHandler(thresholdQuery, () => (
+    typeof approval !== 'boolean' && thresholdMet(docMapIdHashes, docMapThreshold)
+      ? {
+        awaitingApproval: docMapIdHashes.length,
+        docMapUrls: docMapIdHashes.map(({ docMapId }) => docMapId),
+      }
+      : null
   ));
   docMapIdHashes.push(...await filterDocmapIndex(docMapIndexUrl, s3StateFileUrl, start, end));
 
