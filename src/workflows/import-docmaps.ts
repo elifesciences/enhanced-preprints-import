@@ -45,7 +45,7 @@ const thresholdQuery = defineQuery<null | ThresholdQueryResponse>('awaitingAppro
 export async function importDocmaps({
   docMapIndexUrl, s3StateFileUrl, docMapThreshold, start, end,
 }: ImportArgs): Promise<ImportDocmapsMessage> {
-  let approval: boolean | null;
+  let approval: boolean | null = null;
   setHandler(approvalSignal, (approvalValue: boolean) => { approval = approvalValue; });
   const docMapIdHashes = await filterDocmapIndex(docMapIndexUrl, s3StateFileUrl, start, end);
 
@@ -57,16 +57,15 @@ export async function importDocmaps({
     };
   }
 
-  setHandler(thresholdQuery, () => (docMapThreshold && approval !== undefined && approval === null
-    ? {
-      awaitingApproval: docMapIdHashes.length,
-      docMapUrls: docMapIdHashes.map(({ docMapId }) => docMapId),
-    }
-    : null
-  ));
-
   if (docMapThreshold && docMapIdHashes.length > docMapThreshold) {
-    approval = null;
+    setHandler(thresholdQuery, () => (docMapThreshold && approval === null
+      ? {
+        awaitingApproval: docMapIdHashes.length,
+        docMapUrls: docMapIdHashes.map(({ docMapId }) => docMapId),
+      }
+      : null
+    ));
+
     await condition(() => typeof approval === 'boolean');
     if (!approval) {
       return {
