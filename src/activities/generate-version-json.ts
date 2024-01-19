@@ -71,7 +71,7 @@ export const generateVersionJson: GenerateVersionJson = async ({
 
   Context.current().heartbeat('storing generated EPP JSON');
   const destination = constructEPPVersionS3FilePath('payload.json', version);
-  s3.send(new PutObjectCommand({
+  await s3.send(new PutObjectCommand({
     Bucket: destination.Bucket,
     Key: destination.Key,
     Body: JSON.stringify(versionJSON),
