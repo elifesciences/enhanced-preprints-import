@@ -205,7 +205,7 @@ describe('docmap-filter', () => {
       });
 
       // Act
-      const mockDocmap2Hashes = await createDocMapHash({ id: 'fake-docmap1' });
+      const mockDocmap2Hashes = await createDocMapHash({ id: 'fake-docmap2' });
       const result = await mergeDocmapState([mockDocmap2Hashes], 'state-file.json');
 
       // Assert
@@ -215,6 +215,32 @@ describe('docmap-filter', () => {
         Bucket: 'test-bucket',
         Key: 'automation/state/state-file.json',
         Body: JSON.stringify([mockDocmap1Hashes, mockDocmap2Hashes]),
+      });
+    });
+
+    it('merges docmaps ensuring one entry for docMapId', async () => {
+      // Arrange
+      const mockDocmap1Hashes = await createDocMapHash({ id: 'fake-docmap1' });
+      const stream = new Readable();
+      stream.push(JSON.stringify([mockDocmap1Hashes]));
+      stream.push(null);
+      const sdkStream = sdkStreamMixin(stream);
+      mockS3Client.on(GetObjectCommand).resolves({
+        Body: sdkStream,
+      });
+
+      // Act
+      const mockDocmap2Hashes = await createDocMapHash({ id: 'fake-docmap2' });
+      const mockDocmap3Hashes = await createDocMapHash({ id: 'fake-docmap1', created: '2022-11-11T05:02:51+00:00' });
+      const result = await mergeDocmapState([mockDocmap2Hashes, mockDocmap3Hashes], 'state-file.json');
+
+      // Assert
+      expect(result).toStrictEqual(true);
+
+      expect(mockS3Client.commandCalls(PutObjectCommand)[0].args[0].input).toStrictEqual({
+        Bucket: 'test-bucket',
+        Key: 'automation/state/state-file.json',
+        Body: JSON.stringify([mockDocmap3Hashes, mockDocmap2Hashes]),
       });
     });
   });
