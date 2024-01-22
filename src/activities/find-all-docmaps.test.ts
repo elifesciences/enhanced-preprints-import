@@ -231,7 +231,8 @@ describe('docmap-filter', () => {
 
       // Act
       const mockDocmap2Hashes = await createDocMapHash({ id: 'fake-docmap2' });
-      const mockDocmap3Hashes = await createDocMapHash({ id: 'fake-docmap1', created: '2022-11-11T05:02:51+00:00' });
+      const mockDocmap3 = { id: 'fake-docmap1', created: '2022-11-11T05:02:51+00:00' };
+      const mockDocmap3Hashes = await createDocMapHash(mockDocmap3);
       const result = await mergeDocmapState([mockDocmap2Hashes, mockDocmap3Hashes], 'state-file.json');
 
       // Assert
