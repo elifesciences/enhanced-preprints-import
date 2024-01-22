@@ -243,5 +243,11 @@ describe('docmap-filter', () => {
         Body: JSON.stringify([mockDocmap3Hashes, mockDocmap2Hashes]),
       });
     });
+
+    it('returns false if s3 state file is not defined', async () => {
+      const mockDocmap1Hashes = await createDocMapHash({ id: 'fake-docmap1' });
+      const result = await mergeDocmapState([mockDocmap1Hashes]);
+      expect(result).toStrictEqual(false);
+    });
   });
 });
