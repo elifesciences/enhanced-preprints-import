@@ -3,6 +3,7 @@ import { DocMapHashes } from '../types';
 
 type DocMapLikeWithId = {
   id: string,
+  [key: string]: any,
 };
 
 export const createDocMapHash = async (docMap: DocMapLikeWithId): Promise<DocMapHashes> => {
