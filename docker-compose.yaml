@@ -233,6 +233,7 @@ services:
       retries: 20
       start_period: 30s
     environment:
+      NEXT_PUBLIC_SITE_NAME: ${NEXT_PUBLIC_SITE_NAME:-elife}
       API_SERVER: http://api:3000
       NEXT_PUBLIC_IMAGE_SERVER: /iiif
       MANUSCRIPT_CONFIG_FILE: /opt/epp-client/data/manuscripts.json
