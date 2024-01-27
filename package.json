@@ -9,7 +9,7 @@
     "@aws-sdk/client-s3": "^3.374.0",
     "@aws-sdk/credential-providers": "^3.374.0",
     "@elifesciences/docmap-ts": "https://github.com/elifesciences/docmap-ts#v0.0.35",
-    "@stencila/encoda": "1.0.1",
+    "@stencila/encoda": "1.0.3",
     "@stencila/schema": "^1.18.0",
     "@temporalio/activity": "^1.7.4",
     "@temporalio/client": "^1.7.4",
