@@ -2,7 +2,7 @@
 
 This is a repository for the temporal worker docker image for EPP.
 
-This project facilitates asynchronous importing of content identified from a [docmap](https://docmaps.knowledgefutures.org/pub/sgkf1pqa) provider. We are using the docmaps to provide a feed of preprints that have been reviewed by a particular publisher. The data in the docmap provides the history and location of content, which we parse and retreive.
+This project facilitates asynchronous importing of content identified from a [docmap](https://docmaps.knowledgefutures.org/pub/sgkf1pqa) provider. We are using the docmaps to provide a feed of preprints that have been reviewed by a particular publisher. The data in the docmap provides the history and location of content, which we parse and retrieve.
 
 We then push the parsed content into an EPP server endpoint.
 
@@ -37,7 +37,7 @@ To re-run the whole process, you will first need to remove the containers **and*
 docker compose down --volumes
 ```
 
-## Run a import workflow with a specified threshold
+## Run an import workflow with a specified threshold
 
 To prevent large reimport of docmaps that would cause content becoming unpublished, you can specify an optional numeric threshold for docmap changes that are allowed.
 
@@ -45,9 +45,9 @@ To prevent large reimport of docmaps that would cause content becoming unpublish
 temporal workflow execute --type importDocmaps -t epp -w import-docmap-test -i '{ "docMapIndexUrl": "http://mock-datahub/enhanced-preprints/docmaps/v1/index", "docMapThreshold": 2 }'
 ```
 
-## Run a import workflow with saved state
+## Run an import workflow with saved state
 
-To run a import workflow that only imports docmaps that are new or have changed since a previous run (or to store a first run), start an importDocmap with a state file name as the second parameter:
+To run an import workflow that only imports docmaps that are new or have changed since a previous run (or to store a first run), start an importDocmaps workflow with a state file name as the second parameter:
 
 ```shell
 temporal workflow execute --type importDocmaps -t epp -w import-docmap-test -i '{ "docMapIndexUrl": "http://mock-datahub/enhanced-preprints/docmaps/v1/index", "s3StateFileUrl": "state.json" }'
@@ -135,8 +135,8 @@ docker-compose -f docker-compose.yaml -f docker-compose.override.yaml -f docker-
 ```
 
 
-## Runing tests with docker
-To run the tests with docker (especially useful if they are not working localy) use the following command:
+## Running tests with docker
+To run the tests with docker (especially useful if they are not working locally) use the following command:
 ```shell
 docker compose -f docker-compose.tests.yaml run tests
 ```
