@@ -99,16 +99,14 @@ MECA_AWS_ROLE_ARN=a role to assume to have permission to source S3 buckets # opt
 Then run docker-compose with the base, override and s3 configs, like below:
 
 ```shell
-docker-compose -f docker-compose.yaml -f docker-compose.override.yaml -f docker-compose.s3.yaml up
+docker compose -f docker-compose.yaml -f docker-compose.override.yaml -f docker-compose.s3.yaml up
 ```
 
-Finally, you can run the `temporal` command to extract a slice of the Docmap index (so you don't index **all** Docmaps in your local environment), where the third argument is the start index (zero-indexed) and the last argument is the end index (not included):
+To import a specific docmap such as 85111 use the importDocmap workflow:
 
 ```shell
-temporal workflow execute --type importDocmaps -t epp -w import-docmap-test -i '{ "docMapIndexUrl": "http://mock-datahub/enhanced-preprints/docmaps/v1/index", "start": 5, "end": 30 }'
+temporal workflow execute --type importDocmap -w import-docmap-85111 -t epp -i '"https://data-hub-api.elifesciences.org/enhanced-preprints/docmaps/v2/by-publisher/elife/get-by-manuscript-id?manuscript_id=85111"'
 ```
-
-read [`Array.prototype.slice()`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/slice) docs for how to use the two params.
 
 ## Run with "real" S3 as a destination
 
@@ -125,15 +123,14 @@ BUCKET_NAME=you will want to create an S3 bucket for your dev experiments
 Then run docker-compose with the base, override and s3 configs, like below:
 
 ```shell
-docker-compose -f docker-compose.yaml -f docker-compose.override.yaml -f docker-compose.s3-epp.yaml up
+docker compose -f docker-compose.yaml -f docker-compose.override.yaml -f docker-compose.s3-epp.yaml up
 ```
 
 You can combine the s3 source and destination to allow for retrieval from s3 source and preparing the assets and uploading them to S3:
 
 ```shell
-docker-compose -f docker-compose.yaml -f docker-compose.override.yaml -f docker-compose.s3.yaml -f docker-compose.s3-epp.yaml up
+docker compose -f docker-compose.yaml -f docker-compose.override.yaml -f docker-compose.s3.yaml -f docker-compose.s3-epp.yaml up
 ```
-
 
 ## Running tests with docker
 To run the tests with docker (especially useful if they are not working locally) use the following command:
