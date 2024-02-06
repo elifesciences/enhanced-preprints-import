@@ -28,6 +28,6 @@ if ! curl -sf $docmap_url > /dev/null; then
   exit 2
 fi
 
-docmap_id_hash="$(echo -n $docmap_url | md5sum)"
+docmap_id_hash="$(echo -n $docmap_url | md5)"
 
 temporal workflow start -n epp--prod --type importDocmap  -i '"'$docmap_url'"' -t 'epp' -w "$workflow_id_prefix$docmap_id_hash"
