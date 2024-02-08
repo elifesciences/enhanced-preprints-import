@@ -54,7 +54,7 @@ export const transformXMLToJson = async (xmlInput: string, version: string, repl
   });
   Context.current().heartbeat('Finishing XML to JSON transform');
   return transformedResponse.data;
-}
+};
 
 const copySourceXmlToKnownPath = async (source: S3File, version: VersionedReviewedPreprint) => {
   const s3 = getEPPS3Client();
