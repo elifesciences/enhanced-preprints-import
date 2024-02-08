@@ -47,7 +47,7 @@ services:
 
 
   temporal:
-    image: temporalio/auto-setup:1.22.3
+    image: temporalio/auto-setup:1.22.4
     ports:
       - 7233:7233
     environment:
@@ -74,7 +74,7 @@ services:
       - temporal_data:/data
 
   temporal-setup-search:
-    image: temporalio/admin-tools:1.22.3
+    image: temporalio/admin-tools:1.22.4
     environment:
       TEMPORAL_ADDRESS: temporal:7233
     entrypoint: bash -c 'temporal operator search-attribute create --name ManuscriptId --type Text && temporal operator search-attribute create --name DocmapURL --type Text'
@@ -83,7 +83,7 @@ services:
         condition: service_healthy
 
   temporal-ui:
-    image: temporalio/ui:2.21.3
+    image: temporalio/ui:2.23.0
     ports:
       - 8233:8233
     environment:
@@ -198,7 +198,7 @@ services:
 
   ## BIORXIV XSLT
   xslt:
-    image: ghcr.io/elifesciences/enhanced-preprints-biorxiv-xslt-api:master-39fa50ec-20231220.1532
+    image: ghcr.io/elifesciences/enhanced-preprints-biorxiv-xslt-api:master-4be2a13f-20240111.1330
     healthcheck:
       test: "curl -H 'X-Passthrough: true' -f http://localhost:80/ -d '<test></test>' || exit 1"
       interval: 60s
@@ -224,7 +224,7 @@ services:
 
   ## EPP API
   api:
-    image: ghcr.io/elifesciences/enhanced-preprints-server:master-768430ce-20240103.0749
+    image: ghcr.io/elifesciences/enhanced-preprints-server:master-a86012de-20240201.2243
     healthcheck:
       test: sh -c 'apk add curl; curl http://api:3000/'
       interval: 5s
@@ -243,7 +243,7 @@ services:
       - 3000:3000
 
   app:
-    image: ghcr.io/elifesciences/enhanced-preprints-client:master-56b46158-20240103.0927
+    image: ghcr.io/elifesciences/enhanced-preprints-client:master-f97e0bc3-20240205.0908
     healthcheck:
       test: sh -c 'apk add curl; curl http://app:3000/'
       interval: 5s
@@ -251,6 +251,7 @@ services:
       retries: 20
       start_period: 30s
     environment:
+      NEXT_PUBLIC_SITE_NAME: ${NEXT_PUBLIC_SITE_NAME:-elife}
       API_SERVER: http://api:3000
       NEXT_PUBLIC_IMAGE_SERVER: /iiif
       MANUSCRIPT_CONFIG_FILE: /opt/epp-client/data/manuscripts.json

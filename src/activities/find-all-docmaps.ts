@@ -38,28 +38,38 @@ export const filterDocmapIndex = async (docMapIndex: string, s3StateFile?: strin
 };
 
 export const mergeDocmapState = async (newDocmapHashes: DocMapHashes[], s3StateFile?: string): Promise<boolean> => {
-  const docmapHashes = [];
-  if (s3StateFile) {
-    const s3 = getEPPS3Client();
-    try {
-      const source = constructEPPStateS3FilePath(s3StateFile);
-      const retreivedDocmapHashes = JSON.parse(await s3.send(new GetObjectCommand({
-        Bucket: source.Bucket,
-        Key: source.Key,
-      })).then((obj) => obj.Body?.transformToString() ?? '')) as DocMapHashes[];
-      docmapHashes.push(...retreivedDocmapHashes);
-    } catch (err) {
-      // nothing added to docmapHashes
-    }
-    docmapHashes.push(...newDocmapHashes);
-
-    const destination = constructEPPStateS3FilePath(s3StateFile);
-    s3.send(new PutObjectCommand({
-      Bucket: destination.Bucket,
-      Key: destination.Key,
-      Body: JSON.stringify(docmapHashes),
-    }));
-    return true;
+  if (!s3StateFile) {
+    return false;
   }
-  return false;
+
+  const s3 = getEPPS3Client();
+  const docmapHashesMap = new Map<string, DocMapHashes>();
+
+  try {
+    const source = constructEPPStateS3FilePath(s3StateFile);
+    const retrievedDocmapHashes = JSON.parse(await s3.send(new GetObjectCommand({
+      Bucket: source.Bucket,
+      Key: source.Key,
+    })).then((obj) => obj.Body?.transformToString() ?? '')) as DocMapHashes[];
+
+    // Add existing hashes to the map using array iteration
+    retrievedDocmapHashes.forEach((hash) => docmapHashesMap.set(hash.docMapId, hash));
+  } catch (err) {
+    // nothing added to docmapHashes
+  }
+
+  // Merge new hashes using array iteration, overwriting any duplicates
+  newDocmapHashes.forEach((newHash) => docmapHashesMap.set(newHash.docMapId, newHash));
+
+  // Convert the map back to an array
+  const mergedDocmapHashes = Array.from(docmapHashesMap.values());
+
+  const destination = constructEPPStateS3FilePath(s3StateFile);
+  await s3.send(new PutObjectCommand({
+    Bucket: destination.Bucket,
+    Key: destination.Key,
+    Body: JSON.stringify(mergedDocmapHashes),
+  }));
+
+  return true;
 };

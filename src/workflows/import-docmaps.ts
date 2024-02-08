@@ -1,13 +1,16 @@
 import {
   ParentClosePolicy,
   WorkflowIdReusePolicy,
+  condition,
+  defineSignal,
+  defineQuery,
   proxyActivities,
+  setHandler,
   startChild,
-
 } from '@temporalio/workflow';
 import type * as activities from '../activities/index';
+import { DocMapHashes, ImportDocmapsMessage } from '../types';
 import { importDocmap } from './import-docmap';
-import { ImportDocmapsMessage } from '../types';
 
 const {
   filterDocmapIndex,
@@ -21,10 +24,41 @@ const {
   },
 });
 
+type ImportArgs = {
+  docMapIndexUrl: string,
+  s3StateFileUrl?: string,
+  docMapThreshold?: number,
+  start?: number,
+  end?: number,
+};
+
+type ThresholdQueryResponse = {
+  awaitingApproval: number,
+  docMapUrls: string[],
+};
+
 export type Hash = { hash: string, idHash: string };
 
-export async function importDocmaps(docMapIndexUrl: string, s3StateFileUrl?: string, start?: number, end?: number): Promise<ImportDocmapsMessage> {
-  const docMapIdHashes = await filterDocmapIndex(docMapIndexUrl, s3StateFileUrl, start, end);
+const approvalSignal = defineSignal<[boolean]>('approval');
+const thresholdQuery = defineQuery<null | ThresholdQueryResponse>('awaitingApproval');
+
+const thresholdMet = (docMapIdHashes: DocMapHashes[], docMapThreshold?: number) => ((docMapThreshold && docMapIdHashes.length > docMapThreshold));
+
+export async function importDocmaps({
+  docMapIndexUrl, s3StateFileUrl, docMapThreshold, start, end,
+}: ImportArgs): Promise<ImportDocmapsMessage> {
+  let approval: boolean | null = null;
+  const docMapIdHashes: DocMapHashes[] = [];
+  setHandler(approvalSignal, (approvalValue: boolean) => { approval = approvalValue; });
+  setHandler(thresholdQuery, () => (
+    typeof approval !== 'boolean' && thresholdMet(docMapIdHashes, docMapThreshold)
+      ? {
+        awaitingApproval: docMapIdHashes.length,
+        docMapUrls: docMapIdHashes.map(({ docMapId }) => docMapId),
+      }
+      : null
+  ));
+  docMapIdHashes.push(...await filterDocmapIndex(docMapIndexUrl, s3StateFileUrl, start, end));
 
   if (docMapIdHashes.length === 0) {
     return {
@@ -32,6 +66,17 @@ export async function importDocmaps(docMapIndexUrl: string, s3StateFileUrl?: str
       message: 'No new docmaps to import',
       results: [],
     };
+  }
+
+  if (thresholdMet(docMapIdHashes, docMapThreshold)) {
+    await condition(() => typeof approval === 'boolean');
+    if (!approval) {
+      return {
+        status: 'NOT APPROVED',
+        message: 'Large import not approved',
+        results: [],
+      };
+    }
   }
 
   const importWorkflows = await Promise.all(docMapIdHashes.map(async (docMapIdHash) => startChild(importDocmap, {

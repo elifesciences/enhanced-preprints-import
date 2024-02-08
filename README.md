@@ -2,7 +2,7 @@
 
 This is a repository for the temporal worker docker image for EPP.
 
-This project facilitates asynchronous importing of content identified from a [docmap](https://docmaps.knowledgefutures.org/pub/sgkf1pqa) provider. We are using the docmaps to provide a feed of preprints that have been reviewed by a particular publisher. The data in the docmap provides the history and location of content, which we parse and retreive.
+This project facilitates asynchronous importing of content identified from a [docmap](https://docmaps.knowledgefutures.org/pub/sgkf1pqa) provider. We are using the docmaps to provide a feed of preprints that have been reviewed by a particular publisher. The data in the docmap provides the history and location of content, which we parse and retrieve.
 
 We then push the parsed content into an EPP server endpoint.
 
@@ -26,7 +26,7 @@ The `docker compose` workflow above will restart the worker when your mounted fi
 To run an import workflow, run:
 
 ```shell
-temporal workflow execute --type importDocmaps -t epp -w import-docmap-test -i '"http://mock-datahub/enhanced-preprints/docmaps/v1/index"'
+temporal workflow execute --type importDocmaps -t epp -w import-docmap-test -i '{ "docMapIndexUrl": "http://mock-datahub/enhanced-preprints/docmaps/v1/index" }'
 ```
 
 This will kick of a full import for a docmap index from eLife's API.
@@ -37,12 +37,20 @@ To re-run the whole process, you will first need to remove the containers **and*
 docker compose down --volumes
 ```
 
-## Run a import workflow with saved state
+## Run an import workflow with a specified threshold
 
-To run a import workflow that only imports docmaps that are new or have changed since a previous run (or to store a first run), start an importDocmap with a state file name as the second parameter:
+To prevent large reimport of docmaps that would cause content becoming unpublished, you can specify an optional numeric threshold for docmap changes that are allowed.
 
 ```shell
-temporal workflow execute --type importDocmaps -t epp -w import-docmap-test -i '"http://mock-datahub/enhanced-preprints/docmaps/v1/index"' -i '"state.json"'
+temporal workflow execute --type importDocmaps -t epp -w import-docmap-test -i '{ "docMapIndexUrl": "http://mock-datahub/enhanced-preprints/docmaps/v1/index", "docMapThreshold": 2 }'
+```
+
+## Run an import workflow with saved state
+
+To run an import workflow that only imports docmaps that are new or have changed since a previous run (or to store a first run), start an importDocmaps workflow with a state file name as the second parameter:
+
+```shell
+temporal workflow execute --type importDocmaps -t epp -w import-docmap-test -i '{ "docMapIndexUrl": "http://mock-datahub/enhanced-preprints/docmaps/v1/index", "s3StateFileUrl": "state.json" }'
 ```
 
 This will read in previously seen (and hashed) docmaps from the S3 bucket in config, skipping any it has seen before.
@@ -55,7 +63,7 @@ To kick of a full import for a docmap index from eLife's API, then loop itself e
 To change the sleep time, add a semantic time parameter to the `--interval` inputs, for example `1 minute` or `5 minutes`:
 
 ```shell
-temporal schedule create --schedule-id import-docmaps -w import-docmaps -t epp --workflow-type importDocmaps -i '"http://mock-datahub/enhanced-preprints/docmaps/v1/index"' -i '"import-docmaps.json"' --overlap-policy Skip --interval '1m'
+temporal schedule create --schedule-id import-docmaps -w import-docmaps -t epp --workflow-type importDocmaps -i '{ "docMapIndexUrl": "http://mock-datahub/enhanced-preprints/docmaps/v1/index", "s3StateFileUrl": "import-docmaps.json" }' --overlap-policy Skip --interval '1m'
 ```
 
 You can then view these runs on the dashboard.
@@ -91,16 +99,14 @@ MECA_AWS_ROLE_ARN=a role to assume to have permission to source S3 buckets # opt
 Then run docker-compose with the base, override and s3 configs, like below:
 
 ```shell
-docker-compose -f docker-compose.yaml -f docker-compose.override.yaml -f docker-compose.s3.yaml up
+docker compose -f docker-compose.yaml -f docker-compose.override.yaml -f docker-compose.s3.yaml up
 ```
 
-Finally, you can run the `temporal` command to extract a slice of the Docmap index (so you don't index **all** Docmaps in your local environment), where the third argument is the start index (zero-indexed) and the last argument is the end index (not included):
+To import a specific docmap such as 85111 use the importDocmap workflow:
 
 ```shell
-temporal workflow execute --type importDocmaps -t epp -w import-docmap-test -i '"http://mock-datahub/enhanced-preprints/docmaps/v1/index"' -i '' -i 5 -i 30
+temporal workflow execute --type importDocmap -w import-docmap-85111 -t epp -i '"https://data-hub-api.elifesciences.org/enhanced-preprints/docmaps/v2/by-publisher/elife/get-by-manuscript-id?manuscript_id=85111"'
 ```
-
-read [`Array.prototype.slice()`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/slice) docs for how to use the two params.
 
 ## Run with "real" S3 as a destination
 
@@ -117,11 +123,17 @@ BUCKET_NAME=you will want to create an S3 bucket for your dev experiments
 Then run docker-compose with the base, override and s3 configs, like below:
 
 ```shell
-docker-compose -f docker-compose.yaml -f docker-compose.override.yaml -f docker-compose.s3-epp.yaml up
+docker compose -f docker-compose.yaml -f docker-compose.override.yaml -f docker-compose.s3-epp.yaml up
 ```
 
 You can combine the s3 source and destination to allow for retrieval from s3 source and preparing the assets and uploading them to S3:
 
 ```shell
-docker-compose -f docker-compose.yaml -f docker-compose.override.yaml -f docker-compose.s3.yaml -f docker-compose.s3-epp.yaml up
+docker compose -f docker-compose.yaml -f docker-compose.override.yaml -f docker-compose.s3.yaml -f docker-compose.s3-epp.yaml up
+```
+
+## Running tests with docker
+To run the tests with docker (especially useful if they are not working locally) use the following command:
+```shell
+docker compose -f docker-compose.tests.yaml run tests
 ```

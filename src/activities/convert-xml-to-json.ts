@@ -6,7 +6,10 @@ import * as fs from 'fs';
 import axios from 'axios';
 import { Context } from '@temporalio/activity';
 import {
+  CopyObjectCommand,
   GetObjectCommand,
+  HeadObjectCommand,
+  NotFound,
   PutObjectCommand,
   PutObjectCommandOutput,
 } from '@aws-sdk/client-s3';
@@ -51,6 +54,39 @@ export const transformXMLToJson = async (xmlInput: string, version: string, repl
   });
   Context.current().heartbeat('Finishing XML to JSON transform');
   return transformedResponse.data;
+}
+
+const copySourceXmlToKnownPath = async (source: S3File, version: VersionedReviewedPreprint) => {
+  const s3 = getEPPS3Client();
+
+  const sourceBucketAndPath = `${source.Bucket}/${source.Key}`;
+  const sourceXMLDestination = constructEPPVersionS3FilePath('article-source.xml', version);
+
+  let destinationETag;
+  try {
+    const destinationExistsResult = await s3.send(new HeadObjectCommand({
+      Bucket: sourceXMLDestination.Bucket,
+      Key: sourceXMLDestination.Key,
+    }));
+    destinationETag = destinationExistsResult.ETag;
+    console.info('convertXmlToJson - Source XML Destination exists - will compare ETag. ', source);
+  } catch (e) {
+    if (!(e instanceof NotFound)) {
+      throw e;
+    }
+  }
+  try {
+    await s3.send(new CopyObjectCommand({
+      Bucket: sourceXMLDestination.Bucket,
+      Key: sourceXMLDestination.Key,
+      CopySource: sourceBucketAndPath,
+      CopySourceIfNoneMatch: destinationETag,
+    }));
+  } catch (e: any) {
+    if (!(e.Code && e.Code === 'PreconditionFailed')) {
+      throw e;
+    }
+  }
 };
 
 export const convertXmlToJson = async (version: VersionedReviewedPreprint, mecaFiles: MecaFiles): Promise<ConvertXmlToJsonOutput> => {
@@ -61,6 +97,9 @@ export const convertXmlToJson = async (version: VersionedReviewedPreprint, mecaF
 
   const s3 = getEPPS3Client();
   const source = constructEPPVersionS3FilePath(mecaFiles.article.path, version);
+
+  await copySourceXmlToKnownPath(source, version);
+
   const object = await s3.send(new GetObjectCommand(source));
 
   const xml = await object.Body?.transformToString();
@@ -69,6 +108,16 @@ export const convertXmlToJson = async (version: VersionedReviewedPreprint, mecaF
   }
 
   const transformedXMLResponse = await transformXML(xml);
+
+  // store the transformed XML for downstream processing
+  const transformedXMLDestination = constructEPPVersionS3FilePath('article-transformed.xml', version);
+  await s3.send(new PutObjectCommand({
+    Bucket: transformedXMLDestination.Bucket,
+    Key: transformedXMLDestination.Key,
+    Body: transformedXMLResponse.xml,
+  }));
+
+  fs.writeFileSync(localXmlFilePath, transformedXMLResponse.xml);
 
   const replacementPathToken = 'replacementPathToken/';
   const transformedJsonResponse = await transformXMLToJson(

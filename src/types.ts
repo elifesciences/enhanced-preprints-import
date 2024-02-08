@@ -1,7 +1,7 @@
 import { DocMap } from '@elifesciences/docmap-ts';
 
 export type ImportDocmapsMessage = {
-  status: 'SUCCESS' | 'SKIPPED'
+  status: 'SUCCESS' | 'SKIPPED' | 'NOT APPROVED'
   message: string;
   results: ImportDocmapMessage[],
 };
