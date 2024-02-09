@@ -122,29 +122,21 @@ export const convertXmlToJson = async (version: VersionedReviewedPreprint, mecaF
 
   fs.writeFileSync(localXmlFilePath, transformedXMLResponse.xml);
 
-  // This restores the path of other resources as they were when extracted from the meca file
-  // i.e. if the XML file was in the Zip as `content/123/123.xml`, we pass in content/123/ to replace paths to other resources`
-  const originalPath = path.dirname(mecaFiles.article.path);
+  // This replaces the path of other resources pointed to in original Meca with their new location in S3
+  // i.e. if the XML file was in the Zip as `content/123/123.xml` for id 456 version 1, we pass in `456/v1/content/123/` as a replacement paths to other resources
+  const originalPath = path.dirname(getPrefixlessKey(constructEPPVersionS3FilePath(mecaFiles.article.path, version)));
   const transformedJsonResponse = await transformXMLToJson(
     transformedXMLResponse.xml,
     config.encodaDefaultVersion,
     originalPath,
   );
 
-  // Now we need to replace any zip-relative paths in the JSON (restored with `originalPath`) with the s3 relative paths
-  const corrected = mecaFiles.supportingFiles.reduce((json, mecaFile) => {
-    // this is where the file is in s3, without the configured prefix or bucket
-    const newPath = getPrefixlessKey(constructEPPVersionS3FilePath(mecaFile.path, version));
-
-    return json.replaceAll(mecaFile.path, newPath);
-  }, transformedJsonResponse.body);
-
   // Upload destination in S3
   const destination = constructEPPVersionS3FilePath('article.json', version);
   const result = await s3.send(new PutObjectCommand({
     Bucket: destination.Bucket,
     Key: destination.Key,
-    Body: corrected,
+    Body: transformedJsonResponse.body,
   }));
 
   // Delete tmpDirectory
