@@ -211,7 +211,7 @@ services:
 
   ## ENCODA XSLT
   encoda:
-    image: ghcr.io/elifesciences/enhanced-preprints-encoda:master-f949f23d-20231221.0746
+    image: ghcr.io/elifesciences/enhanced-preprints-encoda:master-1c9eef0e-20240209.1236
     healthcheck:
       test: "wget --post-data '<test></test>' -O - http://localhost:3000/"
       interval: 10s
