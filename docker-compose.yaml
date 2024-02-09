@@ -246,7 +246,7 @@ services:
 
   ## Image Server
   image-server:
-    image: ghcr.io/elifesciences/epp-image-server:master-a34dfaa2-20231003.1350
+    image: ghcr.io/elifesciences/epp-image-server:master-1e22dcf0-20240209.1002
     environment:
       SOURCE_STATIC: S3Source
       S3SOURCE_ENDPOINT: http://minio:9000/
