@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { Context } from '@temporalio/activity';
-import {transformXML, transformXMLToJson} from './convert-xml-to-json';
+import { transformXML, transformXMLToJson } from './convert-xml-to-json';
 import { config } from '../config';
 
 // Mock Context, axios, and config

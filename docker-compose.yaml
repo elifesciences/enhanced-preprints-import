@@ -243,7 +243,7 @@ services:
       - 3000:3000
 
   app:
-    image: ghcr.io/elifesciences/enhanced-preprints-client:master-c948d6a4-20240208.0352
+    image: ghcr.io/elifesciences/enhanced-preprints-client:master-fb11b1d5-20240209.0648
     healthcheck:
       test: sh -c 'apk add curl; curl http://app:3000/'
       interval: 5s
@@ -264,7 +264,7 @@ services:
 
   ## Image Server
   image-server:
-    image: ghcr.io/elifesciences/epp-image-server:master-a34dfaa2-20231003.1350
+    image: ghcr.io/elifesciences/epp-image-server:master-1e22dcf0-20240209.1002
     environment:
       SOURCE_STATIC: S3Source
       S3SOURCE_ENDPOINT: http://minio:9000/
