@@ -25,8 +25,8 @@ type TransformXmlResponse = {
 };
 
 type TransformXmlToJsonResponse = {
-  json: string,
   version: string,
+  body: string,
 };
 
 type ConvertXmlToJsonOutput = {
@@ -53,7 +53,10 @@ export const transformXMLToJson = async (xmlInput: string, version: string, repl
     },
   });
   Context.current().heartbeat('Finishing XML to JSON transform');
-  return transformedResponse.data;
+  return {
+    version: transformedResponse.headers['content-type'].split(';').map((i: string) => i.trim())[0],
+    body: JSON.stringify(transformedResponse.data),
+  };
 };
 
 const copySourceXmlToKnownPath = async (source: S3File, version: VersionedReviewedPreprint) => {
@@ -92,7 +95,7 @@ const copySourceXmlToKnownPath = async (source: S3File, version: VersionedReview
 export const convertXmlToJson = async (version: VersionedReviewedPreprint, mecaFiles: MecaFiles): Promise<ConvertXmlToJsonOutput> => {
   const tmpDirectory = await mkdtemp(`${tmpdir()}/epp_json`);
   const localXmlFilePath = `${tmpDirectory}/${mecaFiles.article.path}`;
-  // mkdir incase the article path is in a subdirectory
+  // mkdir in case the article path is in a subdirectory
   fs.mkdirSync(path.dirname(localXmlFilePath), { recursive: true });
 
   const s3 = getEPPS3Client();
@@ -135,7 +138,7 @@ export const convertXmlToJson = async (version: VersionedReviewedPreprint, mecaF
     const newPath = getPrefixlessKey(constructEPPVersionS3FilePath(mecaFile.path, version));
 
     return json.replaceAll(oldPath, newPath);
-  }, transformedJsonResponse.json);
+  }, transformedJsonResponse.body);
 
   // Upload destination in S3
   const destination = constructEPPVersionS3FilePath('article.json', version);
