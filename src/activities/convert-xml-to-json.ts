@@ -1,5 +1,4 @@
 import { VersionedReviewedPreprint } from '@elifesciences/docmap-ts';
-import { convert } from '@stencila/encoda';
 import { mkdtemp } from 'fs/promises';
 import { tmpdir } from 'os';
 import path from 'path';
@@ -20,23 +19,44 @@ import {
 import { MecaFiles } from './extract-meca';
 import { config } from '../config';
 
-type TransformResponse = {
+type TransformXmlResponse = {
   xml: string,
   logs: string[],
+};
+
+type TransformXmlToJsonResponse = {
+  version: string,
+  body: string,
 };
 
 type ConvertXmlToJsonOutput = {
   result: PutObjectCommandOutput,
   path: S3File,
   xsltLogs: string[],
+  encodaVersion: string,
 };
 
-export const transformXML = async (xmlInput: string): Promise<TransformResponse> => {
+export const transformXML = async (xmlInput: string): Promise<TransformXmlResponse> => {
   Context.current().heartbeat('Starting XML transform');
-  const transformedResponse = await axios.post<TransformResponse>(config.xsltTransformAddress, xmlInput);
+  const transformedResponse = await axios.post<TransformXmlResponse>(config.xsltTransformAddress, xmlInput);
 
   Context.current().heartbeat('Finishing XML transform');
   return transformedResponse.data;
+};
+
+export const transformXMLToJson = async (xmlInput: string, version: string, replacementPath?: string): Promise<TransformXmlToJsonResponse> => {
+  Context.current().heartbeat('Starting XML to JSON transform');
+  const transformedResponse = await axios.post<TransformXmlToJsonResponse>(config.encodaTransformAddress, xmlInput, {
+    params: replacementPath ? { replacementPath } : {},
+    headers: {
+      accept: `application/vnd.elife.encoda.${version}+json`,
+    },
+  });
+  Context.current().heartbeat('Finishing XML to JSON transform');
+  return {
+    version: transformedResponse.headers['content-type'].split(';').map((i: string) => i.trim())[0],
+    body: JSON.stringify(transformedResponse.data),
+  };
 };
 
 const copySourceXmlToKnownPath = async (source: S3File, version: VersionedReviewedPreprint) => {
@@ -75,7 +95,7 @@ const copySourceXmlToKnownPath = async (source: S3File, version: VersionedReview
 export const convertXmlToJson = async (version: VersionedReviewedPreprint, mecaFiles: MecaFiles): Promise<ConvertXmlToJsonOutput> => {
   const tmpDirectory = await mkdtemp(`${tmpdir()}/epp_json`);
   const localXmlFilePath = `${tmpDirectory}/${mecaFiles.article.path}`;
-  // mkdir incase the article path is in a subdirectory
+  // mkdir in case the article path is in a subdirectory
   fs.mkdirSync(path.dirname(localXmlFilePath), { recursive: true });
 
   const s3 = getEPPS3Client();
@@ -90,51 +110,33 @@ export const convertXmlToJson = async (version: VersionedReviewedPreprint, mecaF
     throw new Error('Unable to retrieve XML from S3');
   }
 
-  const transformedXML = await transformXML(xml);
+  const transformedXMLResponse = await transformXML(xml);
 
   // store the transformed XML for downstream processing
   const transformedXMLDestination = constructEPPVersionS3FilePath('article-transformed.xml', version);
   await s3.send(new PutObjectCommand({
     Bucket: transformedXMLDestination.Bucket,
     Key: transformedXMLDestination.Key,
-    Body: transformedXML.xml,
+    Body: transformedXMLResponse.xml,
   }));
 
-  fs.writeFileSync(localXmlFilePath, transformedXML.xml);
+  fs.writeFileSync(localXmlFilePath, transformedXMLResponse.xml);
 
-  const converted = await convert(
-    localXmlFilePath,
-    undefined, // require undefined to return html, causes console output
-    {
-      from: 'jats',
-      to: 'json',
-      encodeOptions: {
-        isBundle: false,
-      },
-    },
+  // This replaces the path of other resources pointed to in original Meca with their new location in S3
+  // i.e. if the XML file was in the Zip as `content/123/123.xml` for id 456 version 1, we pass in `456/v1/content/123/` as a replacement paths to other resources
+  const originalPath = path.dirname(getPrefixlessKey(constructEPPVersionS3FilePath(mecaFiles.article.path, version)));
+  const transformedJsonResponse = await transformXMLToJson(
+    transformedXMLResponse.xml,
+    config.encodaDefaultVersion,
+    originalPath,
   );
-
-  if (converted === undefined) {
-    throw new Error(`Could not convert XML file ${localXmlFilePath}`);
-  }
-
-  // correct any paths in the json
-  const corrected = mecaFiles.supportingFiles.reduce((json, mecaFile) => {
-    // this is a construct of where the files would have been relative to the article in the meca archive
-    const oldPath = path.join(tmpDirectory, mecaFile.path);
-
-    // this is where the path would be relative to the S3 root directory + meca path
-    const newPath = getPrefixlessKey(constructEPPVersionS3FilePath(mecaFile.path, version));
-
-    return json.replaceAll(oldPath, newPath);
-  }, converted);
 
   // Upload destination in S3
   const destination = constructEPPVersionS3FilePath('article.json', version);
   const result = await s3.send(new PutObjectCommand({
     Bucket: destination.Bucket,
     Key: destination.Key,
-    Body: corrected,
+    Body: transformedJsonResponse.body,
   }));
 
   // Delete tmpDirectory
@@ -143,6 +145,7 @@ export const convertXmlToJson = async (version: VersionedReviewedPreprint, mecaF
   return {
     result,
     path: destination,
-    xsltLogs: transformedXML.logs,
+    xsltLogs: transformedXMLResponse.logs,
+    encodaVersion: transformedJsonResponse.version,
   };
 };
