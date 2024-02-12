@@ -48,6 +48,7 @@ export type ImportContentOutput = {
   jsonContentFile: S3File,
   reviewData?: EPPPeerReview,
   xsltLogs: string[],
+  encodaVersion: string,
 };
 
 export async function importContent(version: VersionedReviewedPreprint): Promise<ImportContentOutput | string> {
@@ -60,7 +61,7 @@ export async function importContent(version: VersionedReviewedPreprint): Promise
   // Extract Meca
   const mecaFiles = await extractMeca(version);
 
-  const { path: jsonContentFile, xsltLogs } = await convertXmlToJson(version, mecaFiles);
+  const { path: jsonContentFile, xsltLogs, encodaVersion } = await convertXmlToJson(version, mecaFiles);
 
   // fetch review content (if present)
   const reviewData = await fetchReviewContent(version);
@@ -71,5 +72,6 @@ export async function importContent(version: VersionedReviewedPreprint): Promise
     jsonContentFile,
     reviewData,
     xsltLogs,
+    encodaVersion,
   };
 }
