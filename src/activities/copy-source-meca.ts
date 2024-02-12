@@ -79,7 +79,7 @@ export const s3GetSourceAndPutDestination = async (source: S3File, destination: 
   try {
     // get Etag if destination exists
     console.log('copySourcePreprintToEPP - HEAD destination', destination);
-    const destinationExistsResult = await mecaS3Connection.send(new HeadObjectCommand({
+    const destinationExistsResult = await s3Connection.send(new HeadObjectCommand({
       Bucket: destination.Bucket,
       Key: destination.Key,
     }));
