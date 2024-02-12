@@ -2888,11 +2888,11 @@ __metadata:
   linkType: hard
 
 "@types/decompress@npm:^4.2.5":
-  version: 4.2.5
-  resolution: "@types/decompress@npm:4.2.5"
+  version: 4.2.7
+  resolution: "@types/decompress@npm:4.2.7"
   dependencies:
     "@types/node": "*"
-  checksum: 039bfb51457c764251c7b0cfa8a85a2b3ba4643b621aa7fb6e3252bd271a879216fdbcdc685dc6316d6bd0d95a8ca1691cc5c11ff9730a65f48cfec1fa38cbf5
+  checksum: f2fcc588e0bbeed4f3897e25980d3a5cceba334b900f83c9ad91b9885e3b25b50bdc283a6d684b73442368f9f12f34b4eabfc7f422067c6a882591ed844aa65b
   languageName: node
   linkType: hard
 
