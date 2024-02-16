@@ -49,7 +49,7 @@ export const transformXMLToJson = async (xmlInput: string, version: string, repl
   const transformedResponse = await axios.post<TransformXmlToJsonResponse>(config.encodaTransformAddress, xmlInput, {
     params: replacementPath ? { replacementPath } : {},
     headers: {
-      accept: `application/vnd.elife.encoda.${version}+json`,
+      accept: `application/vnd.elife.encoda.v${version}+json`,
     },
   });
   Context.current().heartbeat('Finishing XML to JSON transform');

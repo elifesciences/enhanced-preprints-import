@@ -35,7 +35,7 @@ describe('TransformXML', () => {
       },
     };
 
-    mockedAxios.post.mockResolvedValueOnce({ headers: { 'content-type': 'application/vnd.elife.encoda.1+json; charset=utf-8' }, data: response });
+    mockedAxios.post.mockResolvedValueOnce({ headers: { 'content-type': 'application/vnd.elife.encoda.v1+json; charset=utf-8' }, data: response });
 
     const result = await transformXMLToJson(xmlInput, '1');
 
@@ -44,9 +44,9 @@ describe('TransformXML', () => {
     expect(Context.current().heartbeat).toHaveBeenNthCalledWith(2, 'Finishing XML to JSON transform');
 
     expect(mockedAxios.post).toHaveBeenCalledTimes(1);
-    expect(mockedAxios.post).toHaveBeenCalledWith(config.encodaTransformAddress, xmlInput, { headers: { accept: 'application/vnd.elife.encoda.1+json' }, params: {} });
+    expect(mockedAxios.post).toHaveBeenCalledWith(config.encodaTransformAddress, xmlInput, { headers: { accept: 'application/vnd.elife.encoda.v1+json' }, params: {} });
     expect(result).toEqual({
-      version: 'application/vnd.elife.encoda.1+json',
+      version: 'application/vnd.elife.encoda.v1+json',
       body: JSON.stringify(response),
     });
   });
