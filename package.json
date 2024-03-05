@@ -21,7 +21,7 @@
     "ts-node": "10.9.2",
     "typescript": "5.3.3"
   },
-  "packageManager": "yarn@4.1.0",
+  "packageManager": "yarn@4.1.1",
   "devDependencies": {
     "@aws-sdk/util-stream-node": "^3.374.0",
     "@temporalio/testing": "^1.7.4",
