@@ -1,7 +1,7 @@
 import { Article } from '@stencila/schema';
 import { GetObjectCommand, GetObjectCommandInput, PutObjectCommand } from '@aws-sdk/client-s3';
 import { Context } from '@temporalio/activity';
-import { Manuscript, VersionedReviewedPreprint } from '@elifesciences/docmap-ts/dist/docmap-parser';
+import { parser, VersionedReviewedPreprint } from '@elifesciences/docmap-ts';
 import { S3File, constructEPPVersionS3FilePath, getEPPS3Client } from '../S3Bucket';
 import { EnhancedArticle } from './send-version-to-epp';
 import { ImportContentOutput } from '../workflows/import-content';
@@ -22,7 +22,7 @@ const parseJsonContentToProcessedArticle = (content: string) => {
 type GenerateVersionJson = (
   {
     importContentResult, msid, version, manuscript,
-  }: { importContentResult: ImportContentOutput, msid: string, version: VersionedReviewedPreprint, manuscript?: Manuscript }
+  }: { importContentResult: ImportContentOutput, msid: string, version: VersionedReviewedPreprint, manuscript?: parser.Manuscript }
 ) => Promise<S3File>;
 
 export const generateVersionJson: GenerateVersionJson = async ({
