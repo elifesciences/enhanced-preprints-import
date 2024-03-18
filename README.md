@@ -8,7 +8,7 @@ We then push the parsed content into an EPP server endpoint.
 
 Finally, the results of all this retrieval is stored in an S3 bucket in well structure paths (which can then be configured as a source for a [canteloupe IIIF server](https://github.com/elifesciences/enhanced-preprints-image-server))
 
-The monitoring and scheduling of the import workflows are handled by a [temporal server](https://temporal.io/) (and [temporalite](https://github.com/temporalio/temporalite) is used for testing and dev).
+The monitoring and scheduling of the import workflows are handled by a [temporal server](https://temporal.io/)testing and dev).
 
 # Getting started
 
@@ -16,7 +16,7 @@ Ensure you have docker and docker-compose (v2 tested). Also install [`temporal`]
 
 - clone the repo
 - run `yarn`
-- run `docker compose up` to start temporalite and the worker in "watch" mode
+- run `docker compose up` to start temporal and the workers in "watch" mode
 - run `temporal operator namespace list` to list namespaces, you should see default namespace listed, and not any other error.
 
 The `docker compose` workflow above will restart the worker when your mounted filesystem changes.
