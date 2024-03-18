@@ -35,6 +35,13 @@ export type EnhancedArticle = {
   volume?: string,
   eLocationId?: string,
   subjects?: string[],
+  relatedContent?: {
+    type: string,
+    title?: string,
+    url?: string,
+    content?: string,
+    imageUrl?: string,
+  }[],
   publishedYear?: number,
   license?: string,
 };

@@ -61,6 +61,14 @@
                 "Cell Biology",
                 "Structural Biology and Molecular Biophysics"
               ],
+              "complement": [
+                {
+                  "type": "insight",
+                  "title": "Hearing: Letting the calcium flow",
+                  "url": "https://doi.org/10.7554/eLife.96139",
+                  "description": "Régis Nouvian"
+                }
+              ],
               "published": "2023-05-07T09:03:08+00:00"
             }
           },
