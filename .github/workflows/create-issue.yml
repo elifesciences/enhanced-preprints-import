@@ -34,7 +34,7 @@ jobs:
       with:
         path: .github/ISSUE_TEMPLATE/publish_manuscript.md
 
-    - uses: bluwy/substitute-string-action@v2
+    - uses: bluwy/substitute-string-action@v3
       id: title
       with:
         _input-text: "${{ steps.extract.outputs.title }}"
@@ -43,7 +43,7 @@ jobs:
         msid: "${{ github.event.inputs.msid }}"
         version: "${{ github.event.inputs.versionManuscript }}"
 
-    - uses: bluwy/substitute-string-action@v2
+    - uses: bluwy/substitute-string-action@v3
       id: body
       with:
         _input-text: "${{ steps.extract.outputs.body }}"
