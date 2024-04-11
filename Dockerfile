@@ -1,4 +1,4 @@
-FROM --platform=$BUILDPLATFORM node:20@sha256:3b676479124ebdb0348f540e5c8b64f959ec1358cea05080b711d965f5353a34 as deps
+FROM --platform=$BUILDPLATFORM node:20@sha256:844b41cf784f66d7920fd673f7af54ca7b81e289985edc6cd864e7d05e0d133c as deps
 RUN mkdir /app
 WORKDIR /app
 RUN apt-get update && apt-get install -y git python3 build-essential libc-dev
@@ -9,7 +9,7 @@ ADD .yarn .yarn
 ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true
 RUN yarn
 
-FROM --platform=$TARGETPLATFORM node:20@sha256:3b676479124ebdb0348f540e5c8b64f959ec1358cea05080b711d965f5353a34 as platform_deps
+FROM --platform=$TARGETPLATFORM node:20@sha256:844b41cf784f66d7920fd673f7af54ca7b81e289985edc6cd864e7d05e0d133c as platform_deps
 RUN mkdir /app
 WORKDIR /app
 RUN apt-get update && apt-get install -y git python3 build-essential libc-dev
@@ -21,7 +21,7 @@ COPY --from=deps /app/.yarnrc.yml .yarnrc.yml
 ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true
 RUN yarn
 
-FROM node:20@sha256:3b676479124ebdb0348f540e5c8b64f959ec1358cea05080b711d965f5353a34 as base
+FROM node:20@sha256:844b41cf784f66d7920fd673f7af54ca7b81e289985edc6cd864e7d05e0d133c as base
 RUN mkdir /app
 WORKDIR /app
 
