@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { GetObjectCommand, NoSuchKey, PutObjectCommand } from '@aws-sdk/client-s3';
+import { GetObjectCommand, PutObjectCommand } from '@aws-sdk/client-s3';
 import { constructEPPStateS3FilePath, getEPPS3Client } from '../S3Bucket';
 import { DocMapHashes, DocMapIndex, DocMapWithHashes } from '../types';
 import { createDocMapHash } from './create-docmap-hash';
