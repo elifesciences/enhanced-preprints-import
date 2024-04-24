@@ -47,7 +47,7 @@ temporal workflow execute --type importDocmaps -t epp -w import-docmap-test -i '
 
 ## Run an import workflow with saved state
 
-To run an import workflow that only imports docmaps that are new or have changed since a previous run (or to store a first run), start an importDocmaps workflow with a state file name as the second parameter:
+To run an import workflow that only imports docmaps that are new or have changed since a previous run, start an importDocmaps workflow with a state file name as the second parameter and add a state file to minio:
 
 ```shell
 temporal workflow execute --type importDocmaps -t epp -w import-docmap-test -i '{ "docMapIndexUrl": "http://mock-datahub/enhanced-preprints/docmaps/v1/index", "s3StateFileUrl": "state.json" }'
