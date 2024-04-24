@@ -2,7 +2,7 @@ import { Readable } from 'stream';
 import axios from 'axios';
 import { mocked } from 'jest-mock';
 import {
-  GetObjectCommand, PutObjectCommand, S3Client,
+  GetObjectCommand, NoSuchKey, PutObjectCommand, S3Client,
 } from '@aws-sdk/client-s3';
 import { mockClient } from 'aws-sdk-client-mock';
 import { sdkStreamMixin } from '@aws-sdk/util-stream-node';
@@ -123,6 +123,21 @@ describe('docmap-filter', () => {
       expect(result).toStrictEqual([]);
       expect(result?.length).toStrictEqual(0);
     });
+
+    it('throws an error if no state file is found', async () => {
+      const mockedGet = mocked(axios.get);
+      // @ts-ignore
+      mockedGet.mockImplementation(() => Promise.resolve({
+        data: { docmaps: [{ id: mockId }] },
+        status: 200,
+      }));
+      mockS3Client.on(GetObjectCommand).rejects(new NoSuchKey({
+        $metadata: {},
+        message: 'No Such Key',
+      }));
+
+      return expect(filterDocmapIndex('http://somewhere.not.real/docmap/index', 'state-file.json')).rejects.toThrow('No Such Key');
+    });
   });
 
   describe('mergeDocmapState', () => {
@@ -182,6 +197,19 @@ describe('docmap-filter', () => {
       const mockDocmap1Hashes = await createDocMapHash({ id: 'fake-docmap1' });
       const result = await mergeDocmapState([mockDocmap1Hashes]);
       expect(result).toStrictEqual(false);
+    });
+
+    it('throws an error if no state file is found', async () => {
+      mockS3Client.on(GetObjectCommand).rejects(new NoSuchKey({
+        $metadata: {},
+        message: 'No Such Key',
+      }));
+
+      const mockDocmap2Hashes = await createDocMapHash({ id: 'fake-docmap2' });
+      const mockDocmap3 = { id: 'fake-docmap1', created: '2022-11-11T05:02:51+00:00' };
+      const mockDocmap3Hashes = await createDocMapHash(mockDocmap3);
+
+      return expect(mergeDocmapState([mockDocmap2Hashes, mockDocmap3Hashes], 'state-file.json')).rejects.toThrow('No Such Key');
     });
   });
 });
