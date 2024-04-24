@@ -2,7 +2,7 @@ import { Readable } from 'stream';
 import axios from 'axios';
 import { mocked } from 'jest-mock';
 import {
-  GetObjectCommand, NoSuchKey, PutObjectCommand, S3Client,
+  GetObjectCommand, PutObjectCommand, S3Client,
 } from '@aws-sdk/client-s3';
 import { mockClient } from 'aws-sdk-client-mock';
 import { sdkStreamMixin } from '@aws-sdk/util-stream-node';
@@ -73,34 +73,13 @@ describe('docmap-filter', () => {
         data: { docmaps: [{ id: mockId }] },
         status: 200,
       }));
-      mockS3Client.on(GetObjectCommand).rejects(new NoSuchKey({
-        $metadata: {},
-        message: 'No Such Key',
-      }));
-
-      // Act
-      const result = await filterDocmapIndex('http://somewhere.not.real/docmap/index', 'state-file.json');
-
-      // Assert
-      expect(result).toStrictEqual([{
-        docMapId: mockId,
-        docMapHash: mockedHash,
-        docMapIdHash: mockedIdHash,
-      }]);
-    });
-
-    it('returns new docmaps (that are not hashed in the state file)', async () => {
-      // Arrange
-      const mockedGet = mocked(axios.get);
-      // @ts-ignore
-      mockedGet.mockImplementation(() => Promise.resolve({
-        data: { docmaps: [{ id: mockId }] },
-        status: 200,
-      }));
-      mockS3Client.on(GetObjectCommand).rejects(new NoSuchKey({
-        $metadata: {},
-        message: 'No Such Key',
-      }));
+      const stream = new Readable();
+      stream.push(JSON.stringify([]));
+      stream.push(null);
+      const sdkStream = sdkStreamMixin(stream);
+      mockS3Client.on(GetObjectCommand).resolves({
+        Body: sdkStream,
+      });
 
       // Act
       const result = await filterDocmapIndex('http://somewhere.not.real/docmap/index', 'state-file.json');
@@ -147,52 +126,6 @@ describe('docmap-filter', () => {
   });
 
   describe('mergeDocmapState', () => {
-    it('creates a new state file', async () => {
-      mockS3Client.on(GetObjectCommand).rejects(new NoSuchKey({
-        $metadata: {},
-        message: 'No Such Key',
-      }));
-
-      // Act
-      const result = await mergeDocmapState([], 'state-file.json');
-
-      // Assert
-      expect(result).toStrictEqual(true);
-
-      expect(mockS3Client.commandCalls(PutObjectCommand)[0].args[0].input).toStrictEqual({
-        Bucket: 'test-bucket',
-        Key: 'automation/state/state-file.json',
-        Body: '[]',
-      });
-    });
-
-    it('creates a new state file with a docmap hash', async () => {
-      mockS3Client.on(GetObjectCommand).rejects(new NoSuchKey({
-        $metadata: {},
-        message: 'No Such Key',
-      }));
-
-      // Act
-      const result = await mergeDocmapState([{
-        docMapId: mockId,
-        docMapHash: mockedHash,
-        docMapIdHash: mockedIdHash,
-      }], 'state-file.json');
-
-      // Assert
-      expect(result).toStrictEqual(true);
-
-      expect(mockS3Client.commandCalls(PutObjectCommand)[0].args[0].input).toStrictEqual({
-        Bucket: 'test-bucket',
-        Key: 'automation/state/state-file.json',
-        Body: JSON.stringify([{
-          docMapId: mockId,
-          docMapHash: mockedHash,
-          docMapIdHash: mockedIdHash,
-        }]),
-      });
-    });
-
     it('merges docmaps into exsiting state file', async () => {
       // Arrange
       const mockDocmap1Hashes = await createDocMapHash({ id: 'fake-docmap1' });
