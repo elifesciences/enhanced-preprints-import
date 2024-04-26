@@ -45,6 +45,14 @@ To prevent large reimport of docmaps that would cause content becoming unpublish
 temporal workflow execute --type importDocmaps -t epp -w import-docmap-test -i '{ "docMapIndexUrl": "http://mock-datahub/enhanced-preprints/docmaps/v1/index", "docMapThreshold": 2 }'
 ```
 
+## Trigger the approval signal from CLI
+
+Sometimes, due to issues with Temporal UI, we need to use command line to send a signal. You need to specify the target workflow id, name and input of the signal.
+
+```shell
+tctl workflow signal --workflow_id import-docmap-test --name approval -i true
+```
+
 ## Run an import workflow with saved state
 
 To run an import workflow that only imports docmaps that are new or have changed since a previous run, start an importDocmaps workflow with a state file name as the second parameter and add a state file to minio:
