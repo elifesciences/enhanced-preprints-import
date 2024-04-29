@@ -30,4 +30,4 @@ fi
 
 docmap_id_hash="$(echo -n $docmap_url | md5)"
 
-temporal workflow start -n epp--staging --type importDocmap  -i '"'$docmap_url'"' -t 'epp' -w "$workflow_id_prefix$docmap_id_hash"
+temporal workflow start -n epp--staging --type importDocmap  -i '"'$docmap_url'"' -t 'epp' -w "$workflow_id_prefix$docmap_id_hash" --id-reuse-policy=TerminateIfRunning
