@@ -7,8 +7,7 @@
       "title": "",
       "mimeType": "application/xml",
       "path": "2212.00741/2212.00741.xml",
-      "fileName": "2212.00741.xml",
-      "localPath": "/tmp/epp_contentXXXXXXn3PkzP/2212.00741/2212.00741.xml"
+      "fileName": "2212.00741.xml"
     },
     "supportingFiles": [
       {
@@ -17,8 +16,7 @@
         "title": "Figure 1",
         "mimeType": "image/jpeg",
         "path": "2212.00741/2212.00741v1_fig1.jpg",
-        "fileName": "2212.00741v1_fig1.jpg",
-        "localPath": "/tmp/epp_contentXXXXXXn3PkzP/2212.00741/2212.00741v1_fig1.jpg"
+        "fileName": "2212.00741v1_fig1.jpg"
       },
       {
         "id": "fig2",
@@ -26,8 +24,7 @@
         "title": "Figure 2",
         "mimeType": "image/jpeg",
         "path": "2212.00741/2212.00741v1_fig2.jpg",
-        "fileName": "2212.00741v1_fig2.jpg",
-        "localPath": "/tmp/epp_contentXXXXXXn3PkzP/2212.00741/2212.00741v1_fig2.jpg"
+        "fileName": "2212.00741v1_fig2.jpg"
       },
       {
         "id": "fig3",
@@ -35,8 +32,7 @@
         "title": "Figure 3",
         "mimeType": "image/jpeg",
         "path": "2212.00741/2212.00741v1_fig3.jpg",
-        "fileName": "2212.00741v1_fig3.jpg",
-        "localPath": "/tmp/epp_contentXXXXXXn3PkzP/2212.00741/2212.00741v1_fig3.jpg"
+        "fileName": "2212.00741v1_fig3.jpg"
       },
       {
         "id": "fig4",
@@ -44,8 +40,7 @@
         "title": "Figure 4",
         "mimeType": "image/jpeg",
         "path": "2212.00741/2212.00741v1_fig4.jpg",
-        "fileName": "2212.00741v1_fig4.jpg",
-        "localPath": "/tmp/epp_contentXXXXXXn3PkzP/2212.00741/2212.00741v1_fig4.jpg"
+        "fileName": "2212.00741v1_fig4.jpg"
       },
       {
         "id": "fig5",
@@ -53,8 +48,7 @@
         "title": "Figure 5",
         "mimeType": "image/jpeg",
         "path": "2212.00741/2212.00741v1_fig5.jpg",
-        "fileName": "2212.00741v1_fig5.jpg",
-        "localPath": "/tmp/epp_contentXXXXXXn3PkzP/2212.00741/2212.00741v1_fig5.jpg"
+        "fileName": "2212.00741v1_fig5.jpg"
       },
       {
         "id": "fig6",
@@ -62,8 +56,7 @@
         "title": "Figure S1",
         "mimeType": "image/jpeg",
         "path": "2212.00741/2212.00741v1_fig6.jpg",
-        "fileName": "2212.00741v1_fig6.jpg",
-        "localPath": "/tmp/epp_contentXXXXXXn3PkzP/2212.00741/2212.00741v1_fig6.jpg"
+        "fileName": "2212.00741v1_fig6.jpg"
       },
       {
         "id": "tbl1a",
@@ -71,8 +64,7 @@
         "title": "Table S1",
         "mimeType": "image/jpeg",
         "path": "2212.00741/2212.00741v1_tbl1a.jpg",
-        "fileName": "2212.00741v1_tbl1a.jpg",
-        "localPath": "/tmp/epp_contentXXXXXXn3PkzP/2212.00741/2212.00741v1_tbl1a.jpg"
+        "fileName": "2212.00741v1_tbl1a.jpg"
       },
       {
         "id": "tbl1b",
@@ -80,8 +72,7 @@
         "title": "Table S1",
         "mimeType": "image/jpeg",
         "path": "2212.00741/2212.00741v1_tbl1b.jpg",
-        "fileName": "2212.00741v1_tbl1b.jpg",
-        "localPath": "/tmp/epp_contentXXXXXXn3PkzP/2212.00741/2212.00741v1_tbl1b.jpg"
+        "fileName": "2212.00741v1_tbl1b.jpg"
       },
       {
         "id": "tbl1c",
@@ -89,8 +80,7 @@
         "title": "Table S1",
         "mimeType": "image/jpeg",
         "path": "2212.00741/2212.00741v1_tbl1c.jpg",
-        "fileName": "2212.00741v1_tbl1c.jpg",
-        "localPath": "/tmp/epp_contentXXXXXXn3PkzP/2212.00741/2212.00741v1_tbl1c.jpg"
+        "fileName": "2212.00741v1_tbl1c.jpg"
       },
       {
         "id": "tbl1d",
@@ -98,8 +88,7 @@
         "title": "Table S1",
         "mimeType": "image/jpeg",
         "path": "2212.00741/2212.00741v1_tbl1d.jpg",
-        "fileName": "2212.00741v1_tbl1d.jpg",
-        "localPath": "/tmp/epp_contentXXXXXXn3PkzP/2212.00741/2212.00741v1_tbl1d.jpg"
+        "fileName": "2212.00741v1_tbl1d.jpg"
       },
       {
         "id": "tbl2a",
@@ -107,8 +96,7 @@
         "title": "Table S2",
         "mimeType": "image/jpeg",
         "path": "2212.00741/2212.00741v1_tbl2a.jpg",
-        "fileName": "2212.00741v1_tbl2a.jpg",
-        "localPath": "/tmp/epp_contentXXXXXXn3PkzP/2212.00741/2212.00741v1_tbl2a.jpg"
+        "fileName": "2212.00741v1_tbl2a.jpg"
       },
       {
         "id": "tbl2b",
@@ -116,8 +104,7 @@
         "title": "Table S2",
         "mimeType": "image/jpeg",
         "path": "2212.00741/2212.00741v1_tbl2b.jpg",
-        "fileName": "2212.00741v1_tbl2b.jpg",
-        "localPath": "/tmp/epp_contentXXXXXXn3PkzP/2212.00741/2212.00741v1_tbl2b.jpg"
+        "fileName": "2212.00741v1_tbl2b.jpg"
       },
       {
         "id": "tbl2c",
@@ -125,8 +112,7 @@
         "title": "Table S2",
         "mimeType": "image/jpeg",
         "path": "2212.00741/2212.00741v1_tbl2c.jpg",
-        "fileName": "2212.00741v1_tbl2c.jpg",
-        "localPath": "/tmp/epp_contentXXXXXXn3PkzP/2212.00741/2212.00741v1_tbl2c.jpg"
+        "fileName": "2212.00741v1_tbl2c.jpg"
       },
       {
         "id": "tbl2d",
@@ -134,8 +120,7 @@
         "title": "Table S2",
         "mimeType": "image/jpeg",
         "path": "2212.00741/2212.00741v1_tbl2d.jpg",
-        "fileName": "2212.00741v1_tbl2d.jpg",
-        "localPath": "/tmp/epp_contentXXXXXXn3PkzP/2212.00741/2212.00741v1_tbl2d.jpg"
+        "fileName": "2212.00741v1_tbl2d.jpg"
       },
       {
         "id": "tbl2e",
@@ -143,16 +128,14 @@
         "title": "Table S2",
         "mimeType": "image/jpeg",
         "path": "2212.00741/2212.00741v1_tbl2e.jpg",
-        "fileName": "2212.00741v1_tbl2e.jpg",
-        "localPath": "/tmp/epp_contentXXXXXXn3PkzP/2212.00741/2212.00741v1_tbl2e.jpg"
+        "fileName": "2212.00741v1_tbl2e.jpg"
       },
       {
         "id": "id1",
         "type": "equation",
         "mimeType": "image/jpeg",
         "path": "2212.00741/2212.00741v1_ieqn1.jpg",
-        "fileName": "2212.00741v1_ieqn1.jpg",
-        "localPath": "/tmp/epp_contentXXXXXXn3PkzP/2212.00741/2212.00741v1_ieqn1.jpg"
+        "fileName": "2212.00741v1_ieqn1.jpg"
       }
     ]
   }
