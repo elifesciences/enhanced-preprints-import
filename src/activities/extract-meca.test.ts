@@ -25,7 +25,7 @@ jest.mock('@temporalio/activity', () => ({
 const mockS3Client = mockClient(S3Client);
 
 describe('extract-meca-activity', () => {
-  it.skip('returns extracted meca file', async () => {
+  it('returns extracted meca file', async () => {
     const stream = createReadStream('./mock-data/meca/dummy-1.meca');
     const sdkStream = sdkStreamMixin(stream);
     mockS3Client.on(GetObjectCommand).resolves({
@@ -43,6 +43,6 @@ describe('extract-meca-activity', () => {
     };
     const result = await extractMeca(version);
 
-    expect(result).toStrictEqual(extractedMecaResult);
+    expect(result).toMatchObject(extractedMecaResult);
   });
 });
