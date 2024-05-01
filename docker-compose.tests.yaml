@@ -7,3 +7,4 @@ services:
     command: yarn test
     volumes:
       - ./src:/app/src
+      - ./mock-data:/app/mock-data
