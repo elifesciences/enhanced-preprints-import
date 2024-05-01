@@ -30,7 +30,7 @@ jobs:
           tags: |
             ${{ env.IMPORT_WORKER_IMAGE_REPO }}:test-${{ github.sha }}
       - name: run test
-        run: docker run ${{ env.IMPORT_WORKER_IMAGE_REPO }}:test-${{ github.sha }} yarn test
+        run: docker run ${{ env.IMPORT_WORKER_IMAGE_REPO }}:test-${{ github.sha }} -v ./mock-data:/app/mock-data yarn test
       - name: run lint
         run: docker run ${{ env.IMPORT_WORKER_IMAGE_REPO }}:test-${{ github.sha }} yarn lint
   build-and-push:
