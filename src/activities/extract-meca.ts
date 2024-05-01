@@ -72,8 +72,12 @@ export const extractMeca = async (version: VersionedReviewedPreprint): Promise<M
   Context.current().heartbeat('Extracting Meca');
   await fs.createReadStream(mecaPath)
     .pipe(unzipper.Extract({ path: tmpDirectory }))
-    .promise();
-  Context.current().heartbeat('Meca successfully extracted');
+    .promise()
+    .then(() => {
+      Context.current().heartbeat('Meca successfully extracted');
+
+      fs.unlinkSync(mecaPath);
+    });
 
   Context.current().heartbeat('Loading manifest');
 
