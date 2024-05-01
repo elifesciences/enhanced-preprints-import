@@ -7,7 +7,7 @@ import { GetObjectCommand, GetObjectCommandInput, PutObjectCommand } from '@aws-
 import * as fs from 'fs';
 import { Context } from '@temporalio/activity';
 import { Readable } from 'stream';
-import decompress from 'decompress';
+import unzipper from 'unzipper';
 import { constructEPPVersionS3FilePath, getEPPS3Client, streamToFile } from '../S3Bucket';
 import { NonRetryableError } from '../errors';
 
@@ -69,11 +69,11 @@ export const extractMeca = async (version: VersionedReviewedPreprint): Promise<M
   await streamToFile(data.Body, mecaPath);
   Context.current().heartbeat('Meca successfully downloaded');
 
-  await decompress(mecaPath, tmpDirectory).then(() => {
-    Context.current().heartbeat('Meca successfully extracted');
-
-    fs.unlinkSync(mecaPath);
-  });
+  Context.current().heartbeat('Extracting Meca');
+  await fs.createReadStream(mecaPath)
+    .pipe(unzipper.Extract({ path: tmpDirectory }))
+    .promise();
+  Context.current().heartbeat('Meca successfully extracted');
 
   Context.current().heartbeat('Loading manifest');
 
