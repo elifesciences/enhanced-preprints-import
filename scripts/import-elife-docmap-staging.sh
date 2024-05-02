@@ -28,6 +28,16 @@ if ! curl -sf $docmap_url > /dev/null; then
   exit 2
 fi
 
-docmap_id_hash="$(echo -n $docmap_url | md5)"
+# Determine the appropriate md5 command based on the operating system
+if command -v md5 >/dev/null 2>&1; then
+    # macOS
+    docmap_id_hash="$(echo -n $docmap_url | md5)"
+elif command -v md5sum >/dev/null 2>&1; then
+    # Ubuntu
+    docmap_id_hash="$(echo -n $docmap_url | md5sum | awk '{print $1}')"
+else
+    echo "md5 or md5sum command not found"
+    exit 3
+fi
 
 temporal workflow start -n epp--staging --type importDocmap  -i '"'$docmap_url'"' -t 'epp' -w "$workflow_id_prefix$docmap_id_hash" --id-reuse-policy=TerminateIfRunning
