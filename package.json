@@ -16,20 +16,20 @@
     "@temporalio/worker": "^1.7.4",
     "@temporalio/workflow": "^1.7.4",
     "axios": "^1.2.2",
-    "decompress": "^4.2.1",
     "fast-xml-parser": "^4.0.11",
     "ts-node": "10.9.2",
-    "typescript": "5.4.5"
+    "typescript": "5.4.5",
+    "unzipper": "^0.11.4"
   },
   "packageManager": "yarn@4.1.1",
   "devDependencies": {
     "@aws-sdk/util-stream-node": "^3.374.0",
     "@temporalio/testing": "^1.7.4",
     "@tsconfig/node16": "^16.0.0",
-    "@types/decompress": "^4.2.5",
     "@types/eslint": "8.56.10",
     "@types/jest": "^29.2.5",
     "@types/node": "^20.0.0",
+    "@types/unzipper": "^0.10.9",
     "@typescript-eslint/eslint-plugin": "^7.0.0",
     "@typescript-eslint/parser": "^7.0.0",
     "aws-sdk-client-mock": "^4.0.0",
