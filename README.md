@@ -63,7 +63,6 @@ temporal workflow execute --type importDocmaps -t epp -w import-docmap-test -i '
 
 This will read in previously seen (and hashed) docmaps from the S3 bucket in config, skipping any it has seen before.
 
-
 ## Run an import workflow with saved state to a schedule
 
 To kick of a full import for a docmap index from eLife's API, then loop itself every hour (see next command to change this), skipping docmaps that have no changes.
