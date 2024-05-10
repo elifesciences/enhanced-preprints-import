@@ -18,7 +18,7 @@ export const generateVersionSummaryJson: GenerateVersionSummaryJson = async ({
     throw new NonRetryableError("Preprint doesn't have a published date");
   }
 
-  const contentUrl = version.content?.find((contentUrl) => contentUrl.startsWith('http')) ?? version.url;
+  const contentUrl = version.content?.find((url) => url.startsWith('http')) ?? version.url;
   if (contentUrl === undefined) {
     throw new NonRetryableError("Preprint doesn't have a content URL");
   }
