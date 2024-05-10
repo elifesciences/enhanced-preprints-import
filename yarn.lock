@@ -1433,12 +1433,12 @@ __metadata:
 
 "@elifesciences/docmap-ts@https://github.com/elifesciences/docmap-ts#experimental-vor":
   version: 0.0.37
-  resolution: "@elifesciences/docmap-ts@https://github.com/elifesciences/docmap-ts.git#commit=815e153e7b88ff32aba42f14659aac482eb4cc53"
+  resolution: "@elifesciences/docmap-ts@https://github.com/elifesciences/docmap-ts.git#commit=c831ff79133efd3c0d1341f437802c061068f48e"
   dependencies:
     "@tsconfig/node18": "npm:^1.0.1"
     ts-node: "npm:^10.9.1"
     typescript: "npm:^5.0.0"
-  checksum: 10c0/c64d0637d9632dc786490faa2a845349b6e34e8724546a3e7c08d163feb7118b5afeaf35ce08623676392797dc2545e16499ba4ca71b2a58e7fb54dab027bf63
+  checksum: 10c0/85a9d0d10686cda26411f97132b4785b1e0c8490d06529360ab9ef494eea816ee3c454fe8f19f5af94f5df43736a98dae3901efe3bb395d599a4936f54814cac
   languageName: node
   linkType: hard
 
@@ -3137,9 +3137,9 @@ __metadata:
   linkType: hard
 
 "@tsconfig/node18@npm:^1.0.1":
-  version: 1.0.1
-  resolution: "@tsconfig/node18@npm:1.0.1"
-  checksum: 10c0/8b2c79b9a0a9e8a305e7d8d28ba2966d626c9bcbd601725f1acddf1660bbb3316f2c24a351ac7912c335cb969ba0e436940516992372d5e992355c7ff02e1e4d
+  version: 1.0.3
+  resolution: "@tsconfig/node18@npm:1.0.3"
+  checksum: 10c0/7cbe70d4c0b2b3f9942f598cec952b4bebcc8a61073582fe650eabbe978eeae3ed081697f3cf51bf88d570450a50297d9311545b2b1654e84372498d7838ca04
   languageName: node
   linkType: hard
 

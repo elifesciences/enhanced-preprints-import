@@ -4,7 +4,7 @@ import {
   upsertSearchAttributes,
   workflowInfo,
 } from '@temporalio/workflow';
-import { DocMap } from '@elifesciences/docmap-ts';
+import { DocMap, VersionedPreprint, VersionedReviewedPreprint } from '@elifesciences/docmap-ts';
 import type * as activities from '../activities/index';
 import { importContent } from './import-content';
 import { ImportDocmapMessage } from '../types';
@@ -46,8 +46,8 @@ export async function importDocmap(url: string): Promise<ImportDocmapMessage> {
     ManuscriptId: [result.id],
   });
 
-  const results = await Promise.all(
-    result.versions.map(async (version) => {
+  const results = await Promise.all([
+    ...result.versions.filter((version): version is VersionedReviewedPreprint => 'preprint' in version).filter((version) => version.preprint.content?.find((contentUrl) => contentUrl.startsWith('s3://'))).map(async (version) => {
       const importContentResult = await executeChild(importContent, {
         args: [version],
         workflowId: `${workflowInfo().workflowId}/${version.versionIdentifier}/content`,
@@ -73,7 +73,12 @@ export async function importDocmap(url: string): Promise<ImportDocmapMessage> {
         result: 'Sent to EPP',
       };
     }),
-  );
+    ...result.versions.filter((version): version is VersionedPreprint => 'content' in version).map(async (version) => ({
+      id: version.id,
+      versionIdentifier: version.versionIdentifier,
+      result: 'TODO',
+    })),
+  ]);
 
   return {
     results,
