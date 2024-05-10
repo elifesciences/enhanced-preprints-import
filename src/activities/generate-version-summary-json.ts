@@ -18,8 +18,9 @@ export const generateVersionSummaryJson: GenerateVersionSummaryJson = async ({
     throw new NonRetryableError("Preprint doesn't have a published date");
   }
 
-  if (version.url === undefined && version.doi === undefined) {
-    throw new NonRetryableError("Preprint doesn't have a URL or doi");
+  const contentUrl = version.content?.find((contentUrl) => contentUrl.startsWith('http')) ?? version.url;
+  if (contentUrl === undefined) {
+    throw new NonRetryableError("Preprint doesn't have a content URL");
   }
 
   const s3 = getEPPS3Client();
@@ -29,6 +30,7 @@ export const generateVersionSummaryJson: GenerateVersionSummaryJson = async ({
     msid,
     doi: version.doi,
     id: `${version.id}v${version.versionIdentifier}`, // construct a global version ID from concat of id and version-specific ID
+    url: contentUrl,
     versionIdentifier: version.versionIdentifier,
     published: version.publishedDate ?? null,
   };

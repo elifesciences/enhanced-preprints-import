@@ -14,6 +14,7 @@ export type ExternalVersionSummary = {
   id: string,
   msid: string,
   doi: string,
+  url: string,
   versionIdentifier: string,
   published?: Date | null,
 };
