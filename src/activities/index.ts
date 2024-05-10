@@ -5,6 +5,7 @@ export { fetchDocMap } from './fetch-docmap';
 export { fetchReviewContent } from './fetch-review-content';
 export { filterDocmapIndex, mergeDocmapState } from './find-all-docmaps';
 export { generateVersionJson } from './generate-version-json';
+export { generateVersionSummaryJson } from './generate-version-summary-json';
 export { parseDocMap } from './parse-docmap';
 export { sendVersionToEpp } from './send-version-to-epp';
 export { createDocMapHash } from './create-docmap-hash';

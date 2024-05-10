@@ -17,6 +17,7 @@ const { parseDocMap } = proxyActivities<typeof activities>({
 });
 const {
   generateVersionJson,
+  generateVersionSummaryJson,
   fetchDocMap,
   sendVersionToEpp,
   createDocMapHash,
@@ -73,11 +74,17 @@ export async function importDocmap(url: string): Promise<ImportDocmapMessage> {
         result: 'Sent to EPP',
       };
     }),
-    ...result.versions.filter((version): version is VersionedPreprint => 'content' in version).map(async (version) => ({
-      id: version.id,
-      versionIdentifier: version.versionIdentifier,
-      result: 'TODO',
-    })),
+    ...result.versions.filter((version): version is VersionedPreprint => 'content' in version).map(async (version) => {
+      const payloadFile = await generateVersionSummaryJson({
+        msid: result.id, version,
+      });
+      await sendVersionToEpp(payloadFile);
+      return {
+        id: version.id,
+        versionIdentifier: version.versionIdentifier,
+        result: 'Sent to EPP',
+      };
+    }),
   ]);
 
   return {
