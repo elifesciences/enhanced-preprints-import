@@ -1431,9 +1431,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@elifesciences/docmap-ts@https://github.com/elifesciences/docmap-ts#experimental-vor":
+"@elifesciences/docmap-ts@https://github.com/elifesciences/docmap-ts#v0.0.38":
   version: 0.0.37
-  resolution: "@elifesciences/docmap-ts@https://github.com/elifesciences/docmap-ts.git#commit=c831ff79133efd3c0d1341f437802c061068f48e"
+  resolution: "@elifesciences/docmap-ts@https://github.com/elifesciences/docmap-ts.git#commit=63a467ecb0a1287911c1ad5a1f2bac62682263cc"
   dependencies:
     "@tsconfig/node18": "npm:^1.0.1"
     ts-node: "npm:^10.9.1"
@@ -4739,7 +4739,7 @@ __metadata:
     "@aws-sdk/client-s3": "npm:^3.374.0"
     "@aws-sdk/credential-providers": "npm:^3.374.0"
     "@aws-sdk/util-stream-node": "npm:^3.374.0"
-    "@elifesciences/docmap-ts": "https://github.com/elifesciences/docmap-ts#experimental-vor"
+    "@elifesciences/docmap-ts": "https://github.com/elifesciences/docmap-ts#v0.0.38"
     "@stencila/schema": "npm:^1.18.0"
     "@temporalio/activity": "npm:^1.7.4"
     "@temporalio/client": "npm:^1.7.4"
