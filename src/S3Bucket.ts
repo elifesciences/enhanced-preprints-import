@@ -1,4 +1,4 @@
-import { VersionedReviewedPreprint } from '@elifesciences/docmap-ts';
+import { VersionedPreprint, VersionedReviewedPreprint } from '@elifesciences/docmap-ts';
 import { createWriteStream, readFileSync } from 'fs';
 import { S3Client } from '@aws-sdk/client-s3';
 import { fromWebToken, fromTemporaryCredentials } from '@aws-sdk/credential-providers';
@@ -69,7 +69,7 @@ const constructEPPS3FilePath = (filename: string): S3File => ({
 
 export const constructEPPStateS3FilePath = (stateFileName: string): S3File => constructEPPS3FilePath(`state/${stateFileName}`);
 
-export const constructEPPVersionS3FilePath = (filename: string, version: VersionedReviewedPreprint): S3File => constructEPPS3FilePath(`${version.id}/v${version.versionIdentifier}/${filename}`);
+export const constructEPPVersionS3FilePath = (filename: string, version: VersionedReviewedPreprint | VersionedPreprint): S3File => constructEPPS3FilePath(`${version.id}/v${version.versionIdentifier}/${filename}`);
 
 export const getPrefixlessKey = (file: S3File): string => file.Key.replace(new RegExp(`^${config.eppBucketPrefix}`), '');
 

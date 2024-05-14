@@ -10,6 +10,15 @@ import { S3File, getEPPS3Client } from '../S3Bucket';
 
 export type Content = Array<Node> | Node;
 
+export type ExternalVersionSummary = {
+  id: string,
+  msid: string,
+  doi: string,
+  url: string,
+  versionIdentifier: string,
+  published?: Date | null,
+};
+
 export type EnhancedArticle = {
   id: string,
   msid: string,

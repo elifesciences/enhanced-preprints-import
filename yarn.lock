@@ -1431,14 +1431,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@elifesciences/docmap-ts@https://github.com/elifesciences/docmap-ts#v0.0.37":
+"@elifesciences/docmap-ts@https://github.com/elifesciences/docmap-ts#v0.0.38":
   version: 0.0.37
-  resolution: "@elifesciences/docmap-ts@https://github.com/elifesciences/docmap-ts.git#commit=b367371e0b6dd1e8f2eea116331897671192ad03"
+  resolution: "@elifesciences/docmap-ts@https://github.com/elifesciences/docmap-ts.git#commit=63a467ecb0a1287911c1ad5a1f2bac62682263cc"
   dependencies:
     "@tsconfig/node18": "npm:^1.0.1"
     ts-node: "npm:^10.9.1"
-    typescript: "npm:^4.9.3"
-  checksum: 10c0/e72d60466d42e8b238a10bf4668b45f08a600de8289cfe1a0d09a07a1b3ce31f6225ddd6844375c025d992f28e6ef0d4b964ec32899554645f05559f9e39a4b6
+    typescript: "npm:^5.0.0"
+  checksum: 10c0/85a9d0d10686cda26411f97132b4785b1e0c8490d06529360ab9ef494eea816ee3c454fe8f19f5af94f5df43736a98dae3901efe3bb395d599a4936f54814cac
   languageName: node
   linkType: hard
 
@@ -3137,9 +3137,9 @@ __metadata:
   linkType: hard
 
 "@tsconfig/node18@npm:^1.0.1":
-  version: 1.0.1
-  resolution: "@tsconfig/node18@npm:1.0.1"
-  checksum: 10c0/8b2c79b9a0a9e8a305e7d8d28ba2966d626c9bcbd601725f1acddf1660bbb3316f2c24a351ac7912c335cb969ba0e436940516992372d5e992355c7ff02e1e4d
+  version: 1.0.3
+  resolution: "@tsconfig/node18@npm:1.0.3"
+  checksum: 10c0/7cbe70d4c0b2b3f9942f598cec952b4bebcc8a61073582fe650eabbe978eeae3ed081697f3cf51bf88d570450a50297d9311545b2b1654e84372498d7838ca04
   languageName: node
   linkType: hard
 
@@ -4739,7 +4739,7 @@ __metadata:
     "@aws-sdk/client-s3": "npm:^3.374.0"
     "@aws-sdk/credential-providers": "npm:^3.374.0"
     "@aws-sdk/util-stream-node": "npm:^3.374.0"
-    "@elifesciences/docmap-ts": "https://github.com/elifesciences/docmap-ts#v0.0.37"
+    "@elifesciences/docmap-ts": "https://github.com/elifesciences/docmap-ts#v0.0.38"
     "@stencila/schema": "npm:^1.18.0"
     "@temporalio/activity": "npm:^1.7.4"
     "@temporalio/client": "npm:^1.7.4"
@@ -8660,7 +8660,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"typescript@npm:5.4.5":
+"typescript@npm:5.4.5, typescript@npm:^5.0.0":
   version: 5.4.5
   resolution: "typescript@npm:5.4.5"
   bin:
@@ -8670,33 +8670,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"typescript@npm:^4.9.3":
-  version: 4.9.5
-  resolution: "typescript@npm:4.9.5"
-  bin:
-    tsc: bin/tsc
-    tsserver: bin/tsserver
-  checksum: 10c0/5f6cad2e728a8a063521328e612d7876e12f0d8a8390d3b3aaa452a6a65e24e9ac8ea22beb72a924fd96ea0a49ea63bb4e251fb922b12eedfb7f7a26475e5c56
-  languageName: node
-  linkType: hard
-
-"typescript@patch:typescript@npm%3A5.4.5#optional!builtin<compat/typescript>":
+"typescript@patch:typescript@npm%3A5.4.5#optional!builtin<compat/typescript>, typescript@patch:typescript@npm%3A^5.0.0#optional!builtin<compat/typescript>":
   version: 5.4.5
   resolution: "typescript@patch:typescript@npm%3A5.4.5#optional!builtin<compat/typescript>::version=5.4.5&hash=5adc0c"
   bin:
     tsc: bin/tsc
     tsserver: bin/tsserver
   checksum: 10c0/db2ad2a16ca829f50427eeb1da155e7a45e598eec7b086d8b4e8ba44e5a235f758e606d681c66992230d3fc3b8995865e5fd0b22a2c95486d0b3200f83072ec9
-  languageName: node
-  linkType: hard
-
-"typescript@patch:typescript@npm%3A^4.9.3#optional!builtin<compat/typescript>":
-  version: 4.9.5
-  resolution: "typescript@patch:typescript@npm%3A4.9.5#optional!builtin<compat/typescript>::version=4.9.5&hash=289587"
-  bin:
-    tsc: bin/tsc
-    tsserver: bin/tsserver
-  checksum: 10c0/e3333f887c6829dfe0ab6c1dbe0dd1e3e2aeb56c66460cb85c5440c566f900c833d370ca34eb47558c0c69e78ced4bfe09b8f4f98b6de7afed9b84b8d1dd06a1
   languageName: node
   linkType: hard
 
