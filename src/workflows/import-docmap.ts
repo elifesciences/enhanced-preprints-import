@@ -49,30 +49,39 @@ export async function importDocmap(url: string): Promise<ImportDocmapMessage> {
 
   const results = await Promise.all([
     ...result.versions.filter((version): version is VersionedReviewedPreprint => 'preprint' in version).filter((version) => version.preprint.content?.find((contentUrl) => contentUrl.startsWith('s3://'))).map(async (version) => {
-      const importContentResult = await executeChild(importContent, {
-        args: [version],
-        workflowId: `${workflowInfo().workflowId}/${version.versionIdentifier}/content`,
-        searchAttributes: {
-          DocmapURL: [url],
-          ManuscriptId: [version.id],
-        },
-      });
-      if (typeof importContentResult === 'string') {
+      try {
+        const importContentResult = await executeChild(importContent, {
+          args: [version],
+          workflowId: `${workflowInfo().workflowId}/${version.versionIdentifier}/content`,
+          searchAttributes: {
+            DocmapURL: [url],
+            ManuscriptId: [version.id],
+          },
+        });
+        if (typeof importContentResult === 'string') {
+          return {
+            id: version.id,
+            versionIdentifier: version.versionIdentifier,
+            result: importContentResult,
+          };
+        }
+        const payloadFile = await generateVersionJson({
+          importContentResult, msid: result.id, version, manuscript: result.manuscript,
+        });
+        await sendVersionToEpp(payloadFile);
         return {
           id: version.id,
           versionIdentifier: version.versionIdentifier,
-          result: importContentResult,
+          result: 'Sent to EPP',
+        };
+      } catch (error) {
+        console.error('An error occurred:', error);
+        return {
+          id: version.id,
+          versionIdentifier: version.versionIdentifier,
+          result: `Error: ${JSON.stringify(error)}`,
         };
       }
-      const payloadFile = await generateVersionJson({
-        importContentResult, msid: result.id, version, manuscript: result.manuscript,
-      });
-      await sendVersionToEpp(payloadFile);
-      return {
-        id: version.id,
-        versionIdentifier: version.versionIdentifier,
-        result: 'Sent to EPP',
-      };
     }),
     ...result.versions.filter((version): version is VersionedPreprint => 'content' in version).map(async (version) => {
       const payloadFile = await generateVersionSummaryJson({
