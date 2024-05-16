@@ -16,14 +16,18 @@
 ## `./scripts/import-elife-docmap.sh "12345" "epp--staging"` or
 ## `./scripts/import-elife-docmap.sh "12345" "epp--staging" "manual-import-2024-02-05-"`
 
-docmap_api_manuscript_prefix=https://data-hub-api.elifesciences.org/enhanced-preprints/docmaps/v2/by-publisher/elife/get-by-manuscript-id?manuscript_id=
-
 namespace=${2:-"epp--prod"}
 workflow_id_prefix=${3:-"docmap-"}
 
 if [[ "$namespace" != "epp--prod" && "$namespace" != "epp--staging" ]]; then
   workflow_id_prefix="$namespace"
   namespace="epp--prod"
+fi
+
+if [[ "$namespace" == "epp--staging" ]]; then
+  docmap_api_manuscript_prefix=https://data-hub-api--stg.elifesciences.org/enhanced-preprints/docmaps/v2/by-publisher/elife/get-by-manuscript-id?manuscript_id=
+else
+  docmap_api_manuscript_prefix=https://data-hub-api.elifesciences.org/enhanced-preprints/docmaps/v2/by-publisher/elife/get-by-manuscript-id?manuscript_id=
 fi
 
 if [ -z "$1" ]; then
