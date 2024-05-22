@@ -1502,28 +1502,27 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@grpc/grpc-js@npm:~1.7.3":
-  version: 1.7.3
-  resolution: "@grpc/grpc-js@npm:1.7.3"
+"@grpc/grpc-js@npm:^1.10.6":
+  version: 1.10.8
+  resolution: "@grpc/grpc-js@npm:1.10.8"
   dependencies:
-    "@grpc/proto-loader": "npm:^0.7.0"
-    "@types/node": "npm:>=12.12.47"
-  checksum: 10c0/f9206fd4b7a4d46ed9e113125491fd5b7e103afc2e058e7b528406227496986c63099995030e29b12d928c89f67c39369a2fda450b13958e3957506cafb39fb4
+    "@grpc/proto-loader": "npm:^0.7.13"
+    "@js-sdsl/ordered-map": "npm:^4.4.2"
+  checksum: 10c0/600ccd5fc1f4d5e49b52c1ac8fd656b4583d81e6f9708a75459861dbf55251e7c0378ff6ba0043c140916f22dee195119cec6535c7b7e8a0a9da244d48cacc9e
   languageName: node
   linkType: hard
 
-"@grpc/proto-loader@npm:^0.7.0":
-  version: 0.7.3
-  resolution: "@grpc/proto-loader@npm:0.7.3"
+"@grpc/proto-loader@npm:^0.7.13":
+  version: 0.7.13
+  resolution: "@grpc/proto-loader@npm:0.7.13"
   dependencies:
-    "@types/long": "npm:^4.0.1"
     lodash.camelcase: "npm:^4.3.0"
-    long: "npm:^4.0.0"
-    protobufjs: "npm:^7.0.0"
-    yargs: "npm:^16.2.0"
+    long: "npm:^5.0.0"
+    protobufjs: "npm:^7.2.5"
+    yargs: "npm:^17.7.2"
   bin:
     proto-loader-gen-types: build/bin/proto-loader-gen-types.js
-  checksum: 10c0/370e51946cb3b72798f41577d08e3d24ea18fc45b08ee9d33fcf8094e3348d781ea351b53e385f1182575e2a2d7bc0cf85aec415b4d4bc95024ed46932b646d8
+  checksum: 10c0/dc8ed7aa1454c15e224707cc53d84a166b98d76f33606a9f334c7a6fb1aedd3e3614dcd2c2b02a6ffaf140587d19494f93b3a56346c6c2e26bc564f6deddbbf3
   languageName: node
   linkType: hard
 
@@ -1989,6 +1988,13 @@ __metadata:
     "@jridgewell/resolve-uri": "npm:^3.0.3"
     "@jridgewell/sourcemap-codec": "npm:^1.4.10"
   checksum: 10c0/28d2c695e047ad448561a90c32241ca8b6d1416165129b878c235a809be727330d13aac005e1a6deb3cd5f0ef11bf292d15403e89b2b971b19943c3e56776524
+  languageName: node
+  linkType: hard
+
+"@js-sdsl/ordered-map@npm:^4.4.2":
+  version: 4.4.2
+  resolution: "@js-sdsl/ordered-map@npm:4.4.2"
+  checksum: 10c0/cc7e15dc4acf6d9ef663757279600bab70533d847dcc1ab01332e9e680bd30b77cdf9ad885cc774276f51d98b05a013571c940e5b360985af5eb798dc1a2ee2b
   languageName: node
   linkType: hard
 
@@ -2992,112 +2998,112 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@temporalio/activity@npm:1.9.3, @temporalio/activity@npm:^1.7.4":
-  version: 1.9.3
-  resolution: "@temporalio/activity@npm:1.9.3"
+"@temporalio/activity@npm:1.10.0, @temporalio/activity@npm:^1.7.4":
+  version: 1.10.0
+  resolution: "@temporalio/activity@npm:1.10.0"
   dependencies:
-    "@temporalio/common": "npm:1.9.3"
+    "@temporalio/common": "npm:1.10.0"
     abort-controller: "npm:^3.0.0"
-  checksum: 10c0/68aede1f0c17974a3a47891b01d27056d55b90ecc6a4193fcab9bdefd507630a0e322d8d92591804c1114a8ef70337cc952894cd952b29840ca8b5c86c9fdc47
+  checksum: 10c0/bd58e46b29289851e8dc4cbd1a57db2499676d3a28a9b234d7b4c68687b3f19c9b0e93c15db332f185c58d7c40c3abedc1f3a7ae70b30c690988ea89a110cab5
   languageName: node
   linkType: hard
 
-"@temporalio/client@npm:1.9.3, @temporalio/client@npm:^1.7.4":
-  version: 1.9.3
-  resolution: "@temporalio/client@npm:1.9.3"
+"@temporalio/client@npm:1.10.0, @temporalio/client@npm:^1.7.4":
+  version: 1.10.0
+  resolution: "@temporalio/client@npm:1.10.0"
   dependencies:
-    "@grpc/grpc-js": "npm:~1.7.3"
-    "@temporalio/common": "npm:1.9.3"
-    "@temporalio/proto": "npm:1.9.3"
+    "@grpc/grpc-js": "npm:^1.10.6"
+    "@temporalio/common": "npm:1.10.0"
+    "@temporalio/proto": "npm:1.10.0"
     abort-controller: "npm:^3.0.0"
     long: "npm:^5.2.3"
     uuid: "npm:^9.0.1"
-  checksum: 10c0/954a411b46a859879d8ce361cafcbbf32a682f6fe14caca1af482e9ae78f2eebcfedf29f0362e744647bcce23a61a7f1c1ff719bb02b56195de946883971ccca
+  checksum: 10c0/ee3ee0255bc3b952d6bd23930b06d9b9ed3761bf624acda72bbc54dc1fa597aa975620fdc6f12785554b1d80a2ba851f8bbdf1213caef52fe24a5bf0828a59b7
   languageName: node
   linkType: hard
 
-"@temporalio/common@npm:1.9.3, @temporalio/common@npm:^1.7.4":
-  version: 1.9.3
-  resolution: "@temporalio/common@npm:1.9.3"
+"@temporalio/common@npm:1.10.0, @temporalio/common@npm:^1.7.4":
+  version: 1.10.0
+  resolution: "@temporalio/common@npm:1.10.0"
   dependencies:
-    "@temporalio/proto": "npm:1.9.3"
+    "@temporalio/proto": "npm:1.10.0"
     long: "npm:^5.2.3"
     ms: "npm:^3.0.0-canary.1"
     proto3-json-serializer: "npm:^2.0.0"
-  checksum: 10c0/214433159ef4ef0c0ebc4821a8dc96c801e2bfad3d99a0a14a399a6d6c45134fcabc29eb4e973a1b7185966756dc345dba5b1ab65b7942e09c28830d0b71298a
+  checksum: 10c0/e30ac51d40c062b7f29eaae4617cf436baf84a81cdf030ba240af36e56203c5ac883cd56fe2938cea074ac27c3bbb067ad1e5bde7fe0804a3074429e67a04aa0
   languageName: node
   linkType: hard
 
-"@temporalio/core-bridge@npm:1.9.3":
-  version: 1.9.3
-  resolution: "@temporalio/core-bridge@npm:1.9.3"
+"@temporalio/core-bridge@npm:1.10.0":
+  version: 1.10.0
+  resolution: "@temporalio/core-bridge@npm:1.10.0"
   dependencies:
-    "@temporalio/common": "npm:1.9.3"
+    "@temporalio/common": "npm:1.10.0"
     arg: "npm:^5.0.2"
     cargo-cp-artifact: "npm:^0.1.8"
     which: "npm:^4.0.0"
-  checksum: 10c0/b694e696e2c87c3e7a48153865db5299e5490fc9720f05aa56743c9367dc3c04eff3ab3fe0265201df874eb22617d72e2f492ba803501b48190b6a8bc41e9103
+  checksum: 10c0/0375a914d152b6d3fcab3ad0545098a87c215ffb5a128d13a32b8c250965270fbaf1cec570582666712dd472c100971e117eff104810a356668ae031b2bb5a67
   languageName: node
   linkType: hard
 
-"@temporalio/proto@npm:1.9.3":
-  version: 1.9.3
-  resolution: "@temporalio/proto@npm:1.9.3"
+"@temporalio/proto@npm:1.10.0":
+  version: 1.10.0
+  resolution: "@temporalio/proto@npm:1.10.0"
   dependencies:
     long: "npm:^5.2.3"
     protobufjs: "npm:^7.2.5"
-  checksum: 10c0/2426fd7f083f9860ccf50c9ee5f98ac529ff995cdceaa7f5c879b86f0515d1eaf89af672f3e454cca314d0187195ddee02d7b74141e2ddf060f937787e818652
+  checksum: 10c0/8e04194ca34b8e538660c61f74f8131e71ac58ad166f188e80e6eb250d0e2410b872b0be97e3ec26161d70a2729744141474b1a56866f0d9c8e7d11701833494
   languageName: node
   linkType: hard
 
 "@temporalio/testing@npm:^1.7.4":
-  version: 1.9.3
-  resolution: "@temporalio/testing@npm:1.9.3"
+  version: 1.10.0
+  resolution: "@temporalio/testing@npm:1.10.0"
   dependencies:
-    "@grpc/grpc-js": "npm:~1.7.3"
-    "@temporalio/activity": "npm:1.9.3"
-    "@temporalio/client": "npm:1.9.3"
-    "@temporalio/common": "npm:1.9.3"
-    "@temporalio/core-bridge": "npm:1.9.3"
-    "@temporalio/proto": "npm:1.9.3"
-    "@temporalio/worker": "npm:1.9.3"
-    "@temporalio/workflow": "npm:1.9.3"
+    "@temporalio/activity": "npm:1.10.0"
+    "@temporalio/client": "npm:1.10.0"
+    "@temporalio/common": "npm:1.10.0"
+    "@temporalio/core-bridge": "npm:1.10.0"
+    "@temporalio/proto": "npm:1.10.0"
+    "@temporalio/worker": "npm:1.10.0"
+    "@temporalio/workflow": "npm:1.10.0"
     abort-controller: "npm:^3.0.0"
-  checksum: 10c0/8a2d13d4cb03cb731c624829e49590a9844e23471e8dddb241a7a8ac6219c4987d83e548b7c0db2995c552861c423ebadf81b21e7dfb5e78a4b1a0c9c4a85bb0
+  checksum: 10c0/4e558f21b914215d80ee3b6bdeae3d4cd89133fa29ea16ea51ec9e6249ed55dcee7c74b41508cf9b29e6c60cfd2c16aa398b49d5a4db9fe698407e92af330af0
   languageName: node
   linkType: hard
 
-"@temporalio/worker@npm:1.9.3, @temporalio/worker@npm:^1.7.4":
-  version: 1.9.3
-  resolution: "@temporalio/worker@npm:1.9.3"
+"@temporalio/worker@npm:1.10.0, @temporalio/worker@npm:^1.7.4":
+  version: 1.10.0
+  resolution: "@temporalio/worker@npm:1.10.0"
   dependencies:
     "@swc/core": "npm:^1.3.102"
-    "@temporalio/activity": "npm:1.9.3"
-    "@temporalio/client": "npm:1.9.3"
-    "@temporalio/common": "npm:1.9.3"
-    "@temporalio/core-bridge": "npm:1.9.3"
-    "@temporalio/proto": "npm:1.9.3"
-    "@temporalio/workflow": "npm:1.9.3"
+    "@temporalio/activity": "npm:1.10.0"
+    "@temporalio/client": "npm:1.10.0"
+    "@temporalio/common": "npm:1.10.0"
+    "@temporalio/core-bridge": "npm:1.10.0"
+    "@temporalio/proto": "npm:1.10.0"
+    "@temporalio/workflow": "npm:1.10.0"
     abort-controller: "npm:^3.0.0"
     heap-js: "npm:^2.3.0"
     memfs: "npm:^4.6.0"
     rxjs: "npm:^7.8.1"
     source-map: "npm:^0.7.4"
     source-map-loader: "npm:^4.0.2"
+    supports-color: "npm:^8.1.1"
     swc-loader: "npm:^0.2.3"
     unionfs: "npm:^4.5.1"
     webpack: "npm:^5.89.0"
-  checksum: 10c0/67087175b62024df5bcbaa510be722fc1f05603ed0f1b4014056fa9c9e66a3d176ff9a7cbc229f7982db70cecbe8e8e375dbe5bd6dbea2005648ba0e8121fc5a
+  checksum: 10c0/1f78eddae655b16fcc48416f9e050fc0f2bf9071218c07e45209557ad28e60651ce0bd6b3cb986f177914bee9a5581ca28d8fb76dfd7de88591ad6600661250b
   languageName: node
   linkType: hard
 
-"@temporalio/workflow@npm:1.9.3, @temporalio/workflow@npm:^1.7.4":
-  version: 1.9.3
-  resolution: "@temporalio/workflow@npm:1.9.3"
+"@temporalio/workflow@npm:1.10.0, @temporalio/workflow@npm:^1.7.4":
+  version: 1.10.0
+  resolution: "@temporalio/workflow@npm:1.10.0"
   dependencies:
-    "@temporalio/common": "npm:1.9.3"
-    "@temporalio/proto": "npm:1.9.3"
-  checksum: 10c0/abdb8420e1dd7280c891657f1d875ad3eb8eb4eda320563b47812862f7b5a184916db1fe3009e45ad37bcee7ac935915ff2dfb7da06dc60a618e592b257f0b84
+    "@temporalio/common": "npm:1.10.0"
+    "@temporalio/proto": "npm:1.10.0"
+  checksum: 10c0/b957d4530f50e58dbb7b3c440fcfdbcf722a69c2258bf72d526f4e7741a92e969652673bb8f64376054846027f0035c6f1ffa02e8bfbc07eead1c42d77238cc2
   languageName: node
   linkType: hard
 
@@ -3293,14 +3299,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/long@npm:^4.0.1":
-  version: 4.0.2
-  resolution: "@types/long@npm:4.0.2"
-  checksum: 10c0/42ec66ade1f72ff9d143c5a519a65efc7c1c77be7b1ac5455c530ae9acd87baba065542f8847522af2e3ace2cc999f3ad464ef86e6b7352eece34daf88f8c924
-  languageName: node
-  linkType: hard
-
-"@types/node@npm:*, @types/node@npm:>=12.12.47, @types/node@npm:>=13.7.0, @types/node@npm:^20.0.0":
+"@types/node@npm:*, @types/node@npm:>=13.7.0, @types/node@npm:^20.0.0":
   version: 20.12.12
   resolution: "@types/node@npm:20.12.12"
   dependencies:
@@ -4358,17 +4357,6 @@ __metadata:
   version: 2.2.0
   resolution: "clean-stack@npm:2.2.0"
   checksum: 10c0/1f90262d5f6230a17e27d0c190b09d47ebe7efdd76a03b5a1127863f7b3c9aec4c3e6c8bb3a7bbf81d553d56a1fd35728f5a8ef4c63f867ac8d690109742a8c1
-  languageName: node
-  linkType: hard
-
-"cliui@npm:^7.0.2":
-  version: 7.0.4
-  resolution: "cliui@npm:7.0.4"
-  dependencies:
-    string-width: "npm:^4.2.0"
-    strip-ansi: "npm:^6.0.0"
-    wrap-ansi: "npm:^7.0.0"
-  checksum: 10c0/6035f5daf7383470cef82b3d3db00bec70afb3423538c50394386ffbbab135e26c3689c41791f911fa71b62d13d3863c712fdd70f0fbdffd938a1e6fd09aac00
   languageName: node
   linkType: hard
 
@@ -6892,13 +6880,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"long@npm:^4.0.0":
-  version: 4.0.0
-  resolution: "long@npm:4.0.0"
-  checksum: 10c0/50a6417d15b06104dbe4e3d4a667c39b137f130a9108ea8752b352a4cfae047531a3ac351c181792f3f8768fe17cca6b0f406674a541a86fb638aaac560d83ed
-  languageName: node
-  linkType: hard
-
 "long@npm:^5.0.0, long@npm:^5.2.3":
   version: 5.2.3
   resolution: "long@npm:5.2.3"
@@ -7642,7 +7623,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"protobufjs@npm:^7.0.0, protobufjs@npm:^7.2.5":
+"protobufjs@npm:^7.2.5":
   version: 7.2.6
   resolution: "protobufjs@npm:7.2.6"
   dependencies:
@@ -8314,7 +8295,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"supports-color@npm:^8.0.0":
+"supports-color@npm:^8.0.0, supports-color@npm:^8.1.1":
   version: 8.1.1
   resolution: "supports-color@npm:8.1.1"
   dependencies:
@@ -8977,13 +8958,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"yargs-parser@npm:^20.2.2":
-  version: 20.2.9
-  resolution: "yargs-parser@npm:20.2.9"
-  checksum: 10c0/0685a8e58bbfb57fab6aefe03c6da904a59769bd803a722bb098bd5b0f29d274a1357762c7258fb487512811b8063fb5d2824a3415a0a4540598335b3b086c72
-  languageName: node
-  linkType: hard
-
 "yargs-parser@npm:^21.0.1, yargs-parser@npm:^21.1.1":
   version: 21.1.1
   resolution: "yargs-parser@npm:21.1.1"
@@ -8991,22 +8965,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"yargs@npm:^16.2.0":
-  version: 16.2.0
-  resolution: "yargs@npm:16.2.0"
-  dependencies:
-    cliui: "npm:^7.0.2"
-    escalade: "npm:^3.1.1"
-    get-caller-file: "npm:^2.0.5"
-    require-directory: "npm:^2.1.1"
-    string-width: "npm:^4.2.0"
-    y18n: "npm:^5.0.5"
-    yargs-parser: "npm:^20.2.2"
-  checksum: 10c0/b1dbfefa679848442454b60053a6c95d62f2d2e21dd28def92b647587f415969173c6e99a0f3bab4f1b67ee8283bf735ebe3544013f09491186ba9e8a9a2b651
-  languageName: node
-  linkType: hard
-
-"yargs@npm:^17.3.1":
+"yargs@npm:^17.3.1, yargs@npm:^17.7.2":
   version: 17.7.2
   resolution: "yargs@npm:17.7.2"
   dependencies:
