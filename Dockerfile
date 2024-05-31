@@ -36,6 +36,7 @@ FROM app as tests
 ADD .eslintignore .eslintignore
 ADD .eslintrc.js .eslintrc.js
 ADD jest.config.ts jest.config.ts
+COPY --from=deps /app/.yarn/releases .yarn/releases
 
 FROM app as worker
 CMD ["./node_modules/.bin/ts-node", "src/worker.ts"]
