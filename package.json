@@ -21,7 +21,6 @@
     "typescript": "5.4.5",
     "unzipper": "^0.11.4"
   },
-  "packageManager": "yarn@4.2.2",
   "devDependencies": {
     "@aws-sdk/util-stream-node": "^3.374.0",
     "@temporalio/testing": "^1.7.4",
