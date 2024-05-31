@@ -38,4 +38,4 @@ ADD .eslintrc.js .eslintrc.js
 ADD jest.config.ts jest.config.ts
 
 FROM app as worker
-CMD ["yarn", "start:worker"]
+CMD ["./node_modules/.bin/ts-node", "src/worker.ts"]
