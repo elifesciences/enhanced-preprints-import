@@ -58,7 +58,7 @@ services:
       DBNAME: temporal
       VISIBILITY_DBNAME: "temporalvisibility"
       DEFAULT_NAMESPACE: default
-      DEFAULT_NAMESPACE_RETENTION: 3d
+      DEFAULT_NAMESPACE_RETENTION: 72h
       SKIP_ADD_CUSTOM_SEARCH_ATTRIBUTES: true
       TEMPORAL_ADDRESS: temporal:7233
     healthcheck:
