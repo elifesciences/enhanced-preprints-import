@@ -19,7 +19,7 @@
     "fast-xml-parser": "^4.0.11",
     "ts-node": "10.9.2",
     "typescript": "5.4.5",
-    "unzipper": "^0.11.4"
+    "unzipper": "^0.12.0"
   },
   "devDependencies": {
     "@aws-sdk/util-stream-node": "^3.374.0",
