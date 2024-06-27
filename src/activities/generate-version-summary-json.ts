@@ -26,14 +26,17 @@ export const generateVersionSummaryJson: GenerateVersionSummaryJson = async ({
   const s3 = getEPPS3Client();
 
   Context.current().heartbeat('Generating version summary JSON');
-  const corrections = version.corrections ? version.corrections.map(correction => {
-    return correction.content && correction.content[0] !== undefined ? {
-      date: correction.correctedDate,
-      content: correction.content[0]
-    } : {
-      date: correction.correctedDate,
+  const corrections = version.corrections ? version.corrections.reduce<{ date: Date, content: string }[]>((acc, current) => {
+    if (current.content && current.content[0] !== undefined) {
+      acc.push({
+        date: current.correctedDate,
+        content: current.content[0],
+      });
     }
-  }) : undefined;
+
+    return acc;
+  }, []) : undefined;
+
   const versionSummaryJSON: ExternalVersionSummary = {
     msid,
     doi: version.doi,
@@ -41,7 +44,7 @@ export const generateVersionSummaryJson: GenerateVersionSummaryJson = async ({
     url: contentUrl,
     versionIdentifier: version.versionIdentifier,
     published: version.publishedDate ?? null,
-    corrections
+    corrections,
   };
 
   Context.current().heartbeat('storing generated EPP JSON');
