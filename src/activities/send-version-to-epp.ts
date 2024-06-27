@@ -17,6 +17,10 @@ export type ExternalVersionSummary = {
   url: string,
   versionIdentifier: string,
   published?: Date | null,
+  corrections?: {
+    date: Date,
+    content: string,
+  }[]
 };
 
 export type EnhancedArticle = {
