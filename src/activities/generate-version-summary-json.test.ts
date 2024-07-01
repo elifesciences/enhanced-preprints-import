@@ -1,5 +1,6 @@
 import { mockClient } from 'aws-sdk-client-mock';
 import { PutObjectCommand, PutObjectCommandInput, S3Client } from '@aws-sdk/client-s3';
+import { Context } from '@temporalio/activity';
 import { generateVersionSummaryJson } from '.';
 import { NonRetryableError } from '../errors';
 
@@ -22,6 +23,10 @@ jest.mock('@temporalio/activity', () => ({
 const mockS3Client = mockClient(S3Client);
 
 describe('generate-version-summary-json', () => {
+  afterEach(() => {
+    jest.clearAllMocks();
+  });
+
   describe('happy path', () => {
     it('generates a version summary', async () => {
       const data = {
@@ -109,7 +114,24 @@ describe('generate-version-summary-json', () => {
       });
     });
 
-    it.todo('emits the correct heartbeats');
+    it('emits the correct heartbeats', async () => {
+      const data = {
+        msid: 'msid',
+        version: {
+          versionIdentifier: 'versionIdentifier',
+          id: 'id',
+          doi: 'doi',
+          publishedDate: new Date('2024-07-01'),
+          content: ['http://content'],
+        },
+      };
+
+      await generateVersionSummaryJson(data);
+
+      expect(Context.current().heartbeat).toHaveBeenCalledTimes(2);
+      expect(Context.current().heartbeat).toHaveBeenNthCalledWith(1, 'Generating version summary JSON');
+      expect(Context.current().heartbeat).toHaveBeenNthCalledWith(2, 'storing generated EPP JSON');
+    });
   });
 
   describe('error path', () => {
