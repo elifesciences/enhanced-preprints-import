@@ -27,10 +27,11 @@ export const generateVersionSummaryJson: GenerateVersionSummaryJson = async ({
 
   Context.current().heartbeat('Generating version summary JSON');
   const corrections = version.corrections ? version.corrections.reduce<{ date: Date, content: string }[]>((acc, current) => {
-    if (current.content && current.content[0] !== undefined) {
+    const correctionUrl = current.content?.find((url) => url.startsWith('http'));
+    if (correctionUrl !== undefined) {
       acc.push({
         date: current.correctedDate,
-        content: current.content[0],
+        content: correctionUrl,
       });
     }
 
