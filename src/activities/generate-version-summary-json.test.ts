@@ -29,7 +29,7 @@ describe('generate-version-summary-json', () => {
           versionIdentifier: 'versionIdentifier',
           id: 'id',
           doi: 'doi',
-          publishedDate: new Date('01-07-2024'),
+          publishedDate: new Date('2024-07-01'),
           content: ['http://content'],
         },
       };
@@ -48,15 +48,67 @@ describe('generate-version-summary-json', () => {
           doi: 'doi',
           id: 'idvversionIdentifier',
           msid: 'msid',
-          published: '2024-01-07T00:00:00.000Z',
+          published: '2024-07-01T00:00:00.000Z',
           url: 'http://content',
           versionIdentifier: 'versionIdentifier',
         },
       });
     });
 
-    it.todo('generates a version summary with corrections');
-    it.todo('emmits the correct heartbeats');
+    it('generates a version summary with corrections', async () => {
+      const data = {
+        msid: 'msid',
+        version: {
+          versionIdentifier: 'versionIdentifier',
+          id: 'id',
+          doi: 'doi',
+          publishedDate: new Date('2024-06-01'),
+          content: ['http://content'],
+          corrections: [
+            {
+              content: ['http://correction'],
+              correctedDate: new Date('2024-06-15'),
+            },
+            {
+              content: ['http://correction2'],
+              correctedDate: new Date('2024-07-01'),
+            },
+          ],
+        },
+      };
+
+      // setup a fake receiver for PutObjectCommand calls
+      const uploadedFiles: { [key: string]: any } = {};
+      mockS3Client.on(PutObjectCommand).callsFake(async (input: PutObjectCommandInput) => {
+        if (typeof input.Key === 'string' && input.Body) {
+          uploadedFiles[input.Key] = JSON.parse(input.Body as string);
+        }
+      });
+
+      await generateVersionSummaryJson(data);
+      expect(uploadedFiles).toEqual({
+        'automation/id/vversionIdentifier/payload.json': {
+          doi: 'doi',
+          id: 'idvversionIdentifier',
+          msid: 'msid',
+          published: '2024-06-01T00:00:00.000Z',
+          url: 'http://content',
+          versionIdentifier: 'versionIdentifier',
+          corrections: [
+            {
+              content: 'http://correction',
+              date: '2024-06-15T00:00:00.000Z',
+            },
+            {
+              content: 'http://correction2',
+              date: '2024-07-01T00:00:00.000Z',
+            },
+          ],
+        },
+      });
+    });
+
+    it.todo('emits the correct heartbeats');
   });
 
   describe('error path', () => {
