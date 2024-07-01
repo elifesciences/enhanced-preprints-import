@@ -1,6 +1,7 @@
 import { mockClient } from 'aws-sdk-client-mock';
 import { PutObjectCommand, PutObjectCommandInput, S3Client } from '@aws-sdk/client-s3';
 import { generateVersionSummaryJson } from '.';
+import { NonRetryableError } from '../errors';
 
 jest.mock('../config', () => ({
   config: {
@@ -12,8 +13,8 @@ jest.mock('../config', () => ({
 
 jest.mock('@temporalio/activity', () => ({
   Context: {
-    current: () => ({
-      heartbeat: () => {},
+    current: jest.fn().mockReturnValue({
+      heartbeat: jest.fn(),
     }),
   },
 }));
@@ -112,7 +113,37 @@ describe('generate-version-summary-json', () => {
   });
 
   describe('error path', () => {
-    it.todo('throws NonRetryableError if there is no published date');
-    it.todo('throws NonRetryableError if there is no content url');
+    it('throws NonRetryableError if there is no published date', async () => {
+      const data = {
+        msid: 'msid',
+        version: {
+          versionIdentifier: 'versionIdentifier',
+          id: 'id',
+          doi: 'doi',
+          content: ['http://content'],
+        },
+      };
+
+      const error = new NonRetryableError("Preprint doesn't have a published date");
+
+      await expect(generateVersionSummaryJson(data)).rejects.toStrictEqual(error);
+    });
+
+    it('throws NonRetryableError if there is no content url', async () => {
+      const data = {
+        msid: 'msid',
+        version: {
+          versionIdentifier: 'versionIdentifier',
+          id: 'id',
+          doi: 'doi',
+          publishedDate: new Date('2024-06-01'),
+          content: ['content'],
+        },
+      };
+
+      const error = new NonRetryableError("Preprint doesn't have a content URL");
+
+      await expect(generateVersionSummaryJson(data)).rejects.toStrictEqual(error);
+    });
   });
 });
