@@ -118,6 +118,57 @@
             {
               "type": "version-of-record",
               "identifier": "000001",
+              "versionIdentifier": "2",
+              "doi": "10.7554/000001.2",
+              "published": "2023-06-07",
+              "url": "https://doi.org/10.7554/000001.2",
+              "content":
+              [
+                {
+                  "type": "web-page",
+                  "url": "https://elifesciences.org/articles/000001v1"
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "assertions":
+      [
+        {
+          "item":
+          {
+            "type": "version-of-record",
+            "doi": "10.7554/000001.2",
+            "versionIdentifier": "2"
+          },
+          "status": "vor-published"
+        }
+      ],
+      "inputs":
+      [
+        {
+          "type": "preprint",
+          "doi": "10.7554/000001.1",
+          "identifier": "000001",
+          "versionIdentifier": "1"
+        }
+      ],
+      "previous-step": "_:b1",
+      "next-step": "_:b3"
+    },
+    "_:b3": {
+      "actions":
+      [
+        {
+          "participants":
+          [],
+          "outputs":
+          [
+            {
+              "type": "version-of-record",
+              "identifier": "000001",
+              "versionIdentifier": "2",
               "doi": "10.7554/000001.2",
               "published": "2023-06-07",
               "url": "https://doi.org/10.7554/000001.2",
@@ -138,23 +189,74 @@
           "item":
           {
             "type": "version-of-record",
-            "identifier": "000001",
             "doi": "10.7554/000001.2",
             "versionIdentifier": "2"
           },
-          "status": "vor-published"
+          "status": "corrected",
+          "happened": "2023-06-30"
         }
       ],
       "inputs":
       [
         {
-          "type": "preprint",
-          "doi": "10.7554/000001.1",
+          "type": "version-of-record",
+          "doi": "10.7554/000001.2",
           "identifier": "000001",
-          "versionIdentifier": "1"
+          "versionIdentifier": "2"
         }
       ],
-      "previous-step": "_:b1"
+      "previous-step": "_:b2",
+      "next-step": "_:b4"
+    },
+    "_:b4": {
+      "actions":
+      [
+        {
+          "participants":
+          [],
+          "outputs":
+          [
+            {
+              "type": "version-of-record",
+              "identifier": "000001",
+              "versionIdentifier": "2",
+              "doi": "10.7554/000001.2",
+              "published": "2023-06-07",
+              "url": "https://doi.org/10.7554/000001.2",
+              "content":
+              [
+                {
+                  "type": "web-page",
+                  "url": "https://elifesciences.org/articles/000001v3"
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "assertions":
+      [
+        {
+          "item":
+          {
+            "type": "version-of-record",
+            "doi": "10.7554/000001.2",
+            "versionIdentifier": "2"
+          },
+          "status": "corrected",
+          "happened": "2023-07-01"
+        }
+      ],
+      "inputs":
+      [
+        {
+          "type": "version-of-record",
+          "doi": "10.7554/000001.2",
+          "identifier": "000001",
+          "versionIdentifier": "2"
+        }
+      ],
+      "previous-step": "_:b3"
     }
   }
 }
