@@ -26,12 +26,12 @@ export const generateVersionSummaryJson: GenerateVersionSummaryJson = async ({
   const s3 = getEPPS3Client();
 
   Context.current().heartbeat('Generating version summary JSON');
-  const corrections = version.corrections ? version.corrections.reduce<{ date: Date, content: string }[]>((acc, current) => {
+  const corrections = version.corrections ? version.corrections.reduce<{ date: Date, url: string }[]>((acc, current) => {
     const correctionUrl = current.content?.find((url) => url.startsWith('http'));
     if (correctionUrl !== undefined) {
       acc.push({
         date: current.correctedDate,
-        content: correctionUrl,
+        url: correctionUrl,
       });
     }
 

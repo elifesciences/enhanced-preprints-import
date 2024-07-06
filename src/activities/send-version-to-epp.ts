@@ -19,7 +19,7 @@ export type ExternalVersionSummary = {
   published?: Date | null,
   corrections?: {
     date: Date,
-    content: string,
+    url: string,
   }[]
 };
 
