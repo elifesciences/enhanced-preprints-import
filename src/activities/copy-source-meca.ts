@@ -134,9 +134,10 @@ export const s3GetSourceAndPutDestination = async (source: S3File, destination: 
 };
 
 export const copySourcePreprintToEPP = async (version: VersionedReviewedPreprint): Promise<CopySourcePreprintToEPPOutput> => {
-  const sourceS3Url = version.preprint.content?.find((url) => url.startsWith('s3://'));
+  const content = [...(version.content ?? []), ...(version.preprint.content ?? [])];
+  const sourceS3Url = content.find((url) => url.startsWith('s3://'));
   if (sourceS3Url === undefined) {
-    throw new NonRetryableError(`Cannot import content - no s3 URL found in content strings [${version.preprint.content?.join(',')}]`);
+    throw new NonRetryableError(`Cannot import content - no s3 URL found in content strings [${content.join(',')}]`);
   }
 
   // Create source.txt in S3 with s3Filename as its content

@@ -113,7 +113,7 @@
               "content": [
                 {
                   "type": "computer-file",
-                  "url": "s3://biorxiv/dummy-1-update.zip"
+                  "url": "s3://biorxiv/dummy-1-enhanced.zip"
                 }
               ]
             }
