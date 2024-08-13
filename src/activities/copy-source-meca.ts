@@ -21,7 +21,7 @@ type CopySourcePreprintToEPPOutput = {
   type: 'COPY' | 'GETANDPUT' | 'NOCOPY',
 };
 
-export const s3CopySourceToDestination = async (source: S3File, destination: S3File): Promise<CopySourcePreprintToEPPOutput> => {
+const s3CopySourceToDestination = async (source: S3File, destination: S3File): Promise<CopySourcePreprintToEPPOutput> => {
   const s3Connection = getEPPS3Client();
 
   // get Etag if destination exists
@@ -69,7 +69,7 @@ export const s3CopySourceToDestination = async (source: S3File, destination: S3F
   };
 };
 
-export const s3GetSourceAndPutDestination = async (source: S3File, destination: S3File): Promise<CopySourcePreprintToEPPOutput> => {
+const s3GetSourceAndPutDestination = async (source: S3File, destination: S3File): Promise<CopySourcePreprintToEPPOutput> => {
   const s3Connection = getEPPS3Client();
   const mecaS3Connection = getMecaS3Client();
 
