@@ -93,8 +93,33 @@
       "next-step": "_:b1"
     },
     "_:b1": {
-      "inputs": [],
-      "actions": [],
+      "inputs": [
+        {
+          "type": "preprint",
+          "doi": "10.1101/000001",
+          "url": "https://www.biorxiv.org/content/10.1101/000001v1",
+          "versionIdentifier": "1"
+        }
+      ],
+      "actions": [
+        {
+          "participants": [],
+          "outputs": [
+            {
+              "type": "preprint",
+              "identifier": "000001",
+              "doi": "10.7554/000001.1",
+              "versionIdentifier": "1",
+              "content": [
+                {
+                  "type": "computer-file",
+                  "url": "s3://biorxiv/dummy-1-update.zip"
+                }
+              ]
+            }
+          ]
+        }
+      ],
       "assertions": [{
         "item": {
           "type": "preprint",

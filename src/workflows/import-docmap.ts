@@ -83,7 +83,7 @@ export async function importDocmap(url: string): Promise<ImportDocmapMessage> {
         };
       }
     }),
-    ...result.versions.filter((version): version is VersionedPreprint => 'content' in version).map(async (version) => {
+    ...result.versions.filter((version): version is VersionedPreprint => 'content' in version && 'url' in version).map(async (version) => {
       const payloadFile = await generateVersionSummaryJson({
         msid: result.id, version,
       });
