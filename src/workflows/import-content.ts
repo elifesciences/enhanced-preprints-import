@@ -52,7 +52,7 @@ export type ImportContentOutput = {
 };
 
 export async function importContent(version: VersionedReviewedPreprint): Promise<ImportContentOutput | string> {
-  if (!version.preprint.content) {
+  if (!version.content && !version.preprint.content) {
     return 'No content to import';
   }
 
