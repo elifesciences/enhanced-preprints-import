@@ -9,6 +9,7 @@ import {
   S3Client,
 } from '@aws-sdk/client-s3';
 import { copySourcePreprintToEPP } from './copy-source-meca';
+import { NonRetryableError } from '../errors';
 
 jest.mock('../config', () => ({
   config: {
@@ -58,6 +59,7 @@ describe('copy-source-meca', () => {
           ],
         },
         content: [
+          'http://not-a-meca-path',
           's3://epp/meca-enhanced.meca',
         ],
       },
@@ -104,5 +106,24 @@ describe('copy-source-meca', () => {
       },
       type: 'COPY',
     });
+  });
+
+  it('throws NonRetryableError if there are no content s3 paths', async () => {
+    const error = new NonRetryableError('Cannot import content - no s3 URL found in content strings [http://not-a-meca-path]');
+
+    const version = {
+      id: 'id1',
+      versionIdentifier: 'ver1',
+      doi: '1',
+      preprint: {
+        doi: '2',
+        id: 'id2',
+        content: [
+          'http://not-a-meca-path',
+        ],
+      },
+    };
+
+    await expect(copySourcePreprintToEPP(version)).rejects.toStrictEqual(error);
   });
 });
