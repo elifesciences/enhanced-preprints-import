@@ -17,11 +17,12 @@ import {
 import { NonRetryableError } from '../errors';
 
 type CopySourcePreprintToEPPOutput = {
+  source: string,
   path: S3File,
   type: 'COPY' | 'GETANDPUT' | 'NOCOPY',
 };
 
-const s3CopySourceToDestination = async (source: S3File, destination: S3File): Promise<CopySourcePreprintToEPPOutput> => {
+const s3CopySourceToDestination = async (source: S3File, destination: S3File): Promise<Omit<CopySourcePreprintToEPPOutput, 'source'>> => {
   const s3Connection = getEPPS3Client();
 
   // get Etag if destination exists
@@ -69,7 +70,7 @@ const s3CopySourceToDestination = async (source: S3File, destination: S3File): P
   };
 };
 
-const s3GetSourceAndPutDestination = async (source: S3File, destination: S3File): Promise<CopySourcePreprintToEPPOutput> => {
+const s3GetSourceAndPutDestination = async (source: S3File, destination: S3File): Promise<Omit<CopySourcePreprintToEPPOutput, 'source'>> => {
   const s3Connection = getEPPS3Client();
   const mecaS3Connection = getMecaS3Client();
 
@@ -158,8 +159,16 @@ export const copySourcePreprintToEPP = async (version: VersionedReviewedPreprint
 
   if (sharedS3()) {
     console.info(`copySourcePreprintToEPP - Copying ${sourceS3Url} source using S3 copy command`);
-    return s3CopySourceToDestination(source, destination);
+    return s3CopySourceToDestination(source, destination)
+      .then((result) => ({
+        source: sourceS3Url,
+        ...result,
+      }));
   }
   console.info(`copySourcePreprintToEPP - Copying ${sourceS3Url} source using GET and PUT commands`);
-  return s3GetSourceAndPutDestination(source, destination);
+  return s3GetSourceAndPutDestination(source, destination)
+    .then((result) => ({
+      source: sourceS3Url,
+      ...result,
+    }));
 };

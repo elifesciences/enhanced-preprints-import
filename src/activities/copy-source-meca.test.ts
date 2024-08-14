@@ -43,6 +43,7 @@ describe('copy-source-meca', () => {
           ],
         },
       },
+      expectedSourceS3: 's3://epp/meca.meca',
       expectedSource: 'epp/meca.meca',
       expectedPutBody: 'meca',
     },
@@ -63,10 +64,13 @@ describe('copy-source-meca', () => {
           's3://epp/meca-enhanced.meca',
         ],
       },
+      expectedSourceS3: 's3://epp/meca-enhanced.meca',
       expectedSource: 'epp/meca-enhanced.meca',
       expectedPutBody: 'meca-enhanced',
     },
-  ])('copies source meca to EPP s3', async ({ version, expectedSource, expectedPutBody }) => {
+  ])('copies source meca to EPP s3', async ({
+    version, expectedSourceS3, expectedSource, expectedPutBody,
+  }) => {
     const mockS3Client = mockClient(S3Client);
     mockS3Client.on(PutObjectCommand)
       .callsFake(async (input: PutObjectCommandInput) => {
@@ -105,6 +109,7 @@ describe('copy-source-meca', () => {
         Key: 'automation/id1/vver1/content.meca',
       },
       type: 'COPY',
+      source: expectedSourceS3,
     });
   });
 
