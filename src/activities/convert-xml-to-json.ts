@@ -38,7 +38,13 @@ type ConvertXmlToJsonOutput = {
 
 export const transformXML = async (xmlInput: string): Promise<TransformXmlResponse> => {
   Context.current().heartbeat('Starting XML transform');
-  const transformedResponse = await axios.post<TransformXmlResponse>(config.xsltTransformAddress, xmlInput);
+  const transformedResponse = await axios.post<TransformXmlResponse>(config.xsltTransformAddress, xmlInput, {
+    headers: {
+      ...(config.xsltTransformPassthrough ? {
+        'X-Passthrough': 'true',
+      } : {}),
+    },
+  });
 
   Context.current().heartbeat('Finishing XML transform');
   return transformedResponse.data;

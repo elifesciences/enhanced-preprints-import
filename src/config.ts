@@ -20,6 +20,7 @@ export type Config = {
   temporalTaskQueue: string,
   prometheusBindAddress: string,
   xsltTransformAddress: string,
+  xsltTransformPassthrough: boolean,
   encodaTransformAddress: string,
   encodaDefaultVersion: string,
   temporalMaxConcurrentActivityTaskExecutions: number,
@@ -70,8 +71,9 @@ export const config: Config = {
   prometheusBindAddress: env.PROMETHEUS_BIND_ADDRESS || '0.0.0.0:9464',
   temporalServer: env.TEMPORAL_SERVER || 'localhost',
   xsltTransformAddress: env.XSLT_TRANSFORM_ADDRESS || 'http://localhost:3004',
+  xsltTransformPassthrough: (env.XSLT_TRANSFORM_PASSTHROUGH && env.XSLT_TRANSFORM_PASSTHROUGH === 'true') || false, // @fixme: default should be false
   encodaTransformAddress: env.ENCODA_TRANSFORM_ADDRESS || 'http://localhost:3005',
-  encodaDefaultVersion: env.ENCODA_DEFAULT_VERSION || '1.0.3',
+  encodaDefaultVersion: env.ENCODA_DEFAULT_VERSION || '1.0.6',
   temporalNamespace: env.TEMPORAL_NAMESPACE || 'default',
   temporalTaskQueue: env.TEMPORAL_TASK_QUEUE || 'epp',
   temporalMaxConcurrentActivityTaskExecutions: getNumericEnvVar('TEMPORAL_MAX_CONCURRENT_ACTIVITY_TASK_EXECUTIONS', 10),
