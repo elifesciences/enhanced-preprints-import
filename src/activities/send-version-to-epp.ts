@@ -42,10 +42,10 @@ export type EnhancedArticle = {
       authorNotes?: {
         type: string,
         id: string,
-        label: string,
+        label?: string,
         text: string,
       }[],
-    }
+    },
   },
   preprintDoi: string,
   preprintUrl: string,
