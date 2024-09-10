@@ -20,7 +20,7 @@ export type ExternalVersionSummary = {
   corrections?: {
     date: Date,
     url: string,
-  }[]
+  }[],
 };
 
 export type EnhancedArticle = {
