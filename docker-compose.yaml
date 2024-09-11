@@ -83,7 +83,7 @@ services:
         condition: service_healthy
 
   temporal-ui:
-    image: temporalio/ui:2.30.2
+    image: temporalio/ui:2.30.3
     ports:
       - 8233:8233
     environment:
@@ -269,7 +269,7 @@ services:
 
   ## EPP API
   api:
-    image: ghcr.io/elifesciences/enhanced-preprints-server:master-439ec7c7-20240907.0059
+    image: ghcr.io/elifesciences/enhanced-preprints-server:master-e87a697c-20240910.2212
     healthcheck:
       test: sh -c 'apk add curl; curl http://localhost:3000/'
       interval: 5s
@@ -288,7 +288,7 @@ services:
       - 3000:3000
 
   app:
-    image: ghcr.io/elifesciences/enhanced-preprints-client:master-eb78cb23-20240906.0032
+    image: ghcr.io/elifesciences/enhanced-preprints-client:master-db684d4a-20240910.1323
     healthcheck:
       test: sh -c 'apk add curl; curl http://app:3000/'
       interval: 5s
