@@ -67,7 +67,7 @@ describe('TransformXML', () => {
     expect(Context.current().heartbeat).toHaveBeenNthCalledWith(2, 'Finishing XML transform');
 
     expect(mockedAxios.post).toHaveBeenCalledTimes(1);
-    expect(mockedAxios.post).toHaveBeenCalledWith(config.xsltTransformAddress, xmlInput, { headers: {} });
+    expect(mockedAxios.post).toHaveBeenCalledWith(config.xsltTransformAddress, xmlInput);
     expect(result).toEqual(response);
   });
 
@@ -83,6 +83,6 @@ describe('TransformXML', () => {
     expect(Context.current().heartbeat).toHaveBeenCalledWith('Starting XML transform');
 
     expect(mockedAxios.post).toHaveBeenCalledTimes(1);
-    expect(mockedAxios.post).toHaveBeenCalledWith(config.xsltTransformAddress, xmlInput, { headers: {} });
+    expect(mockedAxios.post).toHaveBeenCalledWith(config.xsltTransformAddress, xmlInput);
   });
 });
