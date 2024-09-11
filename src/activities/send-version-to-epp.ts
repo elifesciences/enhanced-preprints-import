@@ -20,7 +20,7 @@ export type ExternalVersionSummary = {
   corrections?: {
     date: Date,
     url: string,
-  }[]
+  }[],
 };
 
 export type EnhancedArticle = {
@@ -38,6 +38,14 @@ export type EnhancedArticle = {
     licenses: (string | CreativeWorkTypes)[] | undefined,
     content: (string & BlockContent[]) | (Node[] & BlockContent[]) | undefined,
     references: (string | CreativeWorkTypes)[] | undefined,
+    meta?: {
+      authorNotes?: {
+        type: string,
+        id: string,
+        label?: string,
+        text: string,
+      }[],
+    },
   },
   preprintDoi: string,
   preprintUrl: string,

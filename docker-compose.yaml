@@ -254,9 +254,9 @@ services:
     ports:
       - 3004:80
 
-  ## ENCODA XSLT
+  ## ENCODA API
   encoda:
-    image: ghcr.io/elifesciences/enhanced-preprints-encoda:master-1c9eef0e-20240209.1236
+    image: ghcr.io/elifesciences/enhanced-preprints-encoda:master-e16a8aec-20240906.1812
     healthcheck:
       test: "wget --post-data '<test></test>' -O - http://localhost:3000/"
       interval: 10s
