@@ -16,7 +16,7 @@ const parseJsonContentToProcessedArticle = (content: string) => {
     licenses: contentStruct.licenses,
     content: contentStruct.content,
     references: contentStruct.references,
-    meta: contentStruct.meta,
+    ...(contentStruct.meta ? { meta: contentStruct.meta } : {}),
   };
 };
 
