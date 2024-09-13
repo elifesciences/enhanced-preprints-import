@@ -80,7 +80,7 @@ export const sendVersionToEpp = async (payloadFile: S3File): Promise<{ result: b
   try {
     Context.current().heartbeat('Sending version data to EPP');
     const versionImportUri = `${config.eppServerUri}/preprints`;
-    const { result, message } = await axios.post<EPPImportResponse>(versionImportUri, {}).then(async (response) => response.data);
+    const { result, message } = await axios.post<EPPImportResponse>(versionImportUri, version).then(async (response) => response.data);
     if (!result) {
       throw new Error(`Failed to import version to EPP: ${message}`);
     }
