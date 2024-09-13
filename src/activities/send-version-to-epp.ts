@@ -80,7 +80,7 @@ export const sendVersionToEpp = async (payloadFile: S3File): Promise<{ result: b
   try {
     Context.current().heartbeat('Sending version data to EPP');
     const versionImportUri = `${config.eppServerUri}/preprints`;
-    const { result, message } = await axios.post<EPPImportResponse>(versionImportUri, version).then(async (response) => response.data);
+    const { result, message } = await axios.post<EPPImportResponse>(versionImportUri, {}).then(async (response) => response.data);
     if (!result) {
       throw new Error(`Failed to import version to EPP: ${message}`);
     }
@@ -92,6 +92,8 @@ export const sendVersionToEpp = async (payloadFile: S3File): Promise<{ result: b
     // remove the original payload from the error
     // eslint-disable-next-line no-underscore-dangle
     delete error.response.data.error._original;
+    delete error.response.data.error.details[0].context.label;
+    delete error.response.data.error.details[0].context.value;
     // It's still probably pretty large for Temporal to accept, so at least log it
     // eslint-disable-next-line no-console
     console.log(JSON.stringify(error.response.data));
