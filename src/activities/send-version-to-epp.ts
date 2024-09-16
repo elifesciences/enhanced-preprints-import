@@ -94,7 +94,6 @@ export const sendVersionToEpp = async (payloadFile: S3File): Promise<{ result: b
     delete error.response.data.error._original;
     delete error.response.data.error.details[0].context.label;
     delete error.response.data.error.details[0].context.value;
-    // It's still probably pretty large for Temporal to accept, so at least log it
     // eslint-disable-next-line no-console
     console.log(JSON.stringify(error.response.data));
     throw new ApplicationFailure(
