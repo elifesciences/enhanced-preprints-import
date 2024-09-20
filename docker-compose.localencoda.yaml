@@ -1,0 +1,11 @@
+services:
+  encoda:
+    image: encoda-local
+    build:
+      context: ${ENCODA_DIR}
+      dockerfile: Dockerfile
+      target: dev
+    ports:
+      - 3005:3000
+    volumes:
+      - ${ENCODA_DIR}:/opt/epp-encoda/

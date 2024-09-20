@@ -91,6 +91,12 @@ To run with the local API but **without** the mocked services, omit `-f docker-c
 SERVER_DIR="../enhanced-preprints-server" APP_DIR="../enhanced-preprints-client" docker compose -f docker-compose.yaml -f docker-compose.override.yaml -f docker-compose.localserver.yaml -f docker-compose.localapp.yaml up
 ```
 
+## Run with a local instance of Encoda API
+
+```shell
+SERVER_DIR="../enhanced-preprints-encoda" docker compose -f docker-compose.yaml -f docker-compose.override.yaml -f docker-compose.localencoda.yaml up
+```
+
 ## Run with "real" S3 as a source
 
 NOTE: this will only read meca files from the real S3, so you don't need to mock them out
