@@ -19,6 +19,7 @@ jest.mock('../config', () => ({
   config: {
     xsltTransformAddress: 'mock-xslt-transform-address',
     encodaTransformAddress: 'mock-encoda-transform-address',
+    encodaReshape: true,
   },
 }));
 
@@ -45,6 +46,33 @@ describe('TransformXML', () => {
 
     expect(mockedAxios.post).toHaveBeenCalledTimes(1);
     expect(mockedAxios.post).toHaveBeenCalledWith(config.encodaTransformAddress, xmlInput, { headers: { accept: 'application/vnd.elife.encoda.v1+json' }, params: {} });
+    expect(result).toEqual({
+      version: 'application/vnd.elife.encoda.v1+json',
+      body: JSON.stringify(response),
+    });
+  });
+
+  it('should set reshape param to false', async () => {
+    const xmlInput = '<root></root>';
+    const response = {
+      transformed: {
+        to: 'json',
+      },
+    };
+
+    config.encodaReshape = false;
+
+    mockedAxios.post.mockResolvedValueOnce({ headers: { 'content-type': 'application/vnd.elife.encoda.v1+json; charset=utf-8' }, data: response });
+
+    const result = await transformXMLToJson(xmlInput, '1');
+
+    expect(mockedAxios.post).toHaveBeenCalledTimes(1);
+    expect(mockedAxios.post).toHaveBeenCalledWith(config.encodaTransformAddress, xmlInput, {
+      headers: { accept: 'application/vnd.elife.encoda.v1+json' },
+      params: {
+        reshape: 'false',
+      },
+    });
     expect(result).toEqual({
       version: 'application/vnd.elife.encoda.v1+json',
       body: JSON.stringify(response),

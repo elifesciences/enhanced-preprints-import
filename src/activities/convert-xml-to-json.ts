@@ -47,7 +47,10 @@ export const transformXML = async (xmlInput: string): Promise<TransformXmlRespon
 export const transformXMLToJson = async (xmlInput: string, version: string, replacementPath?: string): Promise<TransformXmlToJsonResponse> => {
   Context.current().heartbeat('Starting XML to JSON transform');
   const transformedResponse = await axios.post<TransformXmlToJsonResponse>(config.encodaTransformAddress, xmlInput, {
-    params: replacementPath ? { replacementPath } : {},
+    params: {
+      ...replacementPath ? { replacementPath } : {},
+      ...!config.encodaReshape ? { reshape: 'false' } : {},
+    },
     headers: {
       accept: `application/vnd.elife.encoda.v${version}+json`,
     },
