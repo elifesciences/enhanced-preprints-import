@@ -6,12 +6,14 @@ export type ImportDocmapsMessage = {
   results: ImportDocmapMessage[],
 };
 
+export type ImportManuscriptResult = {
+  id: string,
+  versionIdentifier: string,
+  result: string,
+};
+
 export type ImportDocmapMessage = {
-  results: {
-    id: string,
-    versionIdentifier: string,
-    result: string,
-  }[]
+  results: ImportManuscriptResult[]
   hashes: DocMapHashes,
 };
 
