@@ -1,13 +1,11 @@
 import {
-  executeChild,
   proxyActivities,
   upsertSearchAttributes,
-  workflowInfo,
 } from '@temporalio/workflow';
-import { DocMap, VersionedPreprint, VersionedReviewedPreprint } from '@elifesciences/docmap-ts';
+import { DocMap } from '@elifesciences/docmap-ts';
 import type * as activities from '../activities/index';
-import { importContent } from './import-content';
 import { ImportDocmapMessage } from '../types';
+import { importManuscriptData } from './import-manuscript-data';
 
 const { parseDocMap } = proxyActivities<typeof activities>({
   startToCloseTimeout: '1 minute',
@@ -16,10 +14,7 @@ const { parseDocMap } = proxyActivities<typeof activities>({
   },
 });
 const {
-  generateVersionJson,
-  generateVersionSummaryJson,
   fetchDocMap,
-  sendVersionToEpp,
   createDocMapHash,
 } = proxyActivities<typeof activities>({
   startToCloseTimeout: '1 minute',
@@ -43,61 +38,8 @@ export async function importDocmap(url: string): Promise<ImportDocmapMessage> {
 
   const result = await parseDocMap(docmapJson);
 
-  upsertSearchAttributes({
-    ManuscriptId: [result.id],
-  });
-
-  const results = await Promise.all([
-    ...result.versions.filter((version): version is VersionedReviewedPreprint => 'preprint' in version).filter((version) => version.preprint.content?.find((contentUrl) => contentUrl.startsWith('s3://'))).map(async (version) => {
-      try {
-        const importContentResult = await executeChild(importContent, {
-          args: [version],
-          workflowId: `${workflowInfo().workflowId}/${version.versionIdentifier}/content`,
-          searchAttributes: {
-            DocmapURL: [url],
-            ManuscriptId: [version.id],
-          },
-        });
-        if (typeof importContentResult === 'string') {
-          return {
-            id: version.id,
-            versionIdentifier: version.versionIdentifier,
-            result: importContentResult,
-          };
-        }
-        const payloadFile = await generateVersionJson({
-          importContentResult, msid: result.id, version, manuscript: result.manuscript,
-        });
-        await sendVersionToEpp(payloadFile);
-        return {
-          id: version.id,
-          versionIdentifier: version.versionIdentifier,
-          result: 'Sent to EPP',
-        };
-      } catch (error) {
-        console.error('An error occurred:', error);
-        return {
-          id: version.id,
-          versionIdentifier: version.versionIdentifier,
-          result: `Error: ${JSON.stringify(error)}`,
-        };
-      }
-    }),
-    ...result.versions.filter((version): version is VersionedPreprint => 'content' in version && 'url' in version).map(async (version) => {
-      const payloadFile = await generateVersionSummaryJson({
-        msid: result.id, version,
-      });
-      await sendVersionToEpp(payloadFile);
-      return {
-        id: version.id,
-        versionIdentifier: version.versionIdentifier,
-        result: 'Sent to EPP',
-      };
-    }),
-  ]);
-
   return {
-    results,
+    results: await importManuscriptData(result),
     hashes,
   };
 }
