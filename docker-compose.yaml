@@ -243,7 +243,7 @@ services:
 
   ## BIORXIV XSLT
   xslt:
-    image: ghcr.io/elifesciences/enhanced-preprints-biorxiv-xslt-api:master-1e6e944a-20241023.1029
+    image: ghcr.io/elifesciences/enhanced-preprints-biorxiv-xslt-api:master-87cecb26-20241101.1624
     healthcheck:
       test: "curl -H 'X-Passthrough: true' -f http://localhost:80/ -d '<test></test>' || exit 1"
       interval: 60s
