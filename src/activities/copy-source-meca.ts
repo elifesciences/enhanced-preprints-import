@@ -142,7 +142,7 @@ export const copySourcePreprintToEPP = async (version: VersionedReviewedPreprint
   }
 
   // Create source.txt in S3 with s3Filename as its content
-  const s3Filename = (sourceS3Url.split('/').pop() ?? '').split('.').shift() ?? '';
+  const s3Filename = (sourceS3Url.split('/').pop() ?? '').replace(/#/g, '%23').split('.').shift() ?? '';
   const s3PathForSourceTxt = constructEPPVersionS3FilePath('source.txt', version);
   const s3Connection = getEPPS3Client();
   await s3Connection.send(new PutObjectCommand({
