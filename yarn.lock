@@ -164,8 +164,8 @@ __metadata:
   linkType: hard
 
 "@aws-sdk/client-s3@npm:^3.374.0":
-  version: 3.696.0
-  resolution: "@aws-sdk/client-s3@npm:3.696.0"
+  version: 3.697.0
+  resolution: "@aws-sdk/client-s3@npm:3.697.0"
   dependencies:
     "@aws-crypto/sha1-browser": "npm:5.2.0"
     "@aws-crypto/sha256-browser": "npm:5.2.0"
@@ -176,7 +176,7 @@ __metadata:
     "@aws-sdk/credential-provider-node": "npm:3.696.0"
     "@aws-sdk/middleware-bucket-endpoint": "npm:3.696.0"
     "@aws-sdk/middleware-expect-continue": "npm:3.696.0"
-    "@aws-sdk/middleware-flexible-checksums": "npm:3.696.0"
+    "@aws-sdk/middleware-flexible-checksums": "npm:3.697.0"
     "@aws-sdk/middleware-host-header": "npm:3.696.0"
     "@aws-sdk/middleware-location-constraint": "npm:3.696.0"
     "@aws-sdk/middleware-logger": "npm:3.696.0"
@@ -225,7 +225,7 @@ __metadata:
     "@smithy/util-utf8": "npm:^3.0.0"
     "@smithy/util-waiter": "npm:^3.1.9"
     tslib: "npm:^2.6.2"
-  checksum: 10c0/2718a4a041b951087c15f69c4b408daa0833f49ef29231ff944806605f349f6184cd64b228cc51b45d9568c18247e35b97f6defa0b27af5780041fc3eeb3a475
+  checksum: 10c0/0f05bf29d30e0f273c362be7c275398b61561cb33852389b9bf5f1c66f4218997b5db01290c81c7e98be47e2f778a19eb12948fbfd675174f4fb65974257ef9d
   languageName: node
   linkType: hard
 
@@ -574,9 +574,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@aws-sdk/middleware-flexible-checksums@npm:3.696.0":
-  version: 3.696.0
-  resolution: "@aws-sdk/middleware-flexible-checksums@npm:3.696.0"
+"@aws-sdk/middleware-flexible-checksums@npm:3.697.0":
+  version: 3.697.0
+  resolution: "@aws-sdk/middleware-flexible-checksums@npm:3.697.0"
   dependencies:
     "@aws-crypto/crc32": "npm:5.2.0"
     "@aws-crypto/crc32c": "npm:5.2.0"
@@ -591,7 +591,7 @@ __metadata:
     "@smithy/util-stream": "npm:^3.3.1"
     "@smithy/util-utf8": "npm:^3.0.0"
     tslib: "npm:^2.6.2"
-  checksum: 10c0/418935999ad1cabf547f71bb32d68374e75d92cf658b5470f6404d53103351bb6c66710946ff58dffeef7208bd6f7f3fc1a40d32286b5039f0af4c55a1f2db7b
+  checksum: 10c0/de87a2171019e713393ac8cfe9a078a07e56327c8ad5c6c08d87a4d406ee4c4d5a0e59f4541659085329ce6ab356b7c483a498a47ee8a4b1cc075f0e21dc387d
   languageName: node
   linkType: hard
 
