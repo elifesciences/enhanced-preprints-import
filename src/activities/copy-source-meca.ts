@@ -136,13 +136,16 @@ const s3GetSourceAndPutDestination = async (source: S3File, destination: S3File)
 
 export const copySourcePreprintToEPP = async (version: VersionedReviewedPreprint): Promise<CopySourcePreprintToEPPOutput> => {
   const content = [...(version.content ?? []), ...(version.preprint.content ?? [])];
-  const sourceS3Url = content.find((url) => url.startsWith('s3://'));
+  const s3Prefix = 's3://';
+  const sourceS3Url = content.find((url) => url.startsWith(s3Prefix));
   if (sourceS3Url === undefined) {
     throw new NonRetryableError(`Cannot import content - no s3 URL found in content strings [${content.join(',')}]`);
   }
 
+  const encodedS3Url = `${s3Prefix}${sourceS3Url.split('/').slice(2).map((part) => encodeURIComponent(part).split('').map((c) => c.replace(/[!'()*]/, `%${c.charCodeAt(0).toString(16).toUpperCase()}`)).join('')).join('/')}`;
+
   // Create source.txt in S3 with s3Filename as its content
-  const s3Filename = (sourceS3Url.split('/').pop() ?? '').split('.').shift() ?? '';
+  const s3Filename = (encodedS3Url.split('/').pop() ?? '').split('.').shift() ?? '';
   const s3PathForSourceTxt = constructEPPVersionS3FilePath('source.txt', version);
   const s3Connection = getEPPS3Client();
   await s3Connection.send(new PutObjectCommand({
@@ -152,7 +155,7 @@ export const copySourcePreprintToEPP = async (version: VersionedReviewedPreprint
   }));
 
   // extract bucket and path for source
-  const source = parseS3Path(sourceS3Url);
+  const source = parseS3Path(encodedS3Url);
 
   // generate destination path
   const destination = constructEPPVersionS3FilePath('content.meca', version);
@@ -161,14 +164,14 @@ export const copySourcePreprintToEPP = async (version: VersionedReviewedPreprint
     console.info(`copySourcePreprintToEPP - Copying ${sourceS3Url} source using S3 copy command`);
     return s3CopySourceToDestination(source, destination)
       .then((result) => ({
-        source: sourceS3Url,
+        source: encodedS3Url,
         ...result,
       }));
   }
   console.info(`copySourcePreprintToEPP - Copying ${sourceS3Url} source using GET and PUT commands`);
   return s3GetSourceAndPutDestination(source, destination)
     .then((result) => ({
-      source: sourceS3Url,
+      source: encodedS3Url,
       ...result,
     }));
 };
