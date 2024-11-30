@@ -67,6 +67,8 @@ const constructEPPS3FilePath = (filename: string): S3File => ({
   Key: `${config.eppBucketPrefix}${filename}`,
 });
 
+export const constructEPPMecaS3FilePath = (mecaFileName: string): S3File => constructEPPS3FilePath(`meca/${mecaFileName}`);
+
 export const constructEPPStateS3FilePath = (stateFileName: string): S3File => constructEPPS3FilePath(`state/${stateFileName}`);
 
 export const constructEPPVersionS3FilePath = (filename: string, version: VersionedReviewedPreprint | VersionedPreprint): S3File => constructEPPS3FilePath(`${version.id}/v${version.versionIdentifier}/${filename}`);

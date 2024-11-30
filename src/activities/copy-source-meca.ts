@@ -8,11 +8,15 @@ import {
 } from '@aws-sdk/client-s3';
 import { Context } from '@temporalio/activity';
 import { VersionedReviewedPreprint } from '@elifesciences/docmap-ts';
+import { createHash } from 'crypto';
 import {
   S3File,
   constructEPPVersionS3FilePath,
   getEPPS3Client,
-  getMecaS3Client, parseS3Path, sharedS3,
+  getMecaS3Client,
+  parseS3Path,
+  sharedS3,
+  constructEPPMecaS3FilePath,
 } from '../S3Bucket';
 import { NonRetryableError } from '../errors';
 
@@ -70,68 +74,41 @@ const s3CopySourceToDestination = async (source: S3File, destination: S3File): P
   };
 };
 
-const s3GetSourceAndPutDestination = async (source: S3File, destination: S3File): Promise<Omit<CopySourcePreprintToEPPOutput, 'source'>> => {
+const s3MoveSourceToDestination = async (source: S3File, destination: S3File) => {
   const s3Connection = getEPPS3Client();
-  const mecaS3Connection = getMecaS3Client();
 
-  let sourceETag;
-  let destinationETag;
+  const sourceHash = createHash('sha256')
+    .update(`${source.Bucket}/${source.Key}`)
+    .digest('hex');
 
-  // get Etags if destination exists
+  const hashDestination = constructEPPMecaS3FilePath(`${sourceHash}.meca`);
+
   try {
-    // get Etag if destination exists
-    console.log('copySourcePreprintToEPP - HEAD destination', destination);
-    const destinationExistsResult = await s3Connection.send(new HeadObjectCommand({
-      Bucket: destination.Bucket,
-      Key: destination.Key,
-    }));
-    destinationETag = destinationExistsResult.ETag;
-
-    // get Etag if source exists
-    console.log('copySourcePreprintToEPP - HEAD source', source);
-    const sourceExistsResult = await mecaS3Connection.send(new HeadObjectCommand({
-      Bucket: source.Bucket,
-      Key: source.Key,
-    }));
-    sourceETag = sourceExistsResult.ETag;
+    await s3Connection.send(new HeadObjectCommand(hashDestination));
   } catch (e) {
     console.log(e);
     if (!(e instanceof NotFound)) {
       throw e;
     }
+    const mecaS3Connection = getMecaS3Client();
+    Context.current().heartbeat('getting object');
+    const downloadCommand = new GetObjectCommand({
+      Bucket: source.Bucket,
+      Key: source.Key,
+      RequestPayer: 'requester',
+    });
+    const downloadData = await mecaS3Connection.send(downloadCommand);
+
+    Context.current().heartbeat('putting object');
+    const uploadCommand = new PutObjectCommand({
+      ...hashDestination,
+      Body: downloadData.Body,
+      ContentLength: downloadData.ContentLength,
+    });
+    await s3Connection.send(uploadCommand);
   }
 
-  console.log(`copySourcePreprintToEPP - destinationETag = ${destinationETag} and sourceETag = ${sourceETag}`);
-
-  // If the ETags match, don't copy
-  if (sourceETag && destinationETag && sourceETag === destinationETag) {
-    return {
-      path: destination,
-      type: 'NOCOPY',
-    };
-  }
-
-  Context.current().heartbeat('getting object');
-  const downloadCommand = new GetObjectCommand({
-    Bucket: source.Bucket,
-    Key: source.Key,
-    RequestPayer: 'requester',
-  });
-  const downloadData = await mecaS3Connection.send(downloadCommand);
-
-  Context.current().heartbeat('putting object');
-  const uploadCommand = new PutObjectCommand({
-    Bucket: destination.Bucket,
-    Key: destination.Key,
-    Body: downloadData.Body,
-    ContentLength: downloadData.ContentLength,
-  });
-  await s3Connection.send(uploadCommand);
-
-  return {
-    path: destination,
-    type: 'GETANDPUT',
-  };
+  return s3CopySourceToDestination(hashDestination, destination);
 };
 
 export const copySourcePreprintToEPP = async (version: VersionedReviewedPreprint): Promise<CopySourcePreprintToEPPOutput> => {
@@ -169,7 +146,7 @@ export const copySourcePreprintToEPP = async (version: VersionedReviewedPreprint
       }));
   }
   console.info(`copySourcePreprintToEPP - Copying ${sourceS3Url} source using GET and PUT commands`);
-  return s3GetSourceAndPutDestination(source, destination)
+  return s3MoveSourceToDestination(source, destination)
     .then((result) => ({
       source: encodedS3Url,
       ...result,
