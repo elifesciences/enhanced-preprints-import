@@ -119,7 +119,7 @@ export const copySourcePreprintToEPP = async (version: VersionedReviewedPreprint
     throw new NonRetryableError(`Cannot import content - no s3 URL found in content strings [${content.join(',')}]`);
   }
 
-  const encodedS3Url = `${s3Prefix}${sourceS3Url.split('/').slice(2).map((part) => encodeURIComponent(part).split('').map((c) => c.replace(/[!'()*]/, `%${c.charCodeAt(0).toString(16).toUpperCase()}`)).join('')).join('/')}`;
+  const encodedS3Url = `${s3Prefix}${sourceS3Url.split('/').slice(2).map(encodeURIComponent).join('/')}`;
 
   // Create source.txt in S3 with s3Filename as its content
   const s3Filename = (encodedS3Url.split('/').pop() ?? '').split('.').shift() ?? '';

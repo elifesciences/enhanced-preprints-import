@@ -81,8 +81,8 @@ describe('copy-source-meca', () => {
           ],
         },
       },
-      expectedSourceS3: 's3://epp_%231/%402/space%20test/%213/special%26chars/%244/complex%25path/%5E5/parentheses%281%29.meca',
-      expectedSource: 'epp_%231/%402/space%20test/%213/special%26chars/%244/complex%25path/%5E5/parentheses%281%29.meca',
+      expectedSourceS3: 's3://epp_%231/%402/space%20test/!3/special%26chars/%244/complex%25path/%5E5/parentheses(1).meca',
+      expectedSource: 'epp_%231/%402/space%20test/!3/special%26chars/%244/complex%25path/%5E5/parentheses(1).meca',
       expectedPutBody: 'meca',
     },
   ])('copies source meca to EPP s3', async ({
