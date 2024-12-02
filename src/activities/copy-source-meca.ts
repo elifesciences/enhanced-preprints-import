@@ -8,6 +8,7 @@ import {
 } from '@aws-sdk/client-s3';
 import { Context } from '@temporalio/activity';
 import { VersionedReviewedPreprint } from '@elifesciences/docmap-ts';
+import { createHash } from 'crypto';
 import {
   S3File,
   constructEPPVersionS3FilePath,
@@ -76,7 +77,11 @@ const s3CopySourceToDestination = async (source: S3File, destination: S3File): P
 const s3MoveSourceToDestination = async (source: S3File, destination: S3File, version: VersionedReviewedPreprint) => {
   const s3Connection = getEPPS3Client();
 
-  const eppSource = constructEPPMecaS3FilePath(`${version.id}-v${version.versionIdentifier}.meca`);
+  const sourceHash = createHash('sha256')
+    .update(`${source.Bucket}/${source.Key}`)
+    .digest('hex');
+
+  const eppSource = constructEPPMecaS3FilePath(`${sourceHash}-${version.id}-v${version.versionIdentifier}.meca`);
 
   try {
     await s3Connection.send(new HeadObjectCommand(eppSource));
