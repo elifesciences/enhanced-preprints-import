@@ -53,7 +53,7 @@ export const parseS3Path = (s3Path: string): S3File => {
   const url = new URL(s3Path);
   return {
     Bucket: url.host,
-    Key: url.pathname.replace(/^\//, ''),
+    Key: `${url.pathname.replace(/^\//, '')}${url.hash}`,
   };
 };
 
