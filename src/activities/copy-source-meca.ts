@@ -8,7 +8,6 @@ import {
 } from '@aws-sdk/client-s3';
 import { Context } from '@temporalio/activity';
 import { VersionedReviewedPreprint } from '@elifesciences/docmap-ts';
-import { createHash } from 'crypto';
 import {
   S3File,
   constructEPPVersionS3FilePath,
@@ -23,7 +22,7 @@ import { NonRetryableError } from '../errors';
 type CopySourcePreprintToEPPOutput = {
   source: string,
   path: S3File,
-  type: 'COPY' | 'GETANDPUT' | 'NOCOPY',
+  type: 'COPY' | 'NOCOPY',
 };
 
 const s3CopySourceToDestination = async (source: S3File, destination: S3File): Promise<Omit<CopySourcePreprintToEPPOutput, 'source'>> => {
@@ -74,17 +73,13 @@ const s3CopySourceToDestination = async (source: S3File, destination: S3File): P
   };
 };
 
-const s3MoveSourceToDestination = async (source: S3File, destination: S3File) => {
+const s3MoveSourceToDestination = async (source: S3File, destination: S3File, version: VersionedReviewedPreprint) => {
   const s3Connection = getEPPS3Client();
 
-  const sourceHash = createHash('sha256')
-    .update(`${source.Bucket}/${source.Key}`)
-    .digest('hex');
-
-  const hashDestination = constructEPPMecaS3FilePath(`${sourceHash}.meca`);
+  const eppSource = constructEPPMecaS3FilePath(`${version.id}-v${version.versionIdentifier}.meca`);
 
   try {
-    await s3Connection.send(new HeadObjectCommand(hashDestination));
+    await s3Connection.send(new HeadObjectCommand(eppSource));
   } catch (e) {
     console.log(e);
     if (!(e instanceof NotFound)) {
@@ -101,14 +96,14 @@ const s3MoveSourceToDestination = async (source: S3File, destination: S3File) =>
 
     Context.current().heartbeat('putting object');
     const uploadCommand = new PutObjectCommand({
-      ...hashDestination,
+      ...eppSource,
       Body: downloadData.Body,
       ContentLength: downloadData.ContentLength,
     });
     await s3Connection.send(uploadCommand);
   }
 
-  return s3CopySourceToDestination(hashDestination, destination);
+  return s3CopySourceToDestination(eppSource, destination);
 };
 
 export const copySourcePreprintToEPP = async (version: VersionedReviewedPreprint): Promise<CopySourcePreprintToEPPOutput> => {
@@ -146,7 +141,7 @@ export const copySourcePreprintToEPP = async (version: VersionedReviewedPreprint
       }));
   }
   console.info(`copySourcePreprintToEPP - Copying ${sourceS3Url} source using GET and PUT commands`);
-  return s3MoveSourceToDestination(source, destination)
+  return s3MoveSourceToDestination(source, destination, version)
     .then((result) => ({
       source: encodedS3Url,
       ...result,
