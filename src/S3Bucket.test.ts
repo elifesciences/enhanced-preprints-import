@@ -1,5 +1,6 @@
 import { parseS3Path, getAWSCredentials } from './S3Bucket';
 import { config } from './config';
+import { NonRetryableError } from './errors';
 
 jest.mock('./config', () => ({
   config: {
@@ -17,6 +18,13 @@ describe('S3 Bucket', () => {
       Key: 'dummy-1.meca',
     });
   });
+
+  it('throws an error for an empty string', async () => {
+    const error = new NonRetryableError('Cannot import content - no s3 URL found in content strings [http://not-a-meca-path]');
+    const S3Path = '';
+    const result = parseS3Path(S3Path);
+    expect(result).rejects.toStrictEqual(error);
+  })
 
   it('returns AWS credentials', async () => {
     const result = getAWSCredentials({
