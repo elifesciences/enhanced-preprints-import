@@ -11,15 +11,6 @@ import {
 import { copySourcePreprintToEPP } from './copy-source-meca';
 import { NonRetryableError } from '../errors';
 
-jest.mock('../config', () => ({
-  config: {
-    eppS3: { endPoint: 'https://s3.amazonaws.com' },
-    mecaS3: { endPoint: 'https://s3.amazonaws.com' },
-    eppBucketName: 'test-bucket', // This is the default bucket name to store files in S3
-    eppBucketPrefix: 'automation/', // This is the default prefix to give to files in S3
-  },
-}));
-
 jest.mock('@temporalio/activity', () => ({
   Context: {
     current: () => ({
@@ -29,123 +20,141 @@ jest.mock('@temporalio/activity', () => ({
 }));
 
 describe('copy-source-meca', () => {
-  it.each([
-    {
-      version: {
-        id: 'id1',
-        versionIdentifier: 'ver1',
-        doi: '1',
-        preprint: {
-          doi: '2',
-          id: 'id2',
-          content: [
-            's3://epp/meca.meca',
-          ],
-        },
-      },
-      expectedSourceS3: 's3://epp/meca.meca',
-      expectedSource: 'epp/meca.meca',
-      expectedPutBody: 'meca',
-    },
-    {
-      version: {
-        id: 'id1',
-        versionIdentifier: 'ver1',
-        doi: '1',
-        preprint: {
-          doi: '2',
-          id: 'id2',
-          content: [
-            's3://epp/meca.meca',
-          ],
-        },
-        content: [
-          'http://not-a-meca-path',
-          's3://epp/meca-enhanced.meca',
-        ],
-      },
-      expectedSourceS3: 's3://epp/meca-enhanced.meca',
-      expectedSource: 'epp/meca-enhanced.meca',
-      expectedPutBody: 'meca-enhanced',
-    },
-    {
-      version: {
-        id: 'id1',
-        versionIdentifier: 'ver1',
-        doi: '1',
-        preprint: {
-          doi: '2',
-          id: 'id2',
-          content: [
-            's3://epp_#1/@2/space test/!3/special&chars/$4/complex%path/^5/parentheses(1).meca',
-          ],
-        },
-      },
-      expectedSourceS3: 's3://epp_#1/@2/space test/!3/special&chars/$4/complex%path/^5/parentheses(1).meca',
-      expectedSource: 'epp_/#1/@2/space%2520test/!3/special&chars/$4/complex%25path/%5E5/parentheses(1).meca',
-      expectedPutBody: 'meca',
-    },
-  ])('copies source meca to EPP s3', async ({
-    version, expectedSourceS3, expectedSource, expectedPutBody,
-  }) => {
-    const mockS3Client = mockClient(S3Client);
-    mockS3Client.on(PutObjectCommand)
-      .callsFake(async (input: PutObjectCommandInput) => {
-        expect(input).toStrictEqual({
-          Body: expectedPutBody,
-          Bucket: 'test-bucket',
-          Key: 'automation/id1/vver1/source.txt',
-        });
-      });
+  const mockS3Client = mockClient(S3Client);
 
-    mockS3Client.on(HeadObjectCommand)
-      .callsFake(async (input: HeadObjectCommandInput) => {
-        expect(input).toStrictEqual({
-          Bucket: 'test-bucket',
-          Key: 'automation/id1/vver1/content.meca',
-        });
-      }).resolves({
-        ETag: 'etag',
-      });
-
-    mockS3Client.on(CopyObjectCommand)
-      .callsFake(async (input: CopyObjectCommandInput) => {
-        expect(input).toStrictEqual({
-          Bucket: 'test-bucket',
-          CopySource: expectedSource,
-          CopySourceIfNoneMatch: 'etag',
-          Key: 'automation/id1/vver1/content.meca',
-          RequestPayer: 'requester',
-        });
-      });
-
-    const result = await copySourcePreprintToEPP(version);
-    expect(result).toStrictEqual({
-      path: {
-        Bucket: 'test-bucket',
-        Key: 'automation/id1/vver1/content.meca',
-      },
-      type: 'COPY',
-      source: expectedSourceS3,
-    });
+  beforeEach(() => {
+    mockS3Client.reset();
   });
 
-  it('throws NonRetryableError if there are no content s3 paths', async () => {
-    const error = new NonRetryableError('Cannot import content - no s3 URL found in content strings [http://not-a-meca-path]');
+  describe('when config.eppS3 and config.mecaS3 are the same', () => {
+    beforeAll(() => {
+      jest.mock('../config', () => ({
+        config: {
+          eppS3: { endPoint: 'https://s3.amazonaws.com' },
+          mecaS3: { endPoint: 'https://s3.amazonaws.com' },
+          eppBucketName: 'test-bucket', // This is the default bucket name to store files in S3
+          eppBucketPrefix: 'automation/', // This is the default prefix to give to files in S3
+        },
+      }));
+    });
 
-    const version = {
-      id: 'id1',
-      versionIdentifier: 'ver1',
-      doi: '1',
-      preprint: {
-        doi: '2',
-        id: 'id2',
-        content: [
-          'http://not-a-meca-path',
-        ],
+    it.each([
+      {
+        version: {
+          id: 'id1',
+          versionIdentifier: 'ver1',
+          doi: '1',
+          preprint: {
+            doi: '2',
+            id: 'id2',
+            content: [
+              's3://epp/meca.meca',
+            ],
+          },
+        },
+        expectedSourceS3: 's3://epp/meca.meca',
+        expectedSource: 'epp/meca.meca',
+        expectedPutBody: 'meca',
       },
-    };
+      {
+        version: {
+          id: 'id1',
+          versionIdentifier: 'ver1',
+          doi: '1',
+          preprint: {
+            doi: '2',
+            id: 'id2',
+            content: [
+              's3://epp/meca.meca',
+            ],
+          },
+          content: [
+            'http://not-a-meca-path',
+            's3://epp/meca-enhanced.meca',
+          ],
+        },
+        expectedSourceS3: 's3://epp/meca-enhanced.meca',
+        expectedSource: 'epp/meca-enhanced.meca',
+        expectedPutBody: 'meca-enhanced',
+      },
+      {
+        version: {
+          id: 'id1',
+          versionIdentifier: 'ver1',
+          doi: '1',
+          preprint: {
+            doi: '2',
+            id: 'id2',
+            content: [
+              's3://epp_#1/@2/space test/!3/special&chars/$4/complex%path/^5/parentheses(1).meca',
+            ],
+          },
+        },
+        expectedSourceS3: 's3://epp_#1/@2/space test/!3/special&chars/$4/complex%path/^5/parentheses(1).meca',
+        expectedSource: 'epp_/#1/@2/space%2520test/!3/special&chars/$4/complex%25path/%5E5/parentheses(1).meca',
+        expectedPutBody: 'meca',
+      },
+    ])('copies source meca to EPP s3', async ({
+      version, expectedSourceS3, expectedSource, expectedPutBody,
+    }) => {
+      mockS3Client.on(PutObjectCommand)
+        .callsFake(async (input: PutObjectCommandInput) => {
+          expect(input).toStrictEqual({
+            Body: expectedPutBody,
+            Bucket: 'test-bucket',
+            Key: 'automation/id1/vver1/source.txt',
+          });
+        });
 
-    await expect(copySourcePreprintToEPP(version)).rejects.toStrictEqual(error);
+      mockS3Client.on(HeadObjectCommand)
+        .callsFake(async (input: HeadObjectCommandInput) => {
+          expect(input).toStrictEqual({
+            Bucket: 'test-bucket',
+            Key: 'automation/id1/vver1/content.meca',
+          });
+        }).resolves({
+          ETag: 'etag',
+        });
+
+      mockS3Client.on(CopyObjectCommand)
+        .callsFake(async (input: CopyObjectCommandInput) => {
+          expect(input).toStrictEqual({
+            Bucket: 'test-bucket',
+            CopySource: expectedSource,
+            CopySourceIfNoneMatch: 'etag',
+            Key: 'automation/id1/vver1/content.meca',
+            RequestPayer: 'requester',
+          });
+        });
+
+      const result = await copySourcePreprintToEPP(version);
+      expect(result).toStrictEqual({
+        path: {
+          Bucket: 'test-bucket',
+          Key: 'automation/id1/vver1/content.meca',
+        },
+        type: 'COPY',
+        source: expectedSourceS3,
+      });
+    });
+
+    it('throws NonRetryableError if there are no content s3 paths', async () => {
+      const error = new NonRetryableError('Cannot import content - no s3 URL found in content strings [http://not-a-meca-path]');
+
+      const version = {
+        id: 'id1',
+        versionIdentifier: 'ver1',
+        doi: '1',
+        preprint: {
+          doi: '2',
+          id: 'id2',
+          content: [
+            'http://not-a-meca-path',
+          ],
+        },
+      };
+
+      await expect(copySourcePreprintToEPP(version)).rejects.toStrictEqual(error);
+    });
   });
 });
