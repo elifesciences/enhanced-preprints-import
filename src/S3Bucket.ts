@@ -5,7 +5,7 @@ import { fromWebToken, fromTemporaryCredentials } from '@aws-sdk/credential-prov
 import { Readable } from 'stream';
 import { S3Config, config } from './config';
 
-const getAWSCredentials = (s3config: S3Config) => {
+export const getAWSCredentials = (s3config: S3Config) => {
   if (s3config.webIdentityTokenFile !== undefined && s3config.awsAssumeRoleArn !== undefined) {
     const webIdentityToken = readFileSync(s3config.webIdentityTokenFile, 'utf-8');
     return fromWebToken({
