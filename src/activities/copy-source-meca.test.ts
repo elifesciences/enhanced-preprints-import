@@ -10,6 +10,7 @@ import {
 } from '@aws-sdk/client-s3';
 import { copySourcePreprintToEPP } from './copy-source-meca';
 import { NonRetryableError } from '../errors';
+import { config } from '../config';
 
 jest.mock('../config', () => ({
   config: {
@@ -29,104 +30,128 @@ jest.mock('@temporalio/activity', () => ({
 }));
 
 describe('copy-source-meca', () => {
-  it.each([
-    {
-      version: {
-        id: 'id1',
-        versionIdentifier: 'ver1',
-        doi: '1',
-        preprint: {
-          doi: '2',
-          id: 'id2',
-          content: [
-            's3://epp/meca.meca',
-          ],
-        },
-      },
-      expectedSourceS3: 's3://epp/meca.meca',
-      expectedSource: 'epp/meca.meca',
-      expectedPutBody: 'meca',
-    },
-    {
-      version: {
-        id: 'id1',
-        versionIdentifier: 'ver1',
-        doi: '1',
-        preprint: {
-          doi: '2',
-          id: 'id2',
-          content: [
-            's3://epp/meca.meca',
-          ],
-        },
-        content: [
-          'http://not-a-meca-path',
-          's3://epp/meca-enhanced.meca',
-        ],
-      },
-      expectedSourceS3: 's3://epp/meca-enhanced.meca',
-      expectedSource: 'epp/meca-enhanced.meca',
-      expectedPutBody: 'meca-enhanced',
-    },
-    {
-      version: {
-        id: 'id1',
-        versionIdentifier: 'ver1',
-        doi: '1',
-        preprint: {
-          doi: '2',
-          id: 'id2',
-          content: [
-            's3://epp_#1/@2/space test/!3/special&chars/$4/complex%path/^5/parentheses(1).meca',
-          ],
-        },
-      },
-      expectedSourceS3: 's3://epp_#1/@2/space test/!3/special&chars/$4/complex%path/^5/parentheses(1).meca',
-      expectedSource: 'epp_/#1/@2/space%2520test/!3/special&chars/$4/complex%25path/%5E5/parentheses(1).meca',
-      expectedPutBody: 'meca',
-    },
-  ])('copies source meca to EPP s3', async ({
-    version, expectedSourceS3, expectedSource, expectedPutBody,
-  }) => {
-    const mockS3Client = mockClient(S3Client);
-    mockS3Client.on(PutObjectCommand)
-      .callsFake(async (input: PutObjectCommandInput) => {
-        expect(input).toStrictEqual({
-          Body: expectedPutBody,
-          Bucket: 'test-bucket',
-          Key: 'automation/id1/vver1/source.txt',
-        });
-      });
+  beforeEach(() => {
+    jest.resetAllMocks();
+  });
 
-    mockS3Client.on(HeadObjectCommand)
-      .callsFake(async (input: HeadObjectCommandInput) => {
-        expect(input).toStrictEqual({
+  describe('sharedS3', () => {
+    it.each([
+      {
+        version: {
+          id: 'id1',
+          versionIdentifier: 'ver1',
+          doi: '1',
+          preprint: {
+            doi: '2',
+            id: 'id2',
+            content: [
+              's3://epp/meca.meca',
+            ],
+          },
+        },
+        expectedSourceS3: 's3://epp/meca.meca',
+        expectedSource: 'epp/meca.meca',
+        expectedPutBody: 'meca',
+      },
+      {
+        version: {
+          id: 'id1',
+          versionIdentifier: 'ver1',
+          doi: '1',
+          preprint: {
+            doi: '2',
+            id: 'id2',
+            content: [
+              's3://epp/meca.meca',
+            ],
+          },
+          content: [
+            'http://not-a-meca-path',
+            's3://epp/meca-enhanced.meca',
+          ],
+        },
+        expectedSourceS3: 's3://epp/meca-enhanced.meca',
+        expectedSource: 'epp/meca-enhanced.meca',
+        expectedPutBody: 'meca-enhanced',
+      },
+      {
+        version: {
+          id: 'id1',
+          versionIdentifier: 'ver1',
+          doi: '1',
+          preprint: {
+            doi: '2',
+            id: 'id2',
+            content: [
+              's3://epp_#1/@2/space test/!3/special&chars/$4/complex%path/^5/parentheses(1).meca',
+            ],
+          },
+        },
+        expectedSourceS3: 's3://epp_#1/@2/space test/!3/special&chars/$4/complex%path/^5/parentheses(1).meca',
+        expectedSource: 'epp_/#1/@2/space%2520test/!3/special&chars/$4/complex%25path/%5E5/parentheses(1).meca',
+        expectedPutBody: 'meca',
+      },
+    ])('copies source meca to EPP s3', async ({
+      version, expectedSourceS3, expectedSource, expectedPutBody,
+    }) => {
+      const mockS3Client = mockClient(S3Client);
+      mockS3Client.on(PutObjectCommand)
+        .callsFake(async (input: PutObjectCommandInput) => {
+          expect(input).toStrictEqual({
+            Body: expectedPutBody,
+            Bucket: 'test-bucket',
+            Key: 'automation/id1/vver1/source.txt',
+          });
+        });
+
+      mockS3Client.on(HeadObjectCommand)
+        .callsFake(async (input: HeadObjectCommandInput) => {
+          expect(input).toStrictEqual({
+            Bucket: 'test-bucket',
+            Key: 'automation/id1/vver1/content.meca',
+          });
+        }).resolves({
+          ETag: 'etag',
+        });
+
+      mockS3Client.on(CopyObjectCommand)
+        .callsFake(async (input: CopyObjectCommandInput) => {
+          expect(input).toStrictEqual({
+            Bucket: 'test-bucket',
+            CopySource: expectedSource,
+            CopySourceIfNoneMatch: 'etag',
+            Key: 'automation/id1/vver1/content.meca',
+            RequestPayer: 'requester',
+          });
+        });
+
+      const result = await copySourcePreprintToEPP(version);
+      expect(result).toStrictEqual({
+        path: {
           Bucket: 'test-bucket',
           Key: 'automation/id1/vver1/content.meca',
-        });
-      }).resolves({
-        ETag: 'etag',
+        },
+        type: 'COPY',
+        source: expectedSourceS3,
       });
+    });
+  });
 
-    mockS3Client.on(CopyObjectCommand)
-      .callsFake(async (input: CopyObjectCommandInput) => {
-        expect(input).toStrictEqual({
-          Bucket: 'test-bucket',
-          CopySource: expectedSource,
-          CopySourceIfNoneMatch: 'etag',
-          Key: 'automation/id1/vver1/content.meca',
-          RequestPayer: 'requester',
+  describe('different s3 resources', () => {
+    it('copies source meca to EPP s3 with GET and PUT', async () => {
+      config.eppS3.endPoint = 'https://s3.alternative.com';
+      config.eppBucketName = 'test-bucket-alternative';
+      config.eppBucketPrefix = 'alternative/';
+
+      const mockS3Client = mockClient(S3Client);
+      mockS3Client.on(PutObjectCommand)
+        .callsFake(async (input: PutObjectCommandInput) => {
+          expect(input).toStrictEqual({
+            Body: 'meca',
+            Bucket: 'test-bucket-alternative',
+            Key: 'automation/id1/vver1/source.txt',
+          });
         });
-      });
-
-    const result = await copySourcePreprintToEPP(version);
-    expect(result).toStrictEqual({
-      path: {
-        Bucket: 'test-bucket',
-        Key: 'automation/id1/vver1/content.meca',
-      },
-      type: 'COPY',
-      source: expectedSourceS3,
     });
   });
 
