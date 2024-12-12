@@ -3,6 +3,7 @@ import { createWriteStream, readFileSync } from 'fs';
 import { S3Client } from '@aws-sdk/client-s3';
 import { fromWebToken, fromTemporaryCredentials } from '@aws-sdk/credential-providers';
 import { Readable } from 'stream';
+import { NodeHttpHandler } from '@aws-sdk/node-http-handler';
 import { S3Config, config } from './config';
 
 const getAWSCredentials = (s3config: S3Config) => {
@@ -42,6 +43,12 @@ export const getS3Client = (s3config: S3Config) => new S3Client({
   endpoint: s3config.endPoint,
   forcePathStyle: true,
   region: s3config.region,
+  ...((s3config.connectionTimeout || s3config.requestTimeout) ? {
+    requestHandler: new NodeHttpHandler({
+      ...(s3config.connectionTimeout ? { connectionTimeout: s3config.connectionTimeout } : {}),
+      ...(s3config.requestTimeout ? { requestTimeout: s3config.requestTimeout } : {}),
+    }),
+  } : {}),
 });
 
 export const getEPPS3Client = () => getS3Client(config.eppS3);
