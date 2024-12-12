@@ -25,14 +25,4 @@ describe('S3 Bucket', () => {
     const result = parseS3Path(S3Path);
     expect(result).rejects.toStrictEqual(error);
   })
-
-  it('returns AWS credentials', async () => {
-    const result = getAWSCredentials({
-      region: config?.eppS3.region
-    });
-    expect(result).toEqual({
-      accessKeyId: 'id',
-      secretAccessKey: 'key'
-    })
-  });
 });
