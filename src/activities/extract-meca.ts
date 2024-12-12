@@ -161,6 +161,7 @@ export const extractMeca = async (version: VersionedReviewedPreprint): Promise<M
     }
 
     const s3UploadConnection = getEPPS3Client();
+    console.log(s3UploadConnection.config.requestHandler);
     const s3Path = constructEPPVersionS3FilePath(remoteFileName, version);
     Context.current().heartbeat(`Uploading ${localFile.type} ${localFile.fileName} (${localFile.id}) to ${s3Path.Key}`);
     const fileStream = fs.createReadStream(localFile.localPath);

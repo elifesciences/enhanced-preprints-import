@@ -7,6 +7,8 @@ export type S3Config = {
   endPoint?: string,
   webIdentityTokenFile?: string,
   awsAssumeRoleArn?: string,
+  connectionTimeout?: number,
+  requestTimeout?: number,
 };
 
 export type Config = {
@@ -55,6 +57,8 @@ export const config: Config = {
     endPoint: env.S3_ENDPOINT || undefined,
     webIdentityTokenFile: env.AWS_WEB_IDENTITY_TOKEN_FILE || undefined,
     awsAssumeRoleArn: env.AWS_ROLE_ARN || undefined,
+    connectionTimeout: getNumericEnvVar('AWS_CONNECTION_TIMEOUT', 20000),
+    requestTimeout: getNumericEnvVar('AWS_REQUEST_TIMEOUT', 20000),
   },
   mecaS3: {
     accessKey: env.MECA_AWS_ACCESS_KEY_ID || undefined,
@@ -63,6 +67,8 @@ export const config: Config = {
     endPoint: env.MECA_S3_ENDPOINT || undefined,
     webIdentityTokenFile: env.MECA_AWS_WEB_IDENTITY_TOKEN_FILE || undefined,
     awsAssumeRoleArn: env.MECA_AWS_ROLE_ARN || undefined,
+    connectionTimeout: getNumericEnvVar('MECA_AWS_CONNECTION_TIMEOUT', 20000),
+    requestTimeout: getNumericEnvVar('MECA_AWS_REQUEST_TIMEOUT', 20000),
   },
   eppBucketName: env.BUCKET_NAME || 'epp',
   eppBucketPrefix: env.BUCKET_PREFIX || 'automation/',
