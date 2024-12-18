@@ -4,7 +4,7 @@ import {
 } from '@temporalio/workflow';
 import { DocMap } from '@elifesciences/docmap-ts';
 import type * as activities from '../activities/index';
-import { ImportDocmapMessage } from '../types';
+import { ImportDocmapMessage, WorkflowArgs } from '../types';
 import { importManuscriptData } from './import-manuscript-data';
 
 const { parseDocMap } = proxyActivities<typeof activities>({
@@ -26,12 +26,11 @@ const {
   },
 });
 
-type ImportDocmapArgs = {
+type ImportDocmapArgs = WorkflowArgs & {
   url: string,
-  xsltTransformPassthrough?: boolean,
 };
 
-export async function importDocmap({ url, xsltTransformPassthrough }: ImportDocmapArgs): Promise<ImportDocmapMessage> {
+export async function importDocmap({ url, workflowArgs }: ImportDocmapArgs): Promise<ImportDocmapMessage> {
   upsertSearchAttributes({
     DocmapURL: [url],
   });
@@ -44,7 +43,7 @@ export async function importDocmap({ url, xsltTransformPassthrough }: ImportDocm
   const data = await parseDocMap(docmapJson);
 
   return {
-    results: await importManuscriptData({ data, xsltTransformPassthrough }),
+    results: await importManuscriptData({ data, workflowArgs }),
     hashes,
   };
 }

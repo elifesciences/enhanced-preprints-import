@@ -1,5 +1,12 @@
 import { DocMap } from '@elifesciences/docmap-ts';
 
+// Arguments that could be passed through all workflows.
+export type WorkflowArgs = {
+  workflowArgs?: {
+    xsltTransformPassthrough?: boolean,
+  },
+};
+
 export type ImportDocmapsMessage = {
   status: 'SUCCESS' | 'SKIPPED' | 'NOT APPROVED'
   message: string;

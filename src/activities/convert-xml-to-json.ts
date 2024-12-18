@@ -18,6 +18,7 @@ import {
 } from '../S3Bucket';
 import { MecaFiles } from './extract-meca';
 import { config } from '../config';
+import { WorkflowArgs } from '../types';
 
 type TransformXmlResponse = {
   xml: string,
@@ -29,10 +30,9 @@ type TransformXmlToJsonResponse = {
   body: string,
 };
 
-type ConvertXmlToJsonArgs = {
+type ConvertXmlToJsonArgs = WorkflowArgs & {
   version: VersionedReviewedPreprint,
   mecaFiles: MecaFiles,
-  xsltTransformPassthrough?: boolean,
 };
 
 type ConvertXmlToJsonOutput = {
@@ -115,7 +115,7 @@ const copySourceXmlToKnownPath = async (source: S3File, version: VersionedReview
   }
 };
 
-export const convertXmlToJson = async ({ version, mecaFiles, xsltTransformPassthrough }: ConvertXmlToJsonArgs): Promise<ConvertXmlToJsonOutput> => {
+export const convertXmlToJson = async ({ version, mecaFiles, workflowArgs }: ConvertXmlToJsonArgs): Promise<ConvertXmlToJsonOutput> => {
   const tmpDirectory = await mkdtemp(`${tmpdir()}/epp_json`);
   const localXmlFilePath = `${tmpDirectory}/${mecaFiles.article.path}`;
   // mkdir in case the article path is in a subdirectory
@@ -133,7 +133,7 @@ export const convertXmlToJson = async ({ version, mecaFiles, xsltTransformPassth
     throw new Error('Unable to retrieve XML from S3');
   }
 
-  const transformedXMLResponse = await transformXML({ xml, xsltTransformPassthrough });
+  const transformedXMLResponse = await transformXML({ xml, ...workflowArgs });
 
   // store the transformed XML for downstream processing
   const transformedXMLDestination = constructEPPVersionS3FilePath('article-transformed.xml', version);

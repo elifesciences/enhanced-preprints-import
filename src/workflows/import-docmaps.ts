@@ -9,7 +9,7 @@ import {
   startChild,
 } from '@temporalio/workflow';
 import type * as activities from '../activities/index';
-import { DocMapHashes, ImportDocmapsMessage } from '../types';
+import { DocMapHashes, ImportDocmapsMessage, WorkflowArgs } from '../types';
 import { importDocmap } from './import-docmap';
 
 const {
@@ -24,7 +24,7 @@ const {
   },
 });
 
-type ImportDocmapsArgs = {
+type ImportDocmapsArgs = WorkflowArgs & {
   docMapIndexUrl: string,
   s3StateFileUrl?: string,
   docMapThreshold?: number,
@@ -45,7 +45,7 @@ const thresholdQuery = defineQuery<null | ThresholdQueryResponse>('awaitingAppro
 const thresholdMet = (docMapIdHashes: DocMapHashes[], docMapThreshold?: number) => ((docMapThreshold && docMapIdHashes.length > docMapThreshold));
 
 export async function importDocmaps({
-  docMapIndexUrl, s3StateFileUrl, docMapThreshold, start, end,
+  docMapIndexUrl, s3StateFileUrl, docMapThreshold, start, end, workflowArgs,
 }: ImportDocmapsArgs): Promise<ImportDocmapsMessage> {
   let approval: boolean | null = null;
   const docMapIdHashes: DocMapHashes[] = [];
@@ -80,7 +80,7 @@ export async function importDocmaps({
   }
 
   const importWorkflows = await Promise.all(docMapIdHashes.map(async (docMapIdHash) => startChild(importDocmap, {
-    args: [{ url: docMapIdHash.docMapId }], // id contains the canonical URL of the docmap
+    args: [{ url: docMapIdHash.docMapId, workflowArgs }], // id contains the canonical URL of the docmap
     workflowId: `docmap-${docMapIdHash.docMapIdHash}`,
     // allows child workflows to outlive this workflow
     parentClosePolicy: ParentClosePolicy.PARENT_CLOSE_POLICY_ABANDON,

@@ -2,7 +2,7 @@ import { ManuscriptData, VersionedPreprint, VersionedReviewedPreprint } from '@e
 import {
   executeChild, proxyActivities, upsertSearchAttributes, workflowInfo,
 } from '@temporalio/workflow';
-import { ImportManuscriptResult } from '../types';
+import { ImportManuscriptResult, WorkflowArgs } from '../types';
 import { importContent } from './import-content';
 import type * as activities from '../activities/index';
 
@@ -20,12 +20,11 @@ const {
   },
 });
 
-type ImportManuscriptDataArgs = {
+type ImportManuscriptDataArgs = WorkflowArgs & {
   data: ManuscriptData,
-  xsltTransformPassthrough?: boolean,
 };
 
-export async function importManuscriptData({ data, xsltTransformPassthrough }: ImportManuscriptDataArgs): Promise<ImportManuscriptResult[]> {
+export async function importManuscriptData({ data, workflowArgs }: ImportManuscriptDataArgs): Promise<ImportManuscriptResult[]> {
   upsertSearchAttributes({
     ManuscriptId: [data.id],
   });
@@ -34,7 +33,7 @@ export async function importManuscriptData({ data, xsltTransformPassthrough }: I
     ...data.versions.filter((version): version is VersionedReviewedPreprint => 'preprint' in version).filter((version) => version.preprint.content?.find((contentUrl) => contentUrl.startsWith('s3://'))).map(async (version) => {
       try {
         const importContentResult = await executeChild(importContent, {
-          args: [{ version, xsltTransformPassthrough }],
+          args: [{ version, workflowArgs }],
           workflowId: `${workflowInfo().workflowId}/${version.versionIdentifier}/content`,
           searchAttributes: {
             ManuscriptId: [version.id],

@@ -4,6 +4,7 @@ import { S3File } from '../S3Bucket';
 import { MecaFiles } from '../activities/extract-meca';
 import { EPPPeerReview } from '../activities/fetch-review-content';
 import type * as activities from '../activities/index';
+import { WorkflowArgs } from '../types';
 
 const {
   fetchReviewContent,
@@ -42,9 +43,8 @@ const {
   },
 });
 
-type ImportContentArgs = {
+type ImportContentArgs = WorkflowArgs & {
   version: VersionedReviewedPreprint,
-  xsltTransformPassthrough?: boolean,
 };
 
 export type ImportContentOutput = {
@@ -56,7 +56,7 @@ export type ImportContentOutput = {
   encodaVersion: string,
 };
 
-export async function importContent({ version, xsltTransformPassthrough }: ImportContentArgs): Promise<ImportContentOutput | string> {
+export async function importContent({ version, workflowArgs }: ImportContentArgs): Promise<ImportContentOutput | string> {
   if (!version.content && !version.preprint.content) {
     return 'No content to import';
   }
@@ -66,7 +66,7 @@ export async function importContent({ version, xsltTransformPassthrough }: Impor
   // Extract Meca
   const mecaFiles = await extractMeca(version);
 
-  const { path: jsonContentFile, xsltLogs, encodaVersion } = await convertXmlToJson({ version, mecaFiles, xsltTransformPassthrough });
+  const { path: jsonContentFile, xsltLogs, encodaVersion } = await convertXmlToJson({ version, mecaFiles, workflowArgs });
 
   // fetch review content (if present)
   const reviewData = await fetchReviewContent(version);
