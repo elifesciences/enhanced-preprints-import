@@ -61,7 +61,7 @@ export async function importContent({ version, xsltTransformPassthrough }: Impor
     return 'No content to import';
   }
 
-  const { path: mecaPath } = await copySourcePreprintToEPP(version);
+  const { path: mecaPath } = await copySourcePreprintToEPP({ version });
 
   // Extract Meca
   const mecaFiles = await extractMeca(version);

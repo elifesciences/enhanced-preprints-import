@@ -26,6 +26,10 @@ type CopySourcePreprintToEPPOutput = {
   type: 'COPY' | 'NOCOPY',
 };
 
+type CopySourceMecaArgs = {
+  version: VersionedReviewedPreprint,
+};
+
 const s3CopySourceToDestination = async (source: S3File, destination: S3File): Promise<Omit<CopySourcePreprintToEPPOutput, 'source'>> => {
   const s3Connection = getEPPS3Client();
 
@@ -111,7 +115,7 @@ const s3MoveSourceToDestination = async (source: S3File, destination: S3File, ve
   return s3CopySourceToDestination(eppSource, destination);
 };
 
-export const copySourcePreprintToEPP = async (version: VersionedReviewedPreprint): Promise<CopySourcePreprintToEPPOutput> => {
+export const copySourcePreprintToEPP = async ({ version }: CopySourceMecaArgs): Promise<CopySourcePreprintToEPPOutput> => {
   const content = [...(version.content ?? []), ...(version.preprint.content ?? [])];
   const sourceS3Url = content.find((url) => url.startsWith('s3://'));
   if (sourceS3Url === undefined) {

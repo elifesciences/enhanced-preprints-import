@@ -119,7 +119,7 @@ describe('copy-source-meca', () => {
         });
       });
 
-    const result = await copySourcePreprintToEPP(version);
+    const result = await copySourcePreprintToEPP({ version });
     expect(result).toStrictEqual({
       path: {
         Bucket: 'test-bucket',
@@ -146,6 +146,6 @@ describe('copy-source-meca', () => {
       },
     };
 
-    await expect(copySourcePreprintToEPP(version)).rejects.toStrictEqual(error);
+    await expect(copySourcePreprintToEPP({ version })).rejects.toStrictEqual(error);
   });
 });
