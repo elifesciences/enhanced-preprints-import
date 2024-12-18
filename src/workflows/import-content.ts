@@ -42,6 +42,11 @@ const {
   },
 });
 
+type ImportContentArgs = {
+  version: VersionedReviewedPreprint,
+  xsltTransformPassthrough?: boolean,
+};
+
 export type ImportContentOutput = {
   mecaPath: S3File,
   mecaFiles: MecaFiles,
@@ -51,7 +56,7 @@ export type ImportContentOutput = {
   encodaVersion: string,
 };
 
-export async function importContent(version: VersionedReviewedPreprint): Promise<ImportContentOutput | string> {
+export async function importContent({ version, xsltTransformPassthrough }: ImportContentArgs): Promise<ImportContentOutput | string> {
   if (!version.content && !version.preprint.content) {
     return 'No content to import';
   }
@@ -61,7 +66,7 @@ export async function importContent(version: VersionedReviewedPreprint): Promise
   // Extract Meca
   const mecaFiles = await extractMeca(version);
 
-  const { path: jsonContentFile, xsltLogs, encodaVersion } = await convertXmlToJson(version, mecaFiles);
+  const { path: jsonContentFile, xsltLogs, encodaVersion } = await convertXmlToJson({ version, mecaFiles, xsltTransformPassthrough });
 
   // fetch review content (if present)
   const reviewData = await fetchReviewContent(version);

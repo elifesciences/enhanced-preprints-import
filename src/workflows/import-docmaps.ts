@@ -24,7 +24,7 @@ const {
   },
 });
 
-type ImportArgs = {
+type ImportDocmapsArgs = {
   docMapIndexUrl: string,
   s3StateFileUrl?: string,
   docMapThreshold?: number,
@@ -46,7 +46,7 @@ const thresholdMet = (docMapIdHashes: DocMapHashes[], docMapThreshold?: number) 
 
 export async function importDocmaps({
   docMapIndexUrl, s3StateFileUrl, docMapThreshold, start, end,
-}: ImportArgs): Promise<ImportDocmapsMessage> {
+}: ImportDocmapsArgs): Promise<ImportDocmapsMessage> {
   let approval: boolean | null = null;
   const docMapIdHashes: DocMapHashes[] = [];
   setHandler(approvalSignal, (approvalValue: boolean) => { approval = approvalValue; });
@@ -80,7 +80,7 @@ export async function importDocmaps({
   }
 
   const importWorkflows = await Promise.all(docMapIdHashes.map(async (docMapIdHash) => startChild(importDocmap, {
-    args: [docMapIdHash.docMapId], // id contains the canonical URL of the docmap
+    args: [{ url: docMapIdHash.docMapId }], // id contains the canonical URL of the docmap
     workflowId: `docmap-${docMapIdHash.docMapIdHash}`,
     // allows child workflows to outlive this workflow
     parentClosePolicy: ParentClosePolicy.PARENT_CLOSE_POLICY_ABANDON,

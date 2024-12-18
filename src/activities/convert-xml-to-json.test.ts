@@ -52,7 +52,7 @@ describe('TransformXML', () => {
   });
 
   it('should transform XML successfully', async () => {
-    const xmlInput = '<root></root>';
+    const xml = '<root></root>';
     const response = {
       xml: '<root>transformed</root>',
       logs: ['log1', 'log2'],
@@ -60,29 +60,57 @@ describe('TransformXML', () => {
 
     mockedAxios.post.mockResolvedValueOnce({ data: response });
 
-    const result = await transformXML(xmlInput);
+    const result = await transformXML({ xml });
 
     expect(Context.current().heartbeat).toHaveBeenCalledTimes(2);
     expect(Context.current().heartbeat).toHaveBeenNthCalledWith(1, 'Starting XML transform');
     expect(Context.current().heartbeat).toHaveBeenNthCalledWith(2, 'Finishing XML transform');
 
     expect(mockedAxios.post).toHaveBeenCalledTimes(1);
-    expect(mockedAxios.post).toHaveBeenCalledWith(config.xsltTransformAddress, xmlInput);
+    expect(mockedAxios.post).toHaveBeenCalledWith(config.xsltTransformAddress, xml);
     expect(result).toEqual(response);
   });
 
   it('should handle transform error', async () => {
-    const xmlInput = '<root></root>';
+    const xml = '<root></root>';
     const error = new Error('Error transforming XML');
 
     mockedAxios.post.mockRejectedValueOnce(error);
 
-    await expect(transformXML(xmlInput)).rejects.toStrictEqual(error);
+    await expect(transformXML({ xml })).rejects.toStrictEqual(error);
 
     expect(Context.current().heartbeat).toHaveBeenCalledTimes(1);
     expect(Context.current().heartbeat).toHaveBeenCalledWith('Starting XML transform');
 
     expect(mockedAxios.post).toHaveBeenCalledTimes(1);
-    expect(mockedAxios.post).toHaveBeenCalledWith(config.xsltTransformAddress, xmlInput);
+    expect(mockedAxios.post).toHaveBeenCalledWith(config.xsltTransformAddress, xml);
+  });
+
+  it('should bypass xslt transforms if passthrough set', async () => {
+    const xml = '<root></root>';
+    const response = {
+      xml: '<root>transformed</root>',
+      logs: ['passthrough'],
+    };
+
+    mockedAxios.post.mockResolvedValueOnce({ data: response });
+
+    const result = await transformXML({ xml, xsltTransformPassthrough: true });
+
+    expect(Context.current().heartbeat).toHaveBeenCalledTimes(2);
+    expect(Context.current().heartbeat).toHaveBeenNthCalledWith(1, 'Starting XML transform');
+    expect(Context.current().heartbeat).toHaveBeenNthCalledWith(2, 'Finishing XML transform');
+
+    expect(mockedAxios.post).toHaveBeenCalledTimes(1);
+    expect(mockedAxios.post).toHaveBeenCalledWith(
+      config.xsltTransformAddress,
+      xml,
+      {
+        headers: {
+          'X-Passthrough': 'true',
+        },
+      },
+    );
+    expect(result).toEqual(response);
   });
 });

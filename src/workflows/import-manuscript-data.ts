@@ -20,16 +20,21 @@ const {
   },
 });
 
-export async function importManuscriptData(manuscriptData: ManuscriptData): Promise<ImportManuscriptResult[]> {
+type ImportManuscriptDataArgs = {
+  data: ManuscriptData,
+  xsltTransformPassthrough?: boolean,
+};
+
+export async function importManuscriptData({ data, xsltTransformPassthrough }: ImportManuscriptDataArgs): Promise<ImportManuscriptResult[]> {
   upsertSearchAttributes({
-    ManuscriptId: [manuscriptData.id],
+    ManuscriptId: [data.id],
   });
 
   const results = await Promise.all([
-    ...manuscriptData.versions.filter((version): version is VersionedReviewedPreprint => 'preprint' in version).filter((version) => version.preprint.content?.find((contentUrl) => contentUrl.startsWith('s3://'))).map(async (version) => {
+    ...data.versions.filter((version): version is VersionedReviewedPreprint => 'preprint' in version).filter((version) => version.preprint.content?.find((contentUrl) => contentUrl.startsWith('s3://'))).map(async (version) => {
       try {
         const importContentResult = await executeChild(importContent, {
-          args: [version],
+          args: [{ version, xsltTransformPassthrough }],
           workflowId: `${workflowInfo().workflowId}/${version.versionIdentifier}/content`,
           searchAttributes: {
             ManuscriptId: [version.id],
@@ -43,7 +48,7 @@ export async function importManuscriptData(manuscriptData: ManuscriptData): Prom
           };
         }
         const payloadFile = await generateVersionJson({
-          importContentResult, msid: manuscriptData.id, version, manuscript: manuscriptData.manuscript,
+          importContentResult, msid: data.id, version, manuscript: data.manuscript,
         });
         await sendVersionToEpp(payloadFile);
         return {
@@ -60,9 +65,9 @@ export async function importManuscriptData(manuscriptData: ManuscriptData): Prom
         };
       }
     }),
-    ...manuscriptData.versions.filter((version): version is VersionedPreprint => 'content' in version && 'url' in version).map(async (version) => {
+    ...data.versions.filter((version): version is VersionedPreprint => 'content' in version && 'url' in version).map(async (version) => {
       const payloadFile = await generateVersionSummaryJson({
-        msid: manuscriptData.id, version,
+        msid: data.id, version,
       });
       await sendVersionToEpp(payloadFile);
       return {
