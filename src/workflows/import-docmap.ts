@@ -26,7 +26,12 @@ const {
   },
 });
 
-export async function importDocmap(url: string): Promise<ImportDocmapMessage> {
+type ImportDocmapArgs = {
+  url: string,
+  xsltTransformPassthrough?: boolean,
+};
+
+export async function importDocmap({ url, xsltTransformPassthrough }: ImportDocmapArgs): Promise<ImportDocmapMessage> {
   upsertSearchAttributes({
     DocmapURL: [url],
   });
@@ -36,10 +41,10 @@ export async function importDocmap(url: string): Promise<ImportDocmapMessage> {
   const docmap = JSON.parse(docmapJson);
   const hashes = await createDocMapHash(docmap as DocMap);
 
-  const result = await parseDocMap(docmapJson);
+  const data = await parseDocMap(docmapJson);
 
   return {
-    results: await importManuscriptData(result),
+    results: await importManuscriptData({ data, xsltTransformPassthrough }),
     hashes,
   };
 }

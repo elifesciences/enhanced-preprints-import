@@ -29,6 +29,12 @@ type TransformXmlToJsonResponse = {
   body: string,
 };
 
+type ConvertXmlToJsonArgs = {
+  version: VersionedReviewedPreprint,
+  mecaFiles: MecaFiles,
+  xsltTransformPassthrough?: boolean,
+};
+
 type ConvertXmlToJsonOutput = {
   result: PutObjectCommandOutput,
   path: S3File,
@@ -36,17 +42,32 @@ type ConvertXmlToJsonOutput = {
   encodaVersion: string,
 };
 
-export const transformXML = async (xmlInput: string): Promise<TransformXmlResponse> => {
+type TransformXmlArgs = {
+  xml: string,
+  xsltTransformPassthrough?: boolean,
+};
+
+export const transformXML = async ({ xml, xsltTransformPassthrough }: TransformXmlArgs): Promise<TransformXmlResponse> => {
   Context.current().heartbeat('Starting XML transform');
-  const transformedResponse = await axios.post<TransformXmlResponse>(config.xsltTransformAddress, xmlInput);
+  const transformedResponse = await axios.post<TransformXmlResponse>(
+    config.xsltTransformAddress,
+    xml,
+    ...(xsltTransformPassthrough ? [
+      {
+        headers: {
+          'X-Passthrough': 'true',
+        },
+      },
+    ] : []),
+  );
 
   Context.current().heartbeat('Finishing XML transform');
   return transformedResponse.data;
 };
 
-export const transformXMLToJson = async (xmlInput: string, version: string, replacementPath?: string): Promise<TransformXmlToJsonResponse> => {
+export const transformXMLToJson = async (xml: string, version: string, replacementPath?: string): Promise<TransformXmlToJsonResponse> => {
   Context.current().heartbeat('Starting XML to JSON transform');
-  const transformedResponse = await axios.post<TransformXmlToJsonResponse>(config.encodaTransformAddress, xmlInput, {
+  const transformedResponse = await axios.post<TransformXmlToJsonResponse>(config.encodaTransformAddress, xml, {
     params: {
       ...replacementPath ? { replacementPath } : {},
     },
@@ -94,7 +115,7 @@ const copySourceXmlToKnownPath = async (source: S3File, version: VersionedReview
   }
 };
 
-export const convertXmlToJson = async (version: VersionedReviewedPreprint, mecaFiles: MecaFiles): Promise<ConvertXmlToJsonOutput> => {
+export const convertXmlToJson = async ({ version, mecaFiles, xsltTransformPassthrough }: ConvertXmlToJsonArgs): Promise<ConvertXmlToJsonOutput> => {
   const tmpDirectory = await mkdtemp(`${tmpdir()}/epp_json`);
   const localXmlFilePath = `${tmpDirectory}/${mecaFiles.article.path}`;
   // mkdir in case the article path is in a subdirectory
@@ -112,7 +133,7 @@ export const convertXmlToJson = async (version: VersionedReviewedPreprint, mecaF
     throw new Error('Unable to retrieve XML from S3');
   }
 
-  const transformedXMLResponse = await transformXML(xml);
+  const transformedXMLResponse = await transformXML({ xml, xsltTransformPassthrough });
 
   // store the transformed XML for downstream processing
   const transformedXMLDestination = constructEPPVersionS3FilePath('article-transformed.xml', version);
