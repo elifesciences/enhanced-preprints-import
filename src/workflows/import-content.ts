@@ -61,7 +61,7 @@ export async function importContent({ version, workflowArgs }: ImportContentArgs
     return 'No content to import';
   }
 
-  const { path: mecaPath } = await copySourcePreprintToEPP({ version });
+  const { path: mecaPath } = await copySourcePreprintToEPP({ version, ...workflowArgs });
 
   // Extract Meca
   const mecaFiles = await extractMeca(version);

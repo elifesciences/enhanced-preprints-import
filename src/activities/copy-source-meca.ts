@@ -28,6 +28,7 @@ type CopySourcePreprintToEPPOutput = {
 
 type CopySourceMecaArgs = {
   version: VersionedReviewedPreprint,
+  preferPreprintContent?: boolean,
 };
 
 const s3CopySourceToDestination = async (source: S3File, destination: S3File): Promise<Omit<CopySourcePreprintToEPPOutput, 'source'>> => {
@@ -115,8 +116,8 @@ const s3MoveSourceToDestination = async (source: S3File, destination: S3File, ve
   return s3CopySourceToDestination(eppSource, destination);
 };
 
-export const copySourcePreprintToEPP = async ({ version }: CopySourceMecaArgs): Promise<CopySourcePreprintToEPPOutput> => {
-  const content = [...(version.content ?? []), ...(version.preprint.content ?? [])];
+export const copySourcePreprintToEPP = async ({ version, preferPreprintContent }: CopySourceMecaArgs): Promise<CopySourcePreprintToEPPOutput> => {
+  const content = preferPreprintContent ? [...(version.preprint.content ?? []), ...(version.content ?? [])] : [...(version.content ?? []), ...(version.preprint.content ?? [])];
   const sourceS3Url = content.find((url) => url.startsWith('s3://'));
   if (sourceS3Url === undefined) {
     throw new NonRetryableError(`Cannot import content - no s3 URL found in content strings [${content.join(',')}]`);

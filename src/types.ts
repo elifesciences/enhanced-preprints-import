@@ -4,6 +4,7 @@ import { DocMap } from '@elifesciences/docmap-ts';
 export type WorkflowArgs = {
   workflowArgs?: {
     xsltTransformPassthrough?: boolean,
+    preferPreprintContent?: boolean,
   },
 };
 

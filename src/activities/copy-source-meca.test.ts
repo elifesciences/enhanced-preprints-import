@@ -77,6 +77,28 @@ describe('copy-source-meca', () => {
           doi: '2',
           id: 'id2',
           content: [
+            's3://epp/meca.meca',
+          ],
+        },
+        content: [
+          'http://not-a-meca-path',
+          's3://epp/meca-enhanced.meca',
+        ],
+      },
+      preferPreprintContent: true,
+      expectedSourceS3: 's3://epp/meca.meca',
+      expectedSource: 'epp/meca.meca',
+      expectedPutBody: 'meca',
+    },
+    {
+      version: {
+        id: 'id1',
+        versionIdentifier: 'ver1',
+        doi: '1',
+        preprint: {
+          doi: '2',
+          id: 'id2',
+          content: [
             's3://epp_#1/@2/space test/!3/special&chars/$4/complex%path/^5/parentheses(1).meca',
           ],
         },
@@ -86,7 +108,11 @@ describe('copy-source-meca', () => {
       expectedPutBody: 'meca',
     },
   ])('copies source meca to EPP s3', async ({
-    version, expectedSourceS3, expectedSource, expectedPutBody,
+    version,
+    preferPreprintContent,
+    expectedSourceS3,
+    expectedSource,
+    expectedPutBody,
   }) => {
     const mockS3Client = mockClient(S3Client);
     mockS3Client.on(PutObjectCommand)
@@ -119,7 +145,7 @@ describe('copy-source-meca', () => {
         });
       });
 
-    const result = await copySourcePreprintToEPP({ version });
+    const result = await copySourcePreprintToEPP({ version, ...(preferPreprintContent ? { preferPreprintContent } : {}) });
     expect(result).toStrictEqual({
       path: {
         Bucket: 'test-bucket',
