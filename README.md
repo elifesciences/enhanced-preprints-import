@@ -45,6 +45,22 @@ To prevent large reimport of docmaps that would cause content becoming unpublish
 temporal workflow execute --type importDocmaps -t epp -w import-docmap-test -i '{ "docMapIndexUrl": "http://mock-datahub/enhanced-preprints/docmaps/v1/index", "docMapThreshold": 2 }'
 ```
 
+## Run an import disabling xslt transforms
+
+This can also be applied to the `importDocmap`, `importManuscriptData` and `importContent` workflows:
+
+```shell
+temporal workflow execute --type importDocmaps -t epp -w import-docmap-test -i '{ "docMapIndexUrl": "http://mock-datahub/enhanced-preprints/docmaps/v1/index", "workflowArgs": { "xsltTransformPassthrough": true } }'
+```
+
+## Run an import preferring preprint content
+
+This can also be applied to the `importDocmap`, `importManuscriptData` and `importContent` workflows:
+
+```shell
+temporal workflow execute --type importDocmaps -t epp -w import-docmap-test -i '{ "docMapIndexUrl": "http://mock-datahub/enhanced-preprints/docmaps/v1/index", "workflowArgs": { "preferPreprintContent": true } }'
+```
+
 ## Trigger the approval signal from CLI
 
 Sometimes, due to issues with Temporal UI, we need to use command line to send a signal. You need to specify the target workflow id, name and input of the signal.
@@ -118,7 +134,7 @@ docker compose -f docker-compose.yaml -f docker-compose.override.yaml -f docker-
 To import a specific docmap such as 85111 use the importDocmap workflow:
 
 ```shell
-temporal workflow execute --type importDocmap -w import-docmap-85111 -t epp -i '"https://data-hub-api.elifesciences.org/enhanced-preprints/docmaps/v2/by-publisher/elife/get-by-manuscript-id?manuscript_id=85111"'
+temporal workflow execute --type importDocmap -w import-docmap-85111 -t epp -i '{ url: "https://data-hub-api.elifesciences.org/enhanced-preprints/docmaps/v2/by-publisher/elife/get-by-manuscript-id?manuscript_id=85111" }'
 ```
 
 ## Run with "real" S3 as a destination
