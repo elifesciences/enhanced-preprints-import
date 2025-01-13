@@ -40,6 +40,7 @@ type ConvertXmlToJsonOutput = {
   path: S3File,
   xsltLogs: string[],
   encodaVersion: string,
+  replacements: string[][],
 };
 
 type TransformXmlArgs = {
@@ -151,15 +152,34 @@ export const convertXmlToJson = async ({ version, mecaFiles, workflowArgs }: Con
   const transformedJsonResponse = await transformXMLToJson(
     transformedXMLResponse.xml,
     config.encodaDefaultVersion,
-    originalPath,
+    originalPath, // Can remove once we fix replacementPath in enhanced-preprints-encoda
   );
+
+  const folderXml = `${path.dirname(mecaFiles.article.path)}/`;
+  const replacements = mecaFiles.supportingFiles
+    .map((mecaFile) => mecaFile.path)
+    .filter((mecaFilePath) => mecaFilePath.slice(0, folderXml.length) === folderXml)
+    .map((mecaFilePath) => mecaFilePath.slice(folderXml.length))
+    .map((mecaFilePath) => ([mecaFilePath, `${originalPath}/${mecaFilePath}`]));
+
+  // Assuming transformedJsonResponse.body is a string containing JSON data
+  let updatedBody = transformedJsonResponse.body;
+
+  // Iterate over each replacement pair
+  replacements.forEach(([original, replacement]) => {
+    // Create a regex pattern with a capture group for "contentUrl" or "target"
+    const combinedPattern = new RegExp(`"(contentUrl|target)"(\\s*:\\s*)"${original}"`, 'g');
+
+    // Replace occurrences in the JSON body using the capture group
+    updatedBody = updatedBody.replace(combinedPattern, `"${'$1'}"${'$2'}"${replacement}"`);
+  });
 
   // Upload destination in S3
   const destination = constructEPPVersionS3FilePath('article.json', version);
   const result = await s3.send(new PutObjectCommand({
     Bucket: destination.Bucket,
     Key: destination.Key,
-    Body: transformedJsonResponse.body,
+    Body: updatedBody,
   }));
 
   // Delete tmpDirectory
@@ -170,5 +190,6 @@ export const convertXmlToJson = async ({ version, mecaFiles, workflowArgs }: Con
     path: destination,
     xsltLogs: transformedXMLResponse.logs,
     encodaVersion: transformedJsonResponse.version,
+    replacements,
   };
 };
