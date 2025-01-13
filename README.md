@@ -134,7 +134,7 @@ docker compose -f docker-compose.yaml -f docker-compose.override.yaml -f docker-
 To import a specific docmap such as 85111 use the importDocmap workflow:
 
 ```shell
-temporal workflow execute --type importDocmap -w import-docmap-85111 -t epp -i '{ url: "https://data-hub-api.elifesciences.org/enhanced-preprints/docmaps/v2/by-publisher/elife/get-by-manuscript-id?manuscript_id=85111" }'
+temporal workflow execute --type importDocmap -w import-docmap-85111 -t epp -i '{ "url": "https://data-hub-api.elifesciences.org/enhanced-preprints/docmaps/v2/by-publisher/elife/get-by-manuscript-id?manuscript_id=85111" }'
 ```
 
 ## Run with "real" S3 as a destination
