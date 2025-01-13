@@ -152,7 +152,7 @@ export const convertXmlToJson = async ({ version, mecaFiles, workflowArgs }: Con
   const transformedJsonResponse = await transformXMLToJson(
     transformedXMLResponse.xml,
     config.encodaDefaultVersion,
-    originalPath, // Can remove once we fix replacementPath in enhanced-preprints-encoda
+    originalPath, // Can remove once we fix replacementPath in enhanced-preprints-encoda. See: https://github.com/elifesciences/enhanced-preprints-encoda/commit/da08f0ec0d469ccd82bdbbe599d3d191c2d9981a
   );
 
   const folderXml = `${path.dirname(mecaFiles.article.path)}/`;
