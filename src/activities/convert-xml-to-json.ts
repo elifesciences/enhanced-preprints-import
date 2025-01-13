@@ -43,6 +43,17 @@ type ConvertXmlToJsonOutput = {
   replacements: string[][],
 };
 
+type UpdateMecaFilePathsArgs = {
+  jsonString: string,
+  version: VersionedReviewedPreprint,
+  mecaFiles: MecaFiles,
+};
+
+type UpdateMecaFilePathsOutput = {
+  jsonString: string,
+  replacements: string[][],
+};
+
 type TransformXmlArgs = {
   xml: string,
   xsltTransformPassthrough?: boolean,
@@ -116,6 +127,35 @@ const copySourceXmlToKnownPath = async (source: S3File, version: VersionedReview
   }
 };
 
+export const updateMecaFilePaths = ({ jsonString, version, mecaFiles }: UpdateMecaFilePathsArgs): UpdateMecaFilePathsOutput => {
+  // This replaces the path of other resources pointed to in original Meca with their new location in S3
+  // i.e. if the XML file was in the Zip as `content/123/123.xml` for id 456 version 1, we pass in `456/v1/content/123/` as a replacement paths to other resources
+  const originalPath = path.dirname(getPrefixlessKey(constructEPPVersionS3FilePath(mecaFiles.article.path, version)));
+
+  const folderXml = `${path.dirname(mecaFiles.article.path)}/`;
+  const replacements = mecaFiles.supportingFiles
+    .map((mecaFile) => mecaFile.path)
+    .filter((mecaFilePath) => mecaFilePath.slice(0, folderXml.length) === folderXml)
+    .map((mecaFilePath) => mecaFilePath.slice(folderXml.length))
+    .map((mecaFilePath) => ([mecaFilePath, `${originalPath}/${mecaFilePath}`]));
+
+  // Assuming transformedJsonResponse.body is a string containing JSON data
+  let updatedBody = jsonString;
+
+  // Iterate over each replacement pair
+  replacements.forEach(([original, replacement]) => {
+    // Create a regex pattern with a capture group for "contentUrl" or "target"
+    const combinedPattern = new RegExp(`"(contentUrl|target)"(\\s*:\\s*)"${original}"`, 'g');
+
+    // Replace occurrences in the JSON body using the capture group
+    updatedBody = updatedBody.replace(combinedPattern, `"${'$1'}"${'$2'}"${replacement}"`);
+  });
+  return {
+    jsonString: updatedBody,
+    replacements,
+  };
+};
+
 export const convertXmlToJson = async ({ version, mecaFiles, workflowArgs }: ConvertXmlToJsonArgs): Promise<ConvertXmlToJsonOutput> => {
   const tmpDirectory = await mkdtemp(`${tmpdir()}/epp_json`);
   const localXmlFilePath = `${tmpDirectory}/${mecaFiles.article.path}`;
@@ -146,32 +186,15 @@ export const convertXmlToJson = async ({ version, mecaFiles, workflowArgs }: Con
 
   fs.writeFileSync(localXmlFilePath, transformedXMLResponse.xml);
 
-  // This replaces the path of other resources pointed to in original Meca with their new location in S3
-  // i.e. if the XML file was in the Zip as `content/123/123.xml` for id 456 version 1, we pass in `456/v1/content/123/` as a replacement paths to other resources
-  const originalPath = path.dirname(getPrefixlessKey(constructEPPVersionS3FilePath(mecaFiles.article.path, version)));
   const transformedJsonResponse = await transformXMLToJson(
     transformedXMLResponse.xml,
     config.encodaDefaultVersion,
-    originalPath, // Can remove once we fix replacementPath in enhanced-preprints-encoda. See: https://github.com/elifesciences/enhanced-preprints-encoda/commit/da08f0ec0d469ccd82bdbbe599d3d191c2d9981a
   );
 
-  const folderXml = `${path.dirname(mecaFiles.article.path)}/`;
-  const replacements = mecaFiles.supportingFiles
-    .map((mecaFile) => mecaFile.path)
-    .filter((mecaFilePath) => mecaFilePath.slice(0, folderXml.length) === folderXml)
-    .map((mecaFilePath) => mecaFilePath.slice(folderXml.length))
-    .map((mecaFilePath) => ([mecaFilePath, `${originalPath}/${mecaFilePath}`]));
-
-  // Assuming transformedJsonResponse.body is a string containing JSON data
-  let updatedBody = transformedJsonResponse.body;
-
-  // Iterate over each replacement pair
-  replacements.forEach(([original, replacement]) => {
-    // Create a regex pattern with a capture group for "contentUrl" or "target"
-    const combinedPattern = new RegExp(`"(contentUrl|target)"(\\s*:\\s*)"${original}"`, 'g');
-
-    // Replace occurrences in the JSON body using the capture group
-    updatedBody = updatedBody.replace(combinedPattern, `"${'$1'}"${'$2'}"${replacement}"`);
+  const { jsonString, replacements } = updateMecaFilePaths({
+    jsonString: transformedJsonResponse.body,
+    version,
+    mecaFiles,
   });
 
   // Upload destination in S3
@@ -179,7 +202,7 @@ export const convertXmlToJson = async ({ version, mecaFiles, workflowArgs }: Con
   const result = await s3.send(new PutObjectCommand({
     Bucket: destination.Bucket,
     Key: destination.Key,
-    Body: updatedBody,
+    Body: jsonString,
   }));
 
   // Delete tmpDirectory
