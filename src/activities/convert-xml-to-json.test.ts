@@ -1,7 +1,14 @@
 import axios from 'axios';
 import { Context } from '@temporalio/activity';
-import { transformXML, transformXMLToJson } from './convert-xml-to-json';
+import { VersionedReviewedPreprint } from '@elifesciences/docmap-ts';
+import { transformXML, transformXMLToJson, updateMecaFilePaths } from './convert-xml-to-json';
 import { config } from '../config';
+import { MecaFile, MecaFiles } from './extract-meca';
+
+jest.mock('../S3Bucket', () => ({
+  constructEPPVersionS3FilePath: jest.fn(),
+  getPrefixlessKey: jest.fn().mockImplementation(() => '456/v1/content/123/foo'),
+}));
 
 // Mock Context, axios, and config
 jest.mock('@temporalio/activity', () => ({
@@ -26,6 +33,7 @@ describe('ConvertXMLtoJSON', () => {
   afterEach(() => {
     jest.clearAllMocks();
   });
+
   describe('transformXML', () => {
     it('should transform XML successfully', async () => {
       const xml = '<root></root>';
@@ -114,6 +122,31 @@ describe('ConvertXMLtoJSON', () => {
         version: 'application/vnd.elife.encoda.v1+json',
         body: JSON.stringify(response),
       });
+    });
+  });
+
+  describe('updateMecaFilePaths', () => {
+    it('return updated path in json string', async () => {
+      const jsonString = '{ "contentUrl": "supplements/file1.pdf"}';
+      const version = { id: '456', versionIdentifier: '1' } as VersionedReviewedPreprint;
+      const mecaFiles: MecaFiles = {
+        id: '456',
+        title: 'foo',
+        article: { path: 'content/123/123.xml' } as MecaFile,
+        supportingFiles: [
+          {
+            id: 'foo',
+            type: 'bar',
+            mimeType: 'stuff',
+            fileName: 'file1.pdf',
+            path: 'content/123/supplements/file1.pdf',
+          },
+        ],
+      };
+      const { jsonString: jsonStringResult } = updateMecaFilePaths({ jsonString, version, mecaFiles });
+      const replacementPath = '456/v1/content/123/supplements/file1.pdf';
+
+      expect(jsonStringResult).toContain(replacementPath);
     });
   });
 });
