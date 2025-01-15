@@ -29,10 +29,12 @@ jobs:
           load: true
           tags: |
             ${{ env.IMPORT_WORKER_IMAGE_REPO }}:test-${{ github.sha }}
-      - name: run test
-        run: docker run ${{ env.IMPORT_WORKER_IMAGE_REPO }}:test-${{ github.sha }} -v ./mock-data:/app/mock-data yarn test
       - name: run lint
         run: docker run ${{ env.IMPORT_WORKER_IMAGE_REPO }}:test-${{ github.sha }} yarn lint
+      - name: run test
+        run: docker run ${{ env.IMPORT_WORKER_IMAGE_REPO }}:test-${{ github.sha }} -v ./mock-data:/app/mock-data yarn test
+      - name: run tsc
+        run: docker run ${{ env.IMPORT_WORKER_IMAGE_REPO }}:test-${{ github.sha }} yarn tsc --noEmit
   build-and-push:
     needs: [test]
     runs-on: ubuntu-latest
