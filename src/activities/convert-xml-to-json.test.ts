@@ -8,7 +8,7 @@ import { getPrefixlessKey } from '../S3Bucket';
 
 jest.mock('../S3Bucket', () => ({
   constructEPPVersionS3FilePath: jest.fn(),
-  getPrefixlessKey: jest.fn(), // .mockImplementation(() => '456/v1/content/123/foo'),
+  getPrefixlessKey: jest.fn(),
 }));
 
 // Mock Context, axios, and config
