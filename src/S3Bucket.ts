@@ -87,6 +87,6 @@ export const streamToFile = (body: Readable, localPath: string) => new Promise((
   const writeStream = createWriteStream(localPath);
   stream.pipe(writeStream);
 
-  writeStream.on('finish', resolve);
+  writeStream.on('finish', () => resolve('finished'));
   writeStream.on('error', reject);
 });
