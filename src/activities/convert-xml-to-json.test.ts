@@ -1,7 +1,15 @@
 import axios from 'axios';
 import { Context } from '@temporalio/activity';
-import { transformXML, transformXMLToJson } from './convert-xml-to-json';
+import { VersionedReviewedPreprint } from '@elifesciences/docmap-ts';
+import { transformXML, transformXMLToJson, updateMecaFilePaths } from './convert-xml-to-json';
 import { config } from '../config';
+import { MecaFile, MecaFiles } from './extract-meca';
+import { getPrefixlessKey } from '../S3Bucket';
+
+jest.mock('../S3Bucket', () => ({
+  constructEPPVersionS3FilePath: jest.fn(),
+  getPrefixlessKey: jest.fn(),
+}));
 
 // Mock Context, axios, and config
 jest.mock('@temporalio/activity', () => ({
@@ -26,6 +34,7 @@ describe('ConvertXMLtoJSON', () => {
   afterEach(() => {
     jest.clearAllMocks();
   });
+
   describe('transformXML', () => {
     it('should transform XML successfully', async () => {
       const xml = '<root></root>';
@@ -142,6 +151,172 @@ describe('ConvertXMLtoJSON', () => {
         version: 'application/vnd.elife.encoda.v1+json',
         body: JSON.stringify(response),
       });
+    });
+  });
+
+  describe('updateMecaFilePaths', () => {
+    const testInput = [
+      {
+        prefixlessKey: '456/v1/simple/foo',
+        articleXml: 'simple/123.xml',
+        items: [
+          {
+            fileName: 'file1.pdf',
+            path: 'simple/supplements/file1.pdf',
+          },
+        ],
+        jsonString: '{ "contentUrl": "supplements/file1.pdf"}',
+        expectedJsonString: '{ "contentUrl": "456/v1/simple/supplements/file1.pdf"}',
+        expectedReplacements: [[
+          'supplements/file1.pdf',
+          '456/v1/simple/supplements/file1.pdf',
+        ]],
+      },
+      {
+        prefixlessKey: '456/v1/sub/folder/foo',
+        articleXml: 'sub/folder/123.xml',
+        items: [
+          {
+            fileName: 'file1.pdf',
+            path: 'sub/folder/supplements/file1.pdf',
+          },
+        ],
+        jsonString: '{ "target": "supplements/file1.pdf"}',
+        expectedJsonString: '{ "target": "456/v1/sub/folder/supplements/file1.pdf"}',
+        expectedReplacements: [[
+          'supplements/file1.pdf',
+          '456/v1/sub/folder/supplements/file1.pdf',
+        ]],
+      },
+      {
+        prefixlessKey: '456/v1/no-match/foo',
+        articleXml: 'no-match/123.xml',
+        items: [
+          {
+            fileName: 'file2.pdf',
+            path: 'no-match/supplements/file2.pdf',
+          },
+        ],
+        jsonString: '{ "contentUrl": "supplements/file1.pdf", "non-target": "supplements/file2.pdf"}',
+        expectedJsonString: '{ "contentUrl": "supplements/file1.pdf", "non-target": "supplements/file2.pdf"}',
+        expectedReplacements: [[
+          'supplements/file2.pdf',
+          '456/v1/no-match/supplements/file2.pdf',
+        ]],
+      },
+      {
+        prefixlessKey: '456/v1/irregular-spacing/foo',
+        articleXml: 'irregular-spacing/123.xml',
+        items: [
+          {
+            fileName: 'file1.pdf',
+            path: 'irregular-spacing/supplements/file1.pdf',
+          },
+        ],
+        jsonString: '{ "target"    :   "supplements/file1.pdf", "contentUrl"  :"supplements/file1.pdf"}',
+        expectedJsonString: '{ "target"    :   "456/v1/irregular-spacing/supplements/file1.pdf", "contentUrl"  :"456/v1/irregular-spacing/supplements/file1.pdf"}',
+        expectedReplacements: [[
+          'supplements/file1.pdf',
+          '456/v1/irregular-spacing/supplements/file1.pdf',
+        ]],
+      },
+      {
+        prefixlessKey: '456/v1/external-link/foo',
+        articleXml: 'irregular-spacing/123.xml',
+        items: [
+          {
+            fileName: 'file1.pdf',
+            path: 'http://www.google.com/file1.pdf',
+          },
+        ],
+        jsonString: '{ "target": "http://www.google.com/file1.pdf"}',
+        expectedJsonString: '{ "target": "http://www.google.com/file1.pdf"}',
+        expectedReplacements: [],
+      },
+      {
+        prefixlessKey: '456/v1/multiple/foo',
+        articleXml: 'multiple/123.xml',
+        items: [
+          {
+            fileName: 'file1.pdf',
+            path: 'multiple/supplements/file1.pdf',
+          },
+          {
+            fileName: 'file2.doc',
+            path: 'multiple/supplements/file2.doc',
+          },
+          {
+            fileName: 'file3.xlsx',
+            path: 'multiple/file3.xlsx',
+          },
+        ],
+        jsonString: '{ "target": "supplements/file1.pdf", "contentUrl": "supplements/file2.doc", "contentUrl": "file3.xlsx"}',
+        expectedJsonString: '{ "target": "456/v1/multiple/supplements/file1.pdf", "contentUrl": "456/v1/multiple/supplements/file2.doc", "contentUrl": "456/v1/multiple/file3.xlsx"}',
+        expectedReplacements: [
+          [
+            'supplements/file1.pdf',
+            '456/v1/multiple/supplements/file1.pdf',
+          ],
+          [
+            'supplements/file2.doc',
+            '456/v1/multiple/supplements/file2.doc',
+          ],
+          [
+            'file3.xlsx',
+            '456/v1/multiple/file3.xlsx',
+          ],
+        ],
+      },
+    ];
+
+    it.each(testInput)('return updated path in json string ($prefixlessKey)', ({
+      prefixlessKey,
+      articleXml,
+      items,
+      jsonString,
+      expectedJsonString,
+    }) => {
+      (getPrefixlessKey as jest.Mock).mockReturnValue(prefixlessKey);
+      const version = { id: '456', versionIdentifier: '1' } as VersionedReviewedPreprint;
+      const mecaFiles: MecaFiles = {
+        id: '456',
+        title: 'foo',
+        article: { path: articleXml } as MecaFile,
+        supportingFiles: items.map((item) => ({
+          id: 'foo',
+          type: 'bar',
+          mimeType: 'stuff',
+          ...item,
+        })),
+      };
+      const { jsonString: jsonStringResult } = updateMecaFilePaths({ jsonString, version, mecaFiles });
+
+      expect(jsonStringResult).toEqual(expectedJsonString);
+    });
+
+    it.each(testInput)('return replacements tuple array in json string ($prefixlessKey)', ({
+      prefixlessKey,
+      articleXml,
+      items,
+      jsonString,
+      expectedReplacements,
+    }) => {
+      (getPrefixlessKey as jest.Mock).mockReturnValue(prefixlessKey);
+      const version = { id: '456', versionIdentifier: '1' } as VersionedReviewedPreprint;
+      const mecaFiles: MecaFiles = {
+        id: '456',
+        title: 'foo',
+        article: { path: articleXml } as MecaFile,
+        supportingFiles: items.map((item) => ({
+          id: 'foo',
+          type: 'bar',
+          mimeType: 'stuff',
+          ...item,
+        })),
+      };
+      const { replacements } = updateMecaFilePaths({ jsonString, version, mecaFiles });
+
+      expect(replacements).toStrictEqual(expectedReplacements);
     });
   });
 });
