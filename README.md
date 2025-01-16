@@ -53,6 +53,14 @@ This can also be applied to the `importDocmap`, `importManuscriptData` and `impo
 temporal workflow execute --type importDocmaps -t epp -w import-docmap-test -i '{ "docMapIndexUrl": "http://mock-datahub/enhanced-preprints/docmaps/v1/index", "workflowArgs": { "xsltTransformPassthrough": true } }'
 ```
 
+## Run an import with an xslt blacklist
+
+This can also be applied to the `importDocmap`, `importManuscriptData` and `importContent` workflows:
+
+```shell
+temporal workflow execute --type importDocmaps -t epp -w import-docmap-test -i '{ "docMapIndexUrl": "http://mock-datahub/enhanced-preprints/docmaps/v1/index", "workflowArgs": { "xsltBlacklist": "file1.xsl, file2.xsl" } }'
+```
+
 ## Run an import preferring preprint content
 
 This can also be applied to the `importDocmap`, `importManuscriptData` and `importContent` workflows:

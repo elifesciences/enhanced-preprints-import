@@ -89,6 +89,34 @@ describe('ConvertXMLtoJSON', () => {
       );
       expect(result).toEqual(response);
     });
+
+    it('should set blacklist header if set', async () => {
+      const xml = '<root></root>';
+      const response = {
+        xml: '<root>transformed</root>',
+        logs: ['blacklist'],
+      };
+
+      mockedAxios.post.mockResolvedValueOnce({ data: response });
+
+      const result = await transformXML({ xml, xsltBlacklist: 'file.xsl' });
+
+      expect(Context.current().heartbeat).toHaveBeenCalledTimes(2);
+      expect(Context.current().heartbeat).toHaveBeenNthCalledWith(1, 'Starting XML transform');
+      expect(Context.current().heartbeat).toHaveBeenNthCalledWith(2, 'Finishing XML transform');
+
+      expect(mockedAxios.post).toHaveBeenCalledTimes(1);
+      expect(mockedAxios.post).toHaveBeenCalledWith(
+        config.xsltTransformAddress,
+        xml,
+        {
+          headers: {
+            'X-Blacklist': 'file.xsl',
+          },
+        },
+      );
+      expect(result).toEqual(response);
+    });
   });
 
   describe('transformXMLToJson', () => {

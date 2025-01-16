@@ -5,6 +5,7 @@ export type WorkflowArgs = {
   workflowArgs?: {
     xsltTransformPassthrough?: boolean,
     preferPreprintContent?: boolean,
+    xsltBlacklist?: string,
   },
 };
 

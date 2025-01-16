@@ -44,21 +44,28 @@ type ConvertXmlToJsonOutput = {
 
 type TransformXmlArgs = {
   xml: string,
+  xsltBlacklist?: string,
   xsltTransformPassthrough?: boolean,
 };
 
-export const transformXML = async ({ xml, xsltTransformPassthrough }: TransformXmlArgs): Promise<TransformXmlResponse> => {
+export const transformXML = async ({ xml, xsltBlacklist, xsltTransformPassthrough }: TransformXmlArgs): Promise<TransformXmlResponse> => {
   Context.current().heartbeat('Starting XML transform');
+  const headers: Record<string, string> = {};
+
+  if (xsltBlacklist) {
+    headers['X-Blacklist'] = xsltBlacklist;
+  }
+
+  if (xsltTransformPassthrough) {
+    headers['X-Passthrough'] = 'true';
+  }
+
   const transformedResponse = await axios.post<TransformXmlResponse>(
     config.xsltTransformAddress,
     xml,
-    ...(xsltTransformPassthrough ? [
-      {
-        headers: {
-          'X-Passthrough': 'true',
-        },
-      },
-    ] : []),
+    ...(Object.keys(headers).length ? [{
+      headers,
+    }] : []),
   );
 
   Context.current().heartbeat('Finishing XML transform');
