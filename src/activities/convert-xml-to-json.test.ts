@@ -193,6 +193,19 @@ describe('ConvertXMLtoJSON', () => {
         ]],
       },
       {
+        prefixlessKey: '456/v1/external-link/foo',
+        articleXml: 'irregular-spacing/123.xml',
+        items: [
+          {
+            fileName: 'file1.pdf',
+            path: 'http://www.google.com/file1.pdf',
+          },
+        ],
+        jsonString: '{ "target": "http://www.google.com/file1.pdf"}',
+        expectedJsonString: '{ "target": "http://www.google.com/file1.pdf"}',
+        expectedReplacements: [],
+      },
+      {
         prefixlessKey: '456/v1/multiple/foo',
         articleXml: 'multiple/123.xml',
         items: [
