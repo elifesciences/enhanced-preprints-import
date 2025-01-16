@@ -127,7 +127,7 @@ describe('ConvertXMLtoJSON', () => {
   });
 
   describe('updateMecaFilePaths', () => {
-    it.each([
+    const testInput = [
       {
         prefixlessKey: '456/v1/simple/foo',
         articleXml: 'simple/123.xml',
@@ -138,7 +138,11 @@ describe('ConvertXMLtoJSON', () => {
           },
         ],
         jsonString: '{ "contentUrl": "supplements/file1.pdf"}',
-        expected: '{ "contentUrl": "456/v1/simple/supplements/file1.pdf"}',
+        expectedJsonString: '{ "contentUrl": "456/v1/simple/supplements/file1.pdf"}',
+        expectedReplacements: [[
+          'supplements/file1.pdf',
+          '456/v1/simple/supplements/file1.pdf',
+        ]],
       },
       {
         prefixlessKey: '456/v1/sub/folder/foo',
@@ -150,7 +154,11 @@ describe('ConvertXMLtoJSON', () => {
           },
         ],
         jsonString: '{ "target": "supplements/file1.pdf"}',
-        expected: '{ "target": "456/v1/sub/folder/supplements/file1.pdf"}',
+        expectedJsonString: '{ "target": "456/v1/sub/folder/supplements/file1.pdf"}',
+        expectedReplacements: [[
+          'supplements/file1.pdf',
+          '456/v1/sub/folder/supplements/file1.pdf',
+        ]],
       },
       {
         prefixlessKey: '456/v1/no-match/foo',
@@ -162,7 +170,11 @@ describe('ConvertXMLtoJSON', () => {
           },
         ],
         jsonString: '{ "contentUrl": "supplements/file1.pdf", "non-target": "supplements/file2.pdf"}',
-        expected: '{ "contentUrl": "supplements/file1.pdf", "non-target": "supplements/file2.pdf"}',
+        expectedJsonString: '{ "contentUrl": "supplements/file1.pdf", "non-target": "supplements/file2.pdf"}',
+        expectedReplacements: [[
+          'supplements/file2.pdf',
+          '456/v1/no-match/supplements/file2.pdf',
+        ]],
       },
       {
         prefixlessKey: '456/v1/irregular-spacing/foo',
@@ -174,7 +186,11 @@ describe('ConvertXMLtoJSON', () => {
           },
         ],
         jsonString: '{ "target"    :   "supplements/file1.pdf", "contentUrl"  :"supplements/file1.pdf"}',
-        expected: '{ "target"    :   "456/v1/irregular-spacing/supplements/file1.pdf", "contentUrl"  :"456/v1/irregular-spacing/supplements/file1.pdf"}',
+        expectedJsonString: '{ "target"    :   "456/v1/irregular-spacing/supplements/file1.pdf", "contentUrl"  :"456/v1/irregular-spacing/supplements/file1.pdf"}',
+        expectedReplacements: [[
+          'supplements/file1.pdf',
+          '456/v1/irregular-spacing/supplements/file1.pdf',
+        ]],
       },
       {
         prefixlessKey: '456/v1/multiple/foo',
@@ -194,14 +210,30 @@ describe('ConvertXMLtoJSON', () => {
           },
         ],
         jsonString: '{ "target": "supplements/file1.pdf", "contentUrl": "supplements/file2.doc", "contentUrl": "file3.xlsx"}',
-        expected: '{ "target": "456/v1/multiple/supplements/file1.pdf", "contentUrl": "456/v1/multiple/supplements/file2.doc", "contentUrl": "456/v1/multiple/file3.xlsx"}',
+        expectedJsonString: '{ "target": "456/v1/multiple/supplements/file1.pdf", "contentUrl": "456/v1/multiple/supplements/file2.doc", "contentUrl": "456/v1/multiple/file3.xlsx"}',
+        expectedReplacements: [
+          [
+            'supplements/file1.pdf',
+            '456/v1/multiple/supplements/file1.pdf',
+          ],
+          [
+            'supplements/file2.doc',
+            '456/v1/multiple/supplements/file2.doc',
+          ],
+          [
+            'file3.xlsx',
+            '456/v1/multiple/file3.xlsx',
+          ],
+        ],
       },
-    ])('return updated path in json string ($prefixlessKey)', async ({
+    ];
+
+    it.each(testInput)('return updated path in json string ($prefixlessKey)', ({
       prefixlessKey,
       articleXml,
       items,
       jsonString,
-      expected,
+      expectedJsonString,
     }) => {
       (getPrefixlessKey as jest.Mock).mockReturnValue(prefixlessKey);
       const version = { id: '456', versionIdentifier: '1' } as VersionedReviewedPreprint;
@@ -218,7 +250,32 @@ describe('ConvertXMLtoJSON', () => {
       };
       const { jsonString: jsonStringResult } = updateMecaFilePaths({ jsonString, version, mecaFiles });
 
-      expect(jsonStringResult).toEqual(expected);
+      expect(jsonStringResult).toEqual(expectedJsonString);
+    });
+
+    it.each(testInput)('return replacements tuple array in json string ($prefixlessKey)', ({
+      prefixlessKey,
+      articleXml,
+      items,
+      jsonString,
+      expectedReplacements,
+    }) => {
+      (getPrefixlessKey as jest.Mock).mockReturnValue(prefixlessKey);
+      const version = { id: '456', versionIdentifier: '1' } as VersionedReviewedPreprint;
+      const mecaFiles: MecaFiles = {
+        id: '456',
+        title: 'foo',
+        article: { path: articleXml } as MecaFile,
+        supportingFiles: items.map((item) => ({
+          id: 'foo',
+          type: 'bar',
+          mimeType: 'stuff',
+          ...item,
+        })),
+      };
+      const { replacements } = updateMecaFilePaths({ jsonString, version, mecaFiles });
+
+      expect(replacements).toStrictEqual(expectedReplacements);
     });
   });
 });
