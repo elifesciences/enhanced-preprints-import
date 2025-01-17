@@ -55,7 +55,7 @@ temporal workflow execute --type importDocmaps -t epp -w import-docmap-test -i '
 
 ## Run an import with an xslt blacklist
 
-This can also be applied to the `importDocmap`, `importManuscriptData` and `importContent` workflows:
+Sometimes we want to disable specific types of XSLT, e.g. handle-etal-in-refs.xsl (full list of options can be found in xsltLogs in Temporal). This can also be applied to the `importDocmap`, `importManuscriptData` and `importContent` workflows:
 
 ```shell
 temporal workflow execute --type importDocmaps -t epp -w import-docmap-test -i '{ "docMapIndexUrl": "http://mock-datahub/enhanced-preprints/docmaps/v1/index", "workflowArgs": { "xsltBlacklist": "file1.xsl, file2.xsl" } }'
