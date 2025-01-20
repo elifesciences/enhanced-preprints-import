@@ -43,12 +43,12 @@ jobs:
         uses: asdf-vm/actions/setup@v2
       - name: Install Temporal CLI plugin
         run: |
-          asdf plugin-add temporal https://github.com/temporalio/asdf-temporal.git
+          asdf plugin-add temporal https://github.com/asdf-community/asdf-temporal.git
           asdf install temporal latest
           asdf global temporal latest
       - name: Verify Temporal installation
         run: |
-          temporal version
+          temporal --version
       - name: Pull images
         run: docker compose pull --quiet
       - name: Bring up import
