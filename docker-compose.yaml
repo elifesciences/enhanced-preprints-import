@@ -30,21 +30,6 @@ services:
       exit 0;
       "
 
-  # mount mock-data/meca, copy .meca and .zip to minio biorxiv s3
-  loadbucket:
-    image: minio/mc:RELEASE.2025-01-17T23-25-50Z
-    depends_on:
-      createbucket:
-        condition: service_completed_successfully
-    entrypoint: >
-      /bin/sh -c "
-      /usr/bin/mc config host add myminio http://minio:9000 minio miniotest;
-      /usr/bin/mc cp --recursive /mock-meca/*.meca /mock-meca/*.zip myminio/biorxiv/;
-      exit 0;
-      "
-    volumes:
-      - ./mock-data/meca:/mock-meca
-
   temporal-db:
     image: percona/percona-server:8.0.34-26.1-multi
     ports:
@@ -126,8 +111,6 @@ services:
       target: worker
     depends_on:
       createbucket:
-        condition: service_completed_successfully
-      loadbucket:
         condition: service_completed_successfully
       yarn:
         condition: service_completed_successfully
@@ -355,15 +338,6 @@ services:
       - 8080:80
     volumes:
       - ./.docker/nginx.conf:/etc/nginx/conf.d/default.conf
-
-  # mock datahub docmaps api
-  mock-datahub:
-    image: nginx:latest
-    ports:
-      - 3002:80
-    volumes:
-      - ./.docker/nginx-datahub-mock.conf:/etc/nginx/conf.d/default.conf
-      - ./mock-data/docmaps:/www/test-data/
 
 volumes:
   minio_storage:
