@@ -35,8 +35,19 @@ jobs:
         run: docker run ${{ env.IMPORT_WORKER_IMAGE_REPO }}:test-${{ github.sha }} -v ./mock-data:/app/mock-data yarn test
       - name: run tsc
         run: docker run ${{ env.IMPORT_WORKER_IMAGE_REPO }}:test-${{ github.sha }} yarn tsc --noEmit
+  test-import:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Pull images
+        run: docker compose pull --quiet
+      - name: Bring up import
+        run: docker compose up --wait
+      - name: Import
+        run: |
+          temporal workflow execute --type importDocmap -w import-docmap-000001 -t epp -i '{ "url": "http://mock-datahub/enhanced-preprints/docmaps/v1/by-publisher/elife/get-by-doi/10.1101%2F000001" }'
   build-and-push:
-    needs: [test]
+    needs: [test, test-import]
     runs-on: ubuntu-latest
     if: github.ref == 'refs/heads/master'
     env:
