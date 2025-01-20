@@ -35,8 +35,53 @@ jobs:
         run: docker run ${{ env.IMPORT_WORKER_IMAGE_REPO }}:test-${{ github.sha }} -v ./mock-data:/app/mock-data yarn test
       - name: run tsc
         run: docker run ${{ env.IMPORT_WORKER_IMAGE_REPO }}:test-${{ github.sha }} yarn tsc --noEmit
+  test-import:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up asdf
+        uses: asdf-vm/actions/setup@v2
+      - name: Install Temporal CLI plugin
+        run: |
+          asdf plugin-add temporal https://github.com/asdf-community/asdf-temporal.git
+          asdf install temporal latest
+          asdf global temporal latest
+      - name: Verify Temporal installation
+        run: |
+          temporal --version
+      - name: Pull images
+        run: docker compose pull --quiet
+      - name: Bring up import
+        run: docker compose up --wait
+      - name: Import
+        run: |
+          timeout 3m temporal workflow execute --type importDocmap -w import-docmap-000001 -t epp -i '{ "url": "http://mock-datahub:80/enhanced-preprints/docmaps/v1/by-publisher/elife/get-by-doi/10.1101%2F000001" }'
+      - name: Import failure
+        if: failure()
+        run: |
+          docker compose ps
+
+          echo "Docker logs for minio"
+          echo ""
+          docker compose logs minio
+          echo ""
+
+          echo "Docker logs for createbucket"
+          echo ""
+          docker compose logs createbucket
+          echo ""
+
+          echo "Docker logs for loadbucket"
+          echo ""
+          docker compose logs loadbucket
+          echo ""
+
+          echo "Docker logs for worker"
+          echo ""
+          docker compose logs worker
+          echo ""
   build-and-push:
-    needs: [test]
+    needs: [test, test-import]
     runs-on: ubuntu-latest
     if: github.ref == 'refs/heads/master'
     env:
