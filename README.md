@@ -102,23 +102,22 @@ You can then view these runs on the dashboard.
 ## Run with a local instance of the API
 
 ```shell
-SERVER_DIR="../your-directory-here" docker compose -f docker-compose.yaml -f docker-compose.override.yaml -f docker-compose.localserver.yaml up
+SERVER_DIR="../your-directory-here" docker compose -f docker-compose.yaml -f docker-compose.localserver.yaml up
 ```
 
 To start the application with a local version of the [`EPP API server`](https://github.com/elifesciences/enhanced-preprints-server), so you can run the application and test local changes of the API, you need to define an environment variable `SERVER_DIR` with the location of your EPP API server project, i.e. `SERVER_DIR="../enhanced-preprints-server"`, then run the above command to invoke the `.localserver` overrides. This will work with the first import workflow command.
 
-To run with the local API but **without** the mocked services, omit `-f docker-compose.override.yaml` from the compose command.
 
 ## Run with a local instance of the API and App
 
 ```shell
-SERVER_DIR="../enhanced-preprints-server" APP_DIR="../enhanced-preprints-client" docker compose -f docker-compose.yaml -f docker-compose.override.yaml -f docker-compose.localserver.yaml -f docker-compose.localapp.yaml up
+SERVER_DIR="../enhanced-preprints-server" APP_DIR="../enhanced-preprints-client" docker compose -f docker-compose.yaml -f docker-compose.localserver.yaml -f docker-compose.localapp.yaml up
 ```
 
 ## Run with a local instance of Encoda API
 
 ```shell
-ENCODA_DIR="../enhanced-preprints-encoda" docker compose -f docker-compose.yaml -f docker-compose.override.yaml -f docker-compose.localencoda.yaml up
+ENCODA_DIR="../enhanced-preprints-encoda" docker compose -f docker-compose.yaml -f docker-compose.localencoda.yaml up
 ```
 
 ## Run with "real" S3 as a source
@@ -133,10 +132,10 @@ MECA_AWS_SECRET_ACCESS_KEY=your secret key
 MECA_AWS_ROLE_ARN=a role to assume to have permission to source S3 buckets # optional
 ```
 
-Then run docker-compose with the base, override and s3 configs, like below:
+Then run docker-compose with the base and s3 configs, like below:
 
 ```shell
-docker compose -f docker-compose.yaml -f docker-compose.override.yaml -f docker-compose.s3.yaml up
+docker compose -f docker-compose.yaml -f docker-compose.s3.yaml up
 ```
 
 To import a specific docmap such as 85111 use the importDocmap workflow:
@@ -157,16 +156,16 @@ AWS_SECRET_ACCESS_KEY=your secret key
 BUCKET_NAME=you will want to create an S3 bucket for your dev experiments
 ```
 
-Then run docker-compose with the base, override and s3 configs, like below:
+Then run docker-compose with the base and s3 configs, like below:
 
 ```shell
-docker compose -f docker-compose.yaml -f docker-compose.override.yaml -f docker-compose.s3-epp.yaml up
+docker compose -f docker-compose.yaml  -f docker-compose.s3-epp.yaml up
 ```
 
 You can combine the s3 source and destination to allow for retrieval from s3 source and preparing the assets and uploading them to S3:
 
 ```shell
-docker compose -f docker-compose.yaml -f docker-compose.override.yaml -f docker-compose.s3.yaml -f docker-compose.s3-epp.yaml up
+docker compose -f docker-compose.yaml -f docker-compose.s3.yaml -f docker-compose.s3-epp.yaml up
 ```
 
 ## Running tests with docker
