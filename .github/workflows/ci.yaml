@@ -39,6 +39,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      - name: Install Temporal CLI
+        run: |
+          curl -sSL https://temporal.download/cli.sh | sh
+          mv temporal $HOME/bin/temporal
+          echo "$HOME/bin" >> $GITHUB_PATH
       - name: Pull images
         run: docker compose pull --quiet
       - name: Bring up import
