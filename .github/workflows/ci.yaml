@@ -39,11 +39,16 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Install Temporal CLI
+      - name: Set up asdf
+        uses: asdf-vm/actions/setup@v2
+      - name: Install Temporal CLI plugin
         run: |
-          curl -sSL https://temporal.download/cli.sh | sh
-          mv temporal $HOME/bin/temporal
-          echo "$HOME/bin" >> $GITHUB_PATH
+          asdf plugin-add temporal https://github.com/temporalio/asdf-temporal.git
+          asdf install temporal latest
+          asdf global temporal latest
+      - name: Verify Temporal installation
+        run: |
+          temporal version
       - name: Pull images
         run: docker compose pull --quiet
       - name: Bring up import
