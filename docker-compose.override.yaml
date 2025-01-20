@@ -1,7 +1,7 @@
 services:
   # mount mock-data/meca, copy .meca and .zip to minio biorxiv s3
   loadbucket:
-    image: minio/mc:RELEASE.2022-12-24T15-21-38Z
+    image: minio/mc:RELEASE.2025-01-17T23-25-50Z.fips
     depends_on:
       createbucket:
         condition: service_completed_successfully
