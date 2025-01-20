@@ -6,5 +6,4 @@ services:
       S3_ENDPOINT:
       BUCKET_NAME: ${BUCKET_NAME}
 volumes:
-  minio_storage: {}
   mongodb_data: {}
