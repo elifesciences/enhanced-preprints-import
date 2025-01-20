@@ -59,6 +59,23 @@ jobs:
       - name: Import failure
         if: failure()
         run: |
+          docker compose ps
+
+          echo "Docker logs for minio"
+          echo ""
+          docker compose logs minio
+          echo ""
+
+          echo "Docker logs for createbucket"
+          echo ""
+          docker compose logs createbucket
+          echo ""
+
+          echo "Docker logs for loadbucket"
+          echo ""
+          docker compose logs loadbucket
+          echo ""
+
           echo "Docker logs for worker"
           echo ""
           docker compose logs worker
