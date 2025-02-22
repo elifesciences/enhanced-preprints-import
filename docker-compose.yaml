@@ -47,7 +47,7 @@ services:
 
 
   temporal:
-    image: temporalio/auto-setup:1.26.2
+    image: temporalio/auto-setup:1.27.0
     ports:
       - 7233:7233
     environment:
