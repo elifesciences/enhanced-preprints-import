@@ -256,7 +256,7 @@ services:
 
   ## ENCODA API
   encoda:
-    image: ghcr.io/elifesciences/enhanced-preprints-encoda:master-fc8686f5-20250212.1010
+    image: ghcr.io/elifesciences/enhanced-preprints-encoda:master-29971997-20250303.1747
     healthcheck:
       test: "wget --post-data '<test></test>' -O - http://localhost:3000/"
       interval: 10s
