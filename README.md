@@ -69,6 +69,12 @@ This can also be applied to the `importDocmap`, `importManuscriptData` and `impo
 temporal workflow execute --type importDocmaps -t epp -w import-docmap-test -i '{ "docMapIndexUrl": "http://mock-datahub/enhanced-preprints/docmaps/v1/index", "workflowArgs": { "preferPreprintContent": true } }'
 ```
 
+## Run an import specifying a version of encoda
+
+```shell
+temporal workflow execute --type importDocmaps -t epp -w import-docmap-test -i '{ "docMapIndexUrl": "http://mock-datahub/enhanced-preprints/docmaps/v1/index", "workflowArgs": { "encodaDefaultVersion": "1.0.12" } }'
+```
+
 ## Trigger the approval signal from CLI
 
 Sometimes, due to issues with Temporal UI, we need to use command line to send a signal. You need to specify the target workflow id, name and input of the signal.

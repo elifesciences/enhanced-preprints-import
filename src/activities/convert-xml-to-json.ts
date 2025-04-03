@@ -195,7 +195,7 @@ export const convertXmlToJson = async ({ version, mecaFiles, workflowArgs }: Con
 
   const transformedJsonResponse = await transformXMLToJson(
     transformedXMLResponse.xml,
-    config.encodaDefaultVersion,
+    workflowArgs?.encodaDefaultVersion ?? config.encodaDefaultVersion,
   );
 
   const { jsonString, replacements } = updateMecaFilePaths({
