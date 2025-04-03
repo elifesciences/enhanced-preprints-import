@@ -77,7 +77,7 @@ export const config: Config = {
   temporalServer: env.TEMPORAL_SERVER || 'localhost',
   xsltTransformAddress: env.XSLT_TRANSFORM_ADDRESS || 'http://localhost:3004',
   encodaTransformAddress: env.ENCODA_TRANSFORM_ADDRESS || 'http://localhost:3005',
-  encodaDefaultVersion: env.ENCODA_DEFAULT_VERSION || '1.0.11',
+  encodaDefaultVersion: env.ENCODA_DEFAULT_VERSION || '1.0.12',
   temporalNamespace: env.TEMPORAL_NAMESPACE || 'default',
   temporalTaskQueue: env.TEMPORAL_TASK_QUEUE || 'epp',
   temporalMaxConcurrentActivityTaskExecutions: getNumericEnvVar('TEMPORAL_MAX_CONCURRENT_ACTIVITY_TASK_EXECUTIONS', 10),
