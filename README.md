@@ -6,9 +6,9 @@ This project facilitates asynchronous importing of content identified from a [do
 
 We then push the parsed content into an EPP server endpoint.
 
-Finally, the results of all this retrieval is stored in an S3 bucket in well structure paths (which can then be configured as a source for a [canteloupe IIIF server](https://github.com/elifesciences/enhanced-preprints-image-server))
+Finally, the results of all this retrieval is stored in an S3 bucket in well structured paths (which can then be configured as a source for a [canteloupe IIIF server](https://github.com/elifesciences/enhanced-preprints-image-server))
 
-The monitoring and scheduling of the import workflows are handled by a [temporal server](https://temporal.io/)testing and dev).
+The monitoring and scheduling of the import workflows are handled by a [temporal server](https://temporal.io/) testing and dev).
 
 # Getting started
 
@@ -174,6 +174,12 @@ You can combine the s3 source and destination to allow for retrieval from s3 sou
 ```shell
 docker compose -f docker-compose.yaml -f docker-compose.override.yaml -f docker-compose.s3.yaml -f docker-compose.s3-epp.yaml up
 ```
+
+## Types of workflow
+
+- `importContent` imports a version of an article as specified in the docmap file.
+- `importDocmap` reads a docmap file and imports all versions of the article defined within that docmap file.
+- `importDocmaps` reads a docmap index and triggers a `importDocmap` workflow for each item in the index by default. If the docmap content is already known, a docmap's import may be skipped, as controlled by an optional s3 state file. 
 
 ## Running tests with docker
 To run the tests with docker (especially useful if they are not working locally) use the following command:
