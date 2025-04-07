@@ -85,7 +85,7 @@ tctl workflow signal --workflow_id import-docmap-test --name approval -i true
 
 ## Run an import workflow with saved state
 
-To run an import workflow that only imports docmaps that are new or have changed since a previous run, start an importDocmaps workflow with a state file name as the second parameter and add a state file to minio:
+To run an import workflow that only imports docmaps that are new or have changed since a previous run, start an importDocmaps workflow with a [state file name](#state-file) as the second parameter and add a state file to minio:
 
 ```shell
 temporal workflow execute --type importDocmaps -t epp -w import-docmap-test -i '{ "docMapIndexUrl": "http://mock-datahub/enhanced-preprints/docmaps/v1/index", "s3StateFileUrl": "state.json" }'
@@ -179,7 +179,25 @@ docker compose -f docker-compose.yaml -f docker-compose.override.yaml -f docker-
 
 - `importContent` imports a version of an article as specified in the docmap file.
 - `importDocmap` reads a docmap file and imports all versions of the article defined within that docmap file.
-- `importDocmaps` reads a docmap index and triggers a `importDocmap` workflow for each item in the index by default. If the docmap content is already known, a docmap's import may be skipped, as controlled by an optional s3 state file. 
+- `importDocmaps` reads a docmap index and triggers a `importDocmap` workflow for each item in the index by default. If the docmap content is already known, a docmap's import may be skipped, as controlled by an optional s3 [state file](#state-file).
+
+## State file
+To find the name of the state file, in the temporal workflow input look for `"s3StateFileUrl": "example-docmap-elife-index.json"` in the configuration object.
+
+To output contents of the state file in AWS cli:
+```shell
+aws s3 cp s3://prod-elife-epp-data/automation/state/example-docmap-elife-index.json
+```
+
+To count the items in the state file use:
+```shell
+aws s3 cp s3://prod-elife-epp-data/automation/state/example-docmap-elife-index.json - | jq ". | length"
+```
+
+To monitor the count of items in the state file:
+```shell
+watch -n 1 'aws s3 cp s3://prod-elife-epp-data/automation/state/example-docmap-elife-index.json - | jq ". | length"'
+```
 
 ## Running tests with docker
 To run the tests with docker (especially useful if they are not working locally) use the following command:
