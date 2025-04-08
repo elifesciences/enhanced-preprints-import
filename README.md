@@ -179,6 +179,8 @@ docker compose -f docker-compose.yaml -f docker-compose.override.yaml -f docker-
 
 ### Prerequisites
 
+Before starting check with the production team a time to perform a full reimport.
+
 Make sure you're using the appropriate AWS profile:
 ```shell
 export AWS_DEFAULT_PROFILE=elife
@@ -190,6 +192,33 @@ Create example-state.json file with an empty array:
 ```shell
 echo "[]" > example-state.json
 ```
+
+Upload state file to S3:
+```shell
+aws s3 cp ./example-state.json s3://prod-elife-epp-data/automation/state/example-state.json
+```
+
+Check the number of docmaps to import:
+```shell
+curl --no-progress-meter https://data-hub-api.elifesciences.org/enhanced-preprints/docmaps/v2/index | jq ".docmaps | length"
+```
+
+#### Create importDocmaps workflows for each batch of 1000 docmaps until workflow generation is complete
+
+Visit: https://temporal.elifesciences.org/namespaces/epp--prod/workflows/start-workflow?workflowId=example-state-YYYY-MM-DD-HHMM&taskQueue=epp&workflowType=importDocmaps
+
+Populate input data with:
+
+```json
+{
+  "docMapIndexUrl": "https://data-hub-api.elifesciences.org/enhanced-preprints/docmaps/v2/index",
+  "end": 1000,
+  "s3StateFileUrl": "example-state.json"
+}
+```
+
+Click "Start Workflow"!
+
 ## Types of workflow
 
 - `importContent` imports a version of an article as specified in the docmap file.
