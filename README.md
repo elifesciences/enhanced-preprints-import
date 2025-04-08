@@ -233,6 +233,8 @@ Once all `importDocmaps` workflows have been successfully created, monitor the p
 
 https://temporal.elifesciences.org/namespaces/epp--prod/workflows?query=%60WorkflowType%60%3D%22importDocmap%22+AND+%60RootWorkflowId%60+STARTS_WITH+%22example-state%22
 
+Time for a strong coffee and a croissant! :coffee: :croissant:
+
 ## Types of workflow
 
 - `importContent` imports a version of an article as specified in the docmap file.
