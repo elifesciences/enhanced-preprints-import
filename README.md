@@ -229,6 +229,10 @@ Check the number of items recorded in the state file. If this is less than the n
 aws s3 cp s3://prod-elife-epp-data/automation/state/example-state.json - | jq ". | length"
 ```
 
+Once all `importDocmaps` workflows have been successfully created, monitor the progress of the import, visit:
+
+https://temporal.elifesciences.org/namespaces/epp--prod/workflows?query=%60WorkflowType%60%3D%22importDocmap%22+AND+%60RootWorkflowId%60+STARTS_WITH+%22example-state%22
+
 ## Types of workflow
 
 - `importContent` imports a version of an article as specified in the docmap file.
