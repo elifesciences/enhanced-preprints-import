@@ -219,6 +219,16 @@ Populate input data with:
 
 Click "Start Workflow"!
 
+Visit the workflow just created.
+
+Wait until `mergeDocmapState` appears in the Event History of the workflow's page in Temporal.
+
+Check the number of items recorded in the state file. If this is less than the number of Docmaps create a new `importDocmaps` workflow:
+
+```shell
+aws s3 cp s3://prod-elife-epp-data/automation/state/example-state.json - | jq ". | length"
+```
+
 ## Types of workflow
 
 - `importContent` imports a version of an article as specified in the docmap file.
