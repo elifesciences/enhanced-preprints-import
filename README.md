@@ -175,6 +175,21 @@ You can combine the s3 source and destination to allow for retrieval from s3 sou
 docker compose -f docker-compose.yaml -f docker-compose.override.yaml -f docker-compose.s3.yaml -f docker-compose.s3-epp.yaml up
 ```
 
+## Run a full docmaps import
+
+### Prerequisites
+
+Make sure you're using the appropriate AWS profile:
+```shell
+export AWS_DEFAULT_PROFILE=elife
+```
+
+### Instructions
+
+Create example-state.json file with an empty array:
+```shell
+echo "[]" > example-state.json
+```
 ## Types of workflow
 
 - `importContent` imports a version of an article as specified in the docmap file.
