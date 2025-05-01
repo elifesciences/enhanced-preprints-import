@@ -162,8 +162,8 @@ __metadata:
   linkType: hard
 
 "@aws-sdk/client-s3@npm:^3.374.0":
-  version: 3.799.0
-  resolution: "@aws-sdk/client-s3@npm:3.799.0"
+  version: 3.800.0
+  resolution: "@aws-sdk/client-s3@npm:3.800.0"
   dependencies:
     "@aws-crypto/sha1-browser": "npm:5.2.0"
     "@aws-crypto/sha256-browser": "npm:5.2.0"
@@ -181,7 +181,7 @@ __metadata:
     "@aws-sdk/middleware-ssec": "npm:3.775.0"
     "@aws-sdk/middleware-user-agent": "npm:3.799.0"
     "@aws-sdk/region-config-resolver": "npm:3.775.0"
-    "@aws-sdk/signature-v4-multi-region": "npm:3.799.0"
+    "@aws-sdk/signature-v4-multi-region": "npm:3.800.0"
     "@aws-sdk/types": "npm:3.775.0"
     "@aws-sdk/util-endpoints": "npm:3.787.0"
     "@aws-sdk/util-user-agent-browser": "npm:3.775.0"
@@ -221,7 +221,7 @@ __metadata:
     "@smithy/util-utf8": "npm:^4.0.0"
     "@smithy/util-waiter": "npm:^4.0.3"
     tslib: "npm:^2.6.2"
-  checksum: 10c0/6ff255d4a063b1f9616c2277aaaa44dc1345a23c1e79ac8fa88a92018a0f3952e7d73a039f1ec4d629b2f889edecfed9d5ae9f4418eaa19ca15ca6b9e359d571
+  checksum: 10c0/718e55fd9b83d4f7a63ee95eef3b452f29398f27ad98ff97f6d14d86ad0d48b2543277af149de21c80e8c1bfeb1c1d3aa55abe4218c30ce7e9d5c47ed2c9c522
   languageName: node
   linkType: hard
 
@@ -658,9 +658,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@aws-sdk/signature-v4-multi-region@npm:3.799.0":
-  version: 3.799.0
-  resolution: "@aws-sdk/signature-v4-multi-region@npm:3.799.0"
+"@aws-sdk/signature-v4-multi-region@npm:3.800.0":
+  version: 3.800.0
+  resolution: "@aws-sdk/signature-v4-multi-region@npm:3.800.0"
   dependencies:
     "@aws-sdk/middleware-sdk-s3": "npm:3.799.0"
     "@aws-sdk/types": "npm:3.775.0"
@@ -668,7 +668,7 @@ __metadata:
     "@smithy/signature-v4": "npm:^5.1.0"
     "@smithy/types": "npm:^4.2.0"
     tslib: "npm:^2.6.2"
-  checksum: 10c0/14eb4b9a9d0c5eeb274bc803d26f92ff9860056c99cbe0f10989cc245cc348cc27091242df52ecddfcc4c429d02aa2d521be2dbdb2e0c4f03f26626d10809af4
+  checksum: 10c0/170010f44abc7a42b6d65e9f106273dfe5e15f22ad55f8bba22cdcf300fd895ed1bd68c8310efd6228646645f7adfa6bda6c7c31c97bee4d2ce2540b705b82a6
   languageName: node
   linkType: hard
 
