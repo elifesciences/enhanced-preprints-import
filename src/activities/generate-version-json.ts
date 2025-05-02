@@ -56,6 +56,7 @@ export const generateVersionJson: GenerateVersionJson = async ({
     id: `${version.id}v${version.versionIdentifier}`, // construct a global version ID from concat of id and version-specific ID
     versionIdentifier: version.versionIdentifier,
     versionDoi: version.doi,
+    ...(manuscript?.doi ? { umbrellaDoi: manuscript.doi } : {}),
     article: articleStruct,
     preprintDoi: version.preprint.doi,
     preprintUrl: version.preprint.url ?? version.preprint.doi,
