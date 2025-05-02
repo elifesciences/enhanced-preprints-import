@@ -7,6 +7,7 @@ import { importContent } from './import-content';
 import type * as activities from '../activities/index';
 
 const {
+  deleteManuscript,
   generateVersionJson,
   generateVersionSummaryJson,
   sendVersionToEpp,
@@ -28,6 +29,10 @@ export async function importManuscriptData({ data, workflowArgs }: ImportManuscr
   upsertSearchAttributes({
     ManuscriptId: [data.id],
   });
+
+  if (workflowArgs?.purgeBeforeImport) {
+    await deleteManuscript(data.id);
+  }
 
   const results = await Promise.all([
     ...data.versions.filter((version): version is VersionedReviewedPreprint => 'preprint' in version).filter((version) => version.preprint.content?.find((contentUrl) => contentUrl.startsWith('s3://'))).map(async (version) => {

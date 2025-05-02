@@ -9,3 +9,4 @@ export { generateVersionSummaryJson } from './generate-version-summary-json';
 export { parseDocMap } from './parse-docmap';
 export { sendVersionToEpp } from './send-version-to-epp';
 export { createDocMapHash } from './create-docmap-hash';
+export { deleteManuscript } from './delete-manuscript';

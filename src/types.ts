@@ -7,6 +7,7 @@ export type WorkflowArgs = {
     preferPreprintContent?: boolean,
     xsltBlacklist?: string,
     encodaDefaultVersion?: string,
+    purgeBeforeImport?: boolean,
   },
 };
 

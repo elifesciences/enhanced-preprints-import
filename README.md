@@ -69,6 +69,14 @@ This can also be applied to the `importDocmap`, `importManuscriptData` and `impo
 temporal workflow execute --type importDocmaps -t epp -w import-docmap-test -i '{ "docMapIndexUrl": "http://mock-datahub/enhanced-preprints/docmaps/v1/index", "workflowArgs": { "preferPreprintContent": true } }'
 ```
 
+## Run an import that purges the manuscript before importing
+
+This option deletes all existing versions of a manuscript before importing, which can be useful for completely refreshing content instead of just updating it. This can be applied to the `importDocmap`, `importManuscriptData` and `importContent` workflows:
+
+```shell
+temporal workflow execute --type importDocmaps -t epp -w import-docmap-test -i '{ "docMapIndexUrl": "http://mock-datahub/enhanced-preprints/docmaps/v1/index", "workflowArgs": { "purgeBeforeImport": true } }'
+```
+
 ## Run an import specifying a version of encoda
 
 ```shell
