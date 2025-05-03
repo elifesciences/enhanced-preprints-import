@@ -5,7 +5,7 @@ import { config } from '../config';
 export const deleteManuscript = async (identifier: string): Promise<string[]> => {
   try {
     Context.current().heartbeat('Delete Manuscript from EPP');
-    const versions = await axios.get<{ versions: Record<string, {}>[] }>(`${config.eppServerUri}/api/preprints/${identifier}`).then(({ data }) => Object.keys(data.versions));
+    const versions = await axios.get<{ versions: Record<string, {}>[] }>(`${config.eppServerUri}/api/preprints/${identifier}?previews=true`).then(({ data }) => Object.keys(data.versions));
     await Promise.all(versions.map((id) => axios.delete(`${config.eppServerUri}/preprints/${id}`)));
     return versions.map((id) => `Successfully deleted (${id})`);
   } catch (error: any) {
