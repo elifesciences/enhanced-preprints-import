@@ -247,6 +247,7 @@ Time for a strong coffee and a croissant! :coffee: :croissant:
 
 - `importContent` imports a version of an article as specified in the docmap file.
 - `importDocmap` reads a docmap file and imports all versions of the article defined within that docmap file.
+- `importManuscriptData` accepts the parsed docmap as input and imports all versions of the article defined.
 - `importDocmaps` reads a docmap index and triggers a `importDocmap` workflow for each item in the index by default. If the docmap content is already known, a docmap's import may be skipped, as controlled by an optional s3 [state file](#state-file).
 
 ## State file
