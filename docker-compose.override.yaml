@@ -1,13 +1,13 @@
 services:
   # mount mock-data/meca, copy .meca and .zip to minio biorxiv s3
   loadbucket:
-    image: minio/mc:RELEASE.2022-12-24T15-21-38Z
+    image: minio/mc:RELEASE.2025-05-21T01-59-54Z
     depends_on:
       createbucket:
         condition: service_completed_successfully
     entrypoint: >
       /bin/sh -c "
-      /usr/bin/mc config host add myminio http://minio:9000 minio miniotest;
+      /usr/bin/mc alias set myminio http://minio:9000 minio miniotest;
       /usr/bin/mc cp --recursive /mock-meca/*.meca /mock-meca/*.zip myminio/biorxiv/;
       exit 0;
       "
