@@ -5,6 +5,7 @@ import { fromWebToken, fromTemporaryCredentials } from '@aws-sdk/credential-prov
 import { Readable } from 'stream';
 import { NodeHttpHandler } from '@aws-sdk/node-http-handler';
 import { S3Config, config } from './config';
+import { VersionOfRecord } from './types';
 
 const getAWSCredentials = (s3config: S3Config) => {
   if (s3config.webIdentityTokenFile !== undefined && s3config.awsAssumeRoleArn !== undefined) {
@@ -78,7 +79,7 @@ export const constructEPPMecaS3FilePath = (mecaFileName: string): S3File => cons
 
 export const constructEPPStateS3FilePath = (stateFileName: string): S3File => constructEPPS3FilePath(`state/${stateFileName}`);
 
-export const constructEPPVersionS3FilePath = (filename: string, version: VersionedReviewedPreprint | VersionedPreprint): S3File => constructEPPS3FilePath(`${version.id}/v${version.versionIdentifier}/${filename}`);
+export const constructEPPVersionS3FilePath = (filename: string, version: VersionedReviewedPreprint | VersionedPreprint | VersionOfRecord): S3File => constructEPPS3FilePath(`${version.id}/v${version.versionIdentifier}/${filename}`);
 
 export const getPrefixlessKey = (file: S3File): string => file.Key.replace(new RegExp(`^${config.eppBucketPrefix}`), '');
 

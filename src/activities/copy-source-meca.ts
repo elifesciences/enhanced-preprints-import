@@ -19,6 +19,7 @@ import {
   constructEPPMecaS3FilePath,
 } from '../S3Bucket';
 import { NonRetryableError } from '../errors';
+import { VersionOfRecord } from '../types';
 
 type CopySourcePreprintToEPPOutput = {
   source: string,
@@ -27,7 +28,7 @@ type CopySourcePreprintToEPPOutput = {
 };
 
 type CopySourceMecaArgs = {
-  version: VersionedReviewedPreprint,
+  version: VersionedReviewedPreprint | VersionOfRecord,
   preferPreprintContent?: boolean,
 };
 
@@ -79,7 +80,7 @@ const s3CopySourceToDestination = async (source: S3File, destination: S3File): P
   };
 };
 
-const s3MoveSourceToDestination = async (source: S3File, destination: S3File, version: VersionedReviewedPreprint) => {
+const s3MoveSourceToDestination = async (source: S3File, destination: S3File, version: VersionedReviewedPreprint | VersionOfRecord) => {
   const s3Connection = getEPPS3Client();
 
   const sourceHash = createHash('sha256')
@@ -117,7 +118,8 @@ const s3MoveSourceToDestination = async (source: S3File, destination: S3File, ve
 };
 
 export const copySourcePreprintToEPP = async ({ version, preferPreprintContent }: CopySourceMecaArgs): Promise<CopySourcePreprintToEPPOutput> => {
-  const content = preferPreprintContent ? [...(version.preprint.content ?? []), ...(version.content ?? [])] : [...(version.content ?? []), ...(version.preprint.content ?? [])];
+  const preprintContent = 'preprint' in version ? (version.preprint.content ?? []) : [];
+  const content = preferPreprintContent ? [...(preprintContent), ...(version.content ?? [])] : [...(version.content ?? []), ...(preprintContent)];
   const sourceS3Url = content.find((url) => url.startsWith('s3://'));
   if (sourceS3Url === undefined) {
     throw new NonRetryableError(`Cannot import content - no s3 URL found in content strings [${content.join(',')}]`);

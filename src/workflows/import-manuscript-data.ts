@@ -1,10 +1,11 @@
-import { ManuscriptData, VersionedPreprint, VersionedReviewedPreprint } from '@elifesciences/docmap-ts';
+import { ManuscriptData, VersionedReviewedPreprint } from '@elifesciences/docmap-ts';
 import {
   executeChild, proxyActivities, upsertSearchAttributes, workflowInfo,
 } from '@temporalio/workflow';
 import { ImportManuscriptResult, WorkflowArgs } from '../types';
 import { importContent } from './import-content';
 import type * as activities from '../activities/index';
+import { isVersionedPreprint, isVersionedReviewedPreprint, isVersionOfRecord } from '../type-guards';
 
 const {
   deleteManuscript,
@@ -34,25 +35,58 @@ export async function importManuscriptData({ data, workflowArgs }: ImportManuscr
     await deleteManuscript(data.id);
   }
 
+  // Helper function to handle version processing with consistent error handling
+  const processVersionWithContent = async (
+    version: VersionedReviewedPreprint | VersionOfRecord,
+    versionType: string,
+  ) => {
+    try {
+      const importContentResult = await executeChild(importContent, {
+        args: [{ version, workflowArgs }],
+        workflowId: `${workflowInfo().workflowId}/${version.versionIdentifier}/content`,
+        searchAttributes: {
+          ManuscriptId: [version.id],
+        },
+      });
+
+      if (typeof importContentResult === 'string') {
+        return {
+          id: version.id,
+          versionIdentifier: version.versionIdentifier,
+          result: importContentResult,
+        };
+      }
+
+      const payloadFile = await generateVersionJson({
+        importContentResult, msid: data.id, version, manuscript: data.manuscript,
+      });
+      await sendVersionToEpp(payloadFile);
+
+      return {
+        id: version.id,
+        versionIdentifier: version.versionIdentifier,
+        result: 'Sent to EPP',
+      };
+    } catch (error) {
+      // eslint-disable-next-line no-console
+      console.error(`Error processing ${versionType} version ${version.id}/${version.versionIdentifier}:`, error);
+      return {
+        id: version.id,
+        versionIdentifier: version.versionIdentifier,
+        result: `Error: ${error instanceof Error ? error.message : JSON.stringify(error)}`,
+      };
+    }
+  };
+
   const results = await Promise.all([
-    ...data.versions.filter((version): version is VersionedReviewedPreprint => 'preprint' in version).filter((version) => version.preprint.content?.find((contentUrl) => contentUrl.startsWith('s3://'))).map(async (version) => {
+    ...data.versions
+      .filter(isVersionedReviewedPreprint)
+      .filter((version) => version.preprint.content?.find((url) => url.startsWith('s3://')))
+      .map(async (version) => processVersionWithContent(version, 'VersionedReviewedPreprint')),
+    ...data.versions.filter(isVersionedPreprint).map(async (version) => {
       try {
-        const importContentResult = await executeChild(importContent, {
-          args: [{ version, workflowArgs }],
-          workflowId: `${workflowInfo().workflowId}/${version.versionIdentifier}/content`,
-          searchAttributes: {
-            ManuscriptId: [version.id],
-          },
-        });
-        if (typeof importContentResult === 'string') {
-          return {
-            id: version.id,
-            versionIdentifier: version.versionIdentifier,
-            result: importContentResult,
-          };
-        }
-        const payloadFile = await generateVersionJson({
-          importContentResult, msid: data.id, version, manuscript: data.manuscript,
+        const payloadFile = await generateVersionSummaryJson({
+          msid: data.id, version,
         });
         await sendVersionToEpp(payloadFile);
         return {
@@ -61,25 +95,16 @@ export async function importManuscriptData({ data, workflowArgs }: ImportManuscr
           result: 'Sent to EPP',
         };
       } catch (error) {
-        console.error('An error occurred:', error);
+        // eslint-disable-next-line no-console
+        console.error(`Error processing VersionedPreprint version ${version.id}/${version.versionIdentifier}:`, error);
         return {
           id: version.id,
           versionIdentifier: version.versionIdentifier,
-          result: `Error: ${JSON.stringify(error)}`,
+          result: `Error: ${error instanceof Error ? error.message : JSON.stringify(error)}`,
         };
       }
     }),
-    ...data.versions.filter((version): version is VersionedPreprint => 'content' in version && 'url' in version).map(async (version) => {
-      const payloadFile = await generateVersionSummaryJson({
-        msid: data.id, version,
-      });
-      await sendVersionToEpp(payloadFile);
-      return {
-        id: version.id,
-        versionIdentifier: version.versionIdentifier,
-        result: 'Sent to EPP',
-      };
-    }),
+    ...data.versions.filter(isVersionOfRecord).map(async (version) => processVersionWithContent(version, 'VersionOfRecord')),
   ]);
 
   return results;

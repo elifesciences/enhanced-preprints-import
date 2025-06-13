@@ -23,7 +23,13 @@ export type ExternalVersionSummary = {
   }[],
 };
 
-export type EnhancedArticle = {
+export type EnhancedArticlePreprint = {
+  preprintDoi?: string,
+  preprintUrl?: string,
+  preprintPosted?: Date,
+};
+
+export type EnhancedArticle = EnhancedArticlePreprint & {
   id: string,
   msid: string,
   doi: string,
@@ -48,9 +54,6 @@ export type EnhancedArticle = {
       }[],
     },
   },
-  preprintDoi: string,
-  preprintUrl: string,
-  preprintPosted: Date,
   sentForReview?: Date,
   peerReview?: EPPPeerReview,
   published?: Date | null,

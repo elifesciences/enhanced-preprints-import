@@ -1,11 +1,13 @@
 import { Article } from '@stencila/schema';
 import { GetObjectCommand, GetObjectCommandInput, PutObjectCommand } from '@aws-sdk/client-s3';
 import { Context } from '@temporalio/activity';
-import { parser, VersionedReviewedPreprint } from '@elifesciences/docmap-ts';
+import { parser } from '@elifesciences/docmap-ts';
 import { S3File, constructEPPVersionS3FilePath, getEPPS3Client } from '../S3Bucket';
-import { EnhancedArticle } from './send-version-to-epp';
+import { EnhancedArticle, EnhancedArticlePreprint } from './send-version-to-epp';
 import { ImportContentOutput } from '../workflows/import-content';
 import { NonRetryableError } from '../errors';
+import { VersionTypes } from '../types';
+import { isVersionedReviewedPreprint } from '../type-guards';
 
 const parseJsonContentToProcessedArticle = (content: string) => {
   const contentStruct = JSON.parse(content) as Article;
@@ -23,20 +25,33 @@ const parseJsonContentToProcessedArticle = (content: string) => {
 type GenerateVersionJson = (
   {
     importContentResult, msid, version, manuscript,
-  }: { importContentResult: ImportContentOutput, msid: string, version: VersionedReviewedPreprint, manuscript?: parser.Manuscript }
+  }: { importContentResult: ImportContentOutput, msid: string, version: VersionTypes, manuscript?: parser.Manuscript }
 ) => Promise<S3File>;
+
+const preparePreprintData = (version: VersionTypes): EnhancedArticlePreprint => {
+  if (isVersionedReviewedPreprint(version)) {
+    if (version.preprint.publishedDate === undefined) {
+      throw new NonRetryableError("Preprint doesn't have a published date");
+    }
+
+    if (version.preprint.url === undefined && version.preprint.doi === undefined) {
+      throw new NonRetryableError("Preprint doesn't have a URL or doi");
+    }
+
+    return {
+      preprintDoi: version.preprint.doi,
+      preprintUrl: version.preprint.url ?? version.preprint.doi,
+      preprintPosted: version.preprint.publishedDate,
+    };
+  }
+
+  return {};
+};
 
 export const generateVersionJson: GenerateVersionJson = async ({
   importContentResult, msid, version, manuscript,
 }) => {
-  if (version.preprint.publishedDate === undefined) {
-    throw new NonRetryableError("Preprint doesn't have a published date");
-  }
-
-  if (version.preprint.url === undefined && version.preprint.doi === undefined) {
-    throw new NonRetryableError("Preprint doesn't have a URL or doi");
-  }
-
+  const preprintData = preparePreprintData(version);
   const s3 = getEPPS3Client();
 
   const getObjectCommandInput: GetObjectCommandInput = {
@@ -58,9 +73,7 @@ export const generateVersionJson: GenerateVersionJson = async ({
     versionDoi: version.doi,
     ...(manuscript?.doi ? { umbrellaDoi: manuscript.doi } : {}),
     article: articleStruct,
-    preprintDoi: version.preprint.doi,
-    preprintUrl: version.preprint.url ?? version.preprint.doi,
-    preprintPosted: version.preprint.publishedDate,
+    ...preprintData,
     sentForReview: version.sentForReviewDate,
     peerReview: importContentResult.reviewData,
     published: version.publishedDate ?? null,

@@ -1,4 +1,4 @@
-import { DocMap } from '@elifesciences/docmap-ts';
+import { DocMap, VersionedReviewedPreprint } from '@elifesciences/docmap-ts';
 
 // Arguments that could be passed through all workflows.
 export type WorkflowArgs = {
@@ -42,3 +42,8 @@ export type DocMapWithHashes = {
   docMap: DocMap,
   docMapHashes: DocMapHashes,
 };
+
+// Temporary type until fully adopted in docmap-ts.
+export type VersionOfRecord = Omit<VersionedReviewedPreprint, 'preprint'>;
+
+export type VersionTypes = VersionedReviewedPreprint | VersionOfRecord;
