@@ -7,7 +7,6 @@ import {
   NotFound,
 } from '@aws-sdk/client-s3';
 import { Context } from '@temporalio/activity';
-import { VersionedReviewedPreprint } from '@elifesciences/docmap-ts';
 import { createHash } from 'crypto';
 import {
   S3File,
@@ -19,7 +18,7 @@ import {
   constructEPPMecaS3FilePath,
 } from '../S3Bucket';
 import { NonRetryableError } from '../errors';
-import { VersionOfRecord } from '../types';
+import { VersionTypes } from '../types';
 
 type CopySourcePreprintToEPPOutput = {
   source: string,
@@ -28,7 +27,7 @@ type CopySourcePreprintToEPPOutput = {
 };
 
 type CopySourceMecaArgs = {
-  version: VersionedReviewedPreprint | VersionOfRecord,
+  version: VersionTypes,
   preferPreprintContent?: boolean,
 };
 
@@ -80,7 +79,7 @@ const s3CopySourceToDestination = async (source: S3File, destination: S3File): P
   };
 };
 
-const s3MoveSourceToDestination = async (source: S3File, destination: S3File, version: VersionedReviewedPreprint | VersionOfRecord) => {
+const s3MoveSourceToDestination = async (source: S3File, destination: S3File, version: VersionTypes) => {
   const s3Connection = getEPPS3Client();
 
   const sourceHash = createHash('sha256')

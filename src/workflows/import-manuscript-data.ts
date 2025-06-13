@@ -1,8 +1,8 @@
-import { ManuscriptData, VersionedReviewedPreprint } from '@elifesciences/docmap-ts';
+import { ManuscriptData } from '@elifesciences/docmap-ts';
 import {
   executeChild, proxyActivities, upsertSearchAttributes, workflowInfo,
 } from '@temporalio/workflow';
-import { ImportManuscriptResult, WorkflowArgs } from '../types';
+import { ImportManuscriptResult, VersionTypes, WorkflowArgs } from '../types';
 import { importContent } from './import-content';
 import type * as activities from '../activities/index';
 import { isVersionedPreprint, isVersionedReviewedPreprint, isVersionOfRecord } from '../type-guards';
@@ -37,7 +37,7 @@ export async function importManuscriptData({ data, workflowArgs }: ImportManuscr
 
   // Helper function to handle version processing with consistent error handling
   const processVersionWithContent = async (
-    version: VersionedReviewedPreprint | VersionOfRecord,
+    version: VersionTypes,
     versionType: string,
   ) => {
     try {
