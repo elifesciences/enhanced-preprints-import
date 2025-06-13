@@ -1,6 +1,7 @@
-import { Evaluation, ReviewType, VersionedReviewedPreprint } from '@elifesciences/docmap-ts';
+import { Evaluation, ReviewType } from '@elifesciences/docmap-ts';
 import { Context } from '@temporalio/activity';
 import axios from 'axios';
+import { VersionTypes } from '../types';
 
 type EPPParticipant = {
   name: string;
@@ -46,7 +47,7 @@ const mapEvaluation = async (evaluation: Evaluation): Promise<EPPEvaluation> => 
   text: await fetchEvaluationContent(evaluation),
 });
 
-export const fetchReviewContent = async (version: VersionedReviewedPreprint): Promise<EPPPeerReview | undefined> => {
+export const fetchReviewContent = async (version: VersionTypes): Promise<EPPPeerReview | undefined> => {
   let reviews: EPPEvaluation[] = [];
   let authorResponse: EPPEvaluation | undefined;
   let evaluationSummary: EPPEvaluation | undefined;

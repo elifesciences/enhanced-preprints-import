@@ -1,10 +1,10 @@
 import { proxyActivities } from '@temporalio/workflow';
-import { VersionedReviewedPreprint } from '@elifesciences/docmap-ts';
 import { S3File } from '../S3Bucket';
 import { MecaFiles } from '../activities/extract-meca';
 import { EPPPeerReview } from '../activities/fetch-review-content';
 import type * as activities from '../activities/index';
-import { WorkflowArgs } from '../types';
+import { VersionTypes, WorkflowArgs } from '../types';
+import { isVersionedReviewedPreprint } from '../type-guards';
 
 const {
   fetchReviewContent,
@@ -44,7 +44,7 @@ const {
 });
 
 type ImportContentArgs = WorkflowArgs & {
-  version: VersionedReviewedPreprint,
+  version: VersionTypes,
 };
 
 export type ImportContentOutput = {
@@ -57,7 +57,7 @@ export type ImportContentOutput = {
 };
 
 export async function importContent({ version, workflowArgs }: ImportContentArgs): Promise<ImportContentOutput | string> {
-  if (!version.content && !version.preprint.content) {
+  if (isVersionedReviewedPreprint(version) && !version.content && !version.preprint.content) {
     return 'No content to import';
   }
 

@@ -1,4 +1,3 @@
-import { VersionedReviewedPreprint } from '@elifesciences/docmap-ts';
 import { XMLParser } from 'fast-xml-parser';
 import { mkdtemp } from 'fs/promises';
 import { tmpdir } from 'os';
@@ -10,6 +9,7 @@ import { Readable } from 'stream';
 import unzipper from 'unzipper';
 import { constructEPPVersionS3FilePath, getEPPS3Client, streamToFile } from '../S3Bucket';
 import { NonRetryableError } from '../errors';
+import { VersionTypes } from '../types';
 
 export type MecaFile = {
   id: string,
@@ -47,7 +47,7 @@ type ManifestItem = {
   instance: ManifestItemInstance[],
 };
 
-export const extractMeca = async (version: VersionedReviewedPreprint): Promise<MecaFiles> => {
+export const extractMeca = async (version: VersionTypes): Promise<MecaFiles> => {
   const tmpDirectory = await mkdtemp(`${tmpdir()}/epp_content`);
 
   const s3 = getEPPS3Client();

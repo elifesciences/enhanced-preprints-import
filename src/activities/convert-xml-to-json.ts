@@ -1,4 +1,3 @@
-import { VersionedReviewedPreprint } from '@elifesciences/docmap-ts';
 import { mkdtemp } from 'fs/promises';
 import { tmpdir } from 'os';
 import path from 'path';
@@ -18,7 +17,7 @@ import {
 } from '../S3Bucket';
 import { MecaFiles } from './extract-meca';
 import { config } from '../config';
-import { WorkflowArgs } from '../types';
+import { VersionTypes, WorkflowArgs } from '../types';
 
 type TransformXmlResponse = {
   xml: string,
@@ -31,7 +30,7 @@ type TransformXmlToJsonResponse = {
 };
 
 type ConvertXmlToJsonArgs = WorkflowArgs & {
-  version: VersionedReviewedPreprint,
+  version: VersionTypes,
   mecaFiles: MecaFiles,
 };
 
@@ -45,7 +44,7 @@ type ConvertXmlToJsonOutput = {
 
 type UpdateMecaFilePathsArgs = {
   jsonString: string,
-  version: VersionedReviewedPreprint,
+  version: VersionTypes,
   mecaFiles: MecaFiles,
 };
 
@@ -101,7 +100,7 @@ export const transformXMLToJson = async (xml: string, version: string, replaceme
   };
 };
 
-const copySourceXmlToKnownPath = async (source: S3File, version: VersionedReviewedPreprint) => {
+const copySourceXmlToKnownPath = async (source: S3File, version: VersionTypes) => {
   const s3 = getEPPS3Client();
 
   const sourceBucketAndPath = `${source.Bucket}/${source.Key}`;
