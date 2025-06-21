@@ -426,8 +426,8 @@ __metadata:
   linkType: hard
 
 "@aws-sdk/credential-providers@npm:^3.374.0":
-  version: 3.830.0
-  resolution: "@aws-sdk/credential-providers@npm:3.830.0"
+  version: 3.834.0
+  resolution: "@aws-sdk/credential-providers@npm:3.834.0"
   dependencies:
     "@aws-sdk/client-cognito-identity": "npm:3.830.0"
     "@aws-sdk/core": "npm:3.826.0"
@@ -448,7 +448,7 @@ __metadata:
     "@smithy/property-provider": "npm:^4.0.4"
     "@smithy/types": "npm:^4.3.1"
     tslib: "npm:^2.6.2"
-  checksum: 10c0/6b1fe53115ce04e549f7dc0c049403c4d4da5a9c5992b497e0fc56a06026b3bdaca921ddef4da02936341ed5b7e2a5a964a77eb8c1b36da4f9332488911fff92
+  checksum: 10c0/7ea7d07e26f2bc7827c449b66d2d9051b27825568b6bbc3422bb41cf60cd968f51733b9a3da6bd859cad229b40083257e7a0c6d7f359e3e676f4f109f45e5181
   languageName: node
   linkType: hard
 
