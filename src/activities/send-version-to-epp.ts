@@ -76,7 +76,11 @@ type EPPImportResponse = {
   message: string,
 };
 
-export const sendVersionToEpp = async (payloadFile: S3File): Promise<{ result: boolean, version: EnhancedArticle }> => {
+type SendVersionToEppArgs = {
+  payloadFile: S3File,
+};
+
+export const sendVersionToEpp = async ({ payloadFile }: SendVersionToEppArgs): Promise<{ result: boolean, version: EnhancedArticle }> => {
   Context.current().heartbeat('Fetching article JSON');
   const s3 = getEPPS3Client();
   const versionJSON: string = await s3.send(new GetObjectCommand(payloadFile)).then((obj) => obj.Body?.transformToString() ?? '');

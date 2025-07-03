@@ -60,7 +60,7 @@ export async function importManuscriptData({ data, workflowArgs }: ImportManuscr
       const payloadFile = await generateVersionJson({
         importContentResult, msid: data.id, version, manuscript: data.manuscript,
       });
-      await sendVersionToEpp(payloadFile);
+      await sendVersionToEpp({ payloadFile });
 
       return {
         id: version.id,
@@ -88,7 +88,7 @@ export async function importManuscriptData({ data, workflowArgs }: ImportManuscr
         const payloadFile = await generateVersionSummaryJson({
           msid: data.id, version,
         });
-        await sendVersionToEpp(payloadFile);
+        await sendVersionToEpp({ payloadFile });
         return {
           id: version.id,
           versionIdentifier: version.versionIdentifier,
