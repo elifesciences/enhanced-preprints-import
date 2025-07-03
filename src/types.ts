@@ -8,6 +8,7 @@ export type WorkflowArgs = {
     xsltBlacklist?: string,
     encodaDefaultVersion?: string,
     purgeBeforeImport?: boolean,
+    siteName?: string,
   },
 };
 

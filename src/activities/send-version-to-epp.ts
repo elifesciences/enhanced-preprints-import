@@ -7,6 +7,7 @@ import { GetObjectCommand } from '@aws-sdk/client-s3';
 import { config } from '../config';
 import { EPPPeerReview } from './fetch-review-content';
 import { S3File, getEPPS3Client } from '../S3Bucket';
+import { WorkflowArgs } from '../types';
 
 export type Content = Array<Node> | Node;
 
@@ -76,15 +77,18 @@ type EPPImportResponse = {
   message: string,
 };
 
-type SendVersionToEppArgs = {
+type SendVersionToEppArgs = WorkflowArgs & {
   payloadFile: S3File,
 };
 
-export const sendVersionToEpp = async ({ payloadFile }: SendVersionToEppArgs): Promise<{ result: boolean, version: EnhancedArticle }> => {
+export const sendVersionToEpp = async ({ payloadFile, workflowArgs }: SendVersionToEppArgs): Promise<{ result: boolean, version: EnhancedArticle }> => {
   Context.current().heartbeat('Fetching article JSON');
   const s3 = getEPPS3Client();
   const versionJSON: string = await s3.send(new GetObjectCommand(payloadFile)).then((obj) => obj.Body?.transformToString() ?? '');
   const version = JSON.parse(versionJSON);
+  if (workflowArgs?.siteName) {
+    version.siteName = workflowArgs.siteName;
+  }
   try {
     Context.current().heartbeat('Sending version data to EPP');
     const versionImportUri = `${config.eppServerUri}/preprints`;
