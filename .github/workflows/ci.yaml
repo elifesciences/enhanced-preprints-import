@@ -39,6 +39,11 @@ jobs:
     needs: [test]
     runs-on: ubuntu-latest
     if: github.ref == 'refs/heads/master'
+    permissions:
+      contents: read
+      id-token: write
+      attestations: write
+      packages: write
     env:
       IMPORT_WORKER_IMAGE_REPO: ghcr.io/elifesciences/enhanced-preprints-import-worker
     steps:
@@ -61,6 +66,7 @@ jobs:
         run: echo "commit_sha=${GITHUB_SHA:0:8}" >> $GITHUB_OUTPUT
       - name: Build and push docker image
         uses: docker/build-push-action@v6
+        id: build-push
         with:
           context: .
           cache-from: type=gha
@@ -71,3 +77,8 @@ jobs:
           tags: |
             ${{ env.IMPORT_WORKER_IMAGE_REPO }}:latest
             ${{ env.IMPORT_WORKER_IMAGE_REPO }}:master-${{ steps.commit_sha.outputs.commit_sha }}-${{ steps.date.outputs.date }}
+      - name: Generate artefact attestation
+        uses: actions/attest-build-provenance@v1
+        with:
+          subject-name: ghcr.io/elifesciences/enhanced-preprints-client
+          subject-digest: ${{ steps.build-push.outputs.digest }}
