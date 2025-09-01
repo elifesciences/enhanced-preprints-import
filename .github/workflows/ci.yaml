@@ -78,7 +78,7 @@ jobs:
             ${{ env.IMPORT_WORKER_IMAGE_REPO }}:latest
             ${{ env.IMPORT_WORKER_IMAGE_REPO }}:master-${{ steps.commit_sha.outputs.commit_sha }}-${{ steps.date.outputs.date }}
       - name: Generate artefact attestation
-        uses: actions/attest-build-provenance@v1
+        uses: actions/attest-build-provenance@v3
         with:
           subject-name: ghcr.io/elifesciences/enhanced-preprints-client
           subject-digest: ${{ steps.build-push.outputs.digest }}
