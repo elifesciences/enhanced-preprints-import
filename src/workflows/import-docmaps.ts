@@ -11,6 +11,11 @@ import {
 import type * as activities from '../activities/index';
 import { DocMapHashes, ImportDocmapsMessage, WorkflowArgs } from '../types';
 import { importDocmap } from './import-docmap';
+import {
+  SecretsManagerClient,
+  GetSecretValueCommand,
+} from "@aws-sdk/client-secrets-manager";
+import axios from 'axios';
 
 const {
   filterDocmapIndex,
@@ -60,6 +65,27 @@ export async function importDocmaps({
   ));
   docMapIdHashes.push(...await filterDocmapIndex(docMapIndexUrl, s3StateFileUrl, start, end));
 
+  const secret_name = "clusters/flux-test/alerts-urls";
+
+  const client = new SecretsManagerClient({
+    region: "us-east-1",
+  });
+
+  let response;
+
+  try {
+    response = await client.send(
+      new GetSecretValueCommand({
+        SecretId: secret_name,
+        VersionStage: "AWSCURRENT",
+      })
+    );
+  } catch (error) {
+    throw error;
+  }
+
+  const secret = response.SecretString;
+
   if (docMapIdHashes.length === 0) {
     return {
       status: 'SKIPPED',
@@ -71,6 +97,11 @@ export async function importDocmaps({
   if (thresholdMet(docMapIdHashes, docMapThreshold)) {
     await condition(() => typeof approval === 'boolean');
     if (!approval) {
+      axios.post(secret['slack-api-url'], {
+        text: 'Large import not approved',
+      })
+      .then((response) => console.log(response.data))
+      .then((error) => console.log(error));
       return {
         status: 'NOT APPROVED',
         message: 'Large import not approved',
