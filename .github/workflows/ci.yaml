@@ -80,5 +80,5 @@ jobs:
       - name: Generate artefact attestation
         uses: actions/attest-build-provenance@v1
         with:
-          subject-name: ghcr.io/elifesciences/enhanced-preprints-client
+          subject-name: ghcr.io/elifesciences/enhanced-preprints-import
           subject-digest: ${{ steps.build-push.outputs.digest }}
