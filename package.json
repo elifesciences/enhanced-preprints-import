@@ -17,7 +17,7 @@
     "@temporalio/worker": "^1.7.4",
     "@temporalio/workflow": "^1.7.4",
     "axios": "^1.2.2",
-    "fast-xml-parser": "^4.0.11",
+    "fast-xml-parser": "^5.0.0",
     "ts-node": "10.9.2",
     "typescript": "5.9.2",
     "unzipper": "^0.12.0"
