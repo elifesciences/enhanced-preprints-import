@@ -270,7 +270,7 @@ services:
 
   ## EPP API
   api:
-    image: ghcr.io/elifesciences/enhanced-preprints-server:master-077e0a06-20250906.0240
+    image: ghcr.io/elifesciences/enhanced-preprints-server:master-8f2dcf84-20250907.1001
     healthcheck:
       test: sh -c 'apk add curl; curl http://localhost:3000/'
       interval: 5s
