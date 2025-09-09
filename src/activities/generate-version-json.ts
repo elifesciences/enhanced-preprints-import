@@ -52,6 +52,12 @@ export const generateVersionJson: GenerateVersionJson = async ({
   importContentResult, msid, version, manuscript,
 }) => {
   const preprintData = preparePreprintData(version);
+  const pdfUrl = [
+    ...(version.content ?? []),
+    ...('preprint' in version ? (version.preprint.content ?? []) : []),
+  ]
+    .find((url) => url.endsWith('.pdf'));
+
   const s3 = getEPPS3Client();
 
   const getObjectCommandInput: GetObjectCommandInput = {
@@ -95,6 +101,7 @@ export const generateVersionJson: GenerateVersionJson = async ({
     })),
     publishedYear: manuscript?.publishedDate ? new Date(manuscript.publishedDate).getFullYear() : undefined,
     license: version.license,
+    ...(pdfUrl ? { pdfUrl } : {}),
   };
 
   Context.current().heartbeat('storing generated EPP JSON');

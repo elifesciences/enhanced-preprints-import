@@ -70,6 +70,7 @@ export type EnhancedArticle = EnhancedArticlePreprint & {
   }[],
   publishedYear?: number,
   license?: string,
+  pdfUrl?: string,
 };
 
 type EPPImportResponse = {

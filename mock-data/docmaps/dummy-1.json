@@ -86,6 +86,10 @@
             {
               "type": "computer-file",
               "url": "s3://biorxiv/dummy-1.meca"
+            },
+            {
+              "type": "computer-file",
+              "url": "https://biorxiv/dummy-1.pdf"
             }
           ]
         }
@@ -114,6 +118,10 @@
                 {
                   "type": "computer-file",
                   "url": "s3://biorxiv/dummy-1-enhanced.zip"
+                },
+                {
+                  "type": "computer-file",
+                  "url": "https://biorxiv/dummy-1-enhanced.pdf"
                 }
               ]
             }
