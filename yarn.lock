@@ -104,9 +104,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@aws-sdk/client-cognito-identity@npm:3.914.0":
-  version: 3.914.0
-  resolution: "@aws-sdk/client-cognito-identity@npm:3.914.0"
+"@aws-sdk/client-cognito-identity@npm:3.915.0":
+  version: 3.915.0
+  resolution: "@aws-sdk/client-cognito-identity@npm:3.915.0"
   dependencies:
     "@aws-crypto/sha256-browser": "npm:5.2.0"
     "@aws-crypto/sha256-js": "npm:5.2.0"
@@ -147,7 +147,7 @@ __metadata:
     "@smithy/util-retry": "npm:^4.2.3"
     "@smithy/util-utf8": "npm:^4.2.0"
     tslib: "npm:^2.6.2"
-  checksum: 10c0/51a59d672553353279d5346ce22932852c1cd35b792db5c13932ce5bb7ce4eb494d99ac3e6a7706bf0a66e8d58e255966e3406e89c9b14af05e89bb5da9d2143
+  checksum: 10c0/98b4624fd3fd04d274bc92b7d6aaddabbe8fbf2168cc5e98103d1c5bfc3b4cbad5bea4851d2b41b83946f27f33a05ac4a836cc24c479dff96cb66579a32b4c74
   languageName: node
   linkType: hard
 
@@ -283,16 +283,16 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@aws-sdk/credential-provider-cognito-identity@npm:3.914.0":
-  version: 3.914.0
-  resolution: "@aws-sdk/credential-provider-cognito-identity@npm:3.914.0"
+"@aws-sdk/credential-provider-cognito-identity@npm:3.915.0":
+  version: 3.915.0
+  resolution: "@aws-sdk/credential-provider-cognito-identity@npm:3.915.0"
   dependencies:
-    "@aws-sdk/client-cognito-identity": "npm:3.914.0"
+    "@aws-sdk/client-cognito-identity": "npm:3.915.0"
     "@aws-sdk/types": "npm:3.914.0"
     "@smithy/property-provider": "npm:^4.2.3"
     "@smithy/types": "npm:^4.8.0"
     tslib: "npm:^2.6.2"
-  checksum: 10c0/135777e42b446d3b415d127f6090108e8fa74e876d3128cc16f83400b4ad59e77c3a37ba7076d18dd1cecef90b8802a3b587d0f2333a45945fa1c1a15af57067
+  checksum: 10c0/5495e3805cb381385a4176c944668f6058b0d90e7f3843a1cf2b03422763c658fb62ad5db94f4c93ccc5c7bc406ed2c56e5a67c0dea319110b26925e3aee28e3
   languageName: node
   linkType: hard
 
@@ -414,12 +414,12 @@ __metadata:
   linkType: hard
 
 "@aws-sdk/credential-providers@npm:^3.374.0":
-  version: 3.914.0
-  resolution: "@aws-sdk/credential-providers@npm:3.914.0"
+  version: 3.915.0
+  resolution: "@aws-sdk/credential-providers@npm:3.915.0"
   dependencies:
-    "@aws-sdk/client-cognito-identity": "npm:3.914.0"
+    "@aws-sdk/client-cognito-identity": "npm:3.915.0"
     "@aws-sdk/core": "npm:3.914.0"
-    "@aws-sdk/credential-provider-cognito-identity": "npm:3.914.0"
+    "@aws-sdk/credential-provider-cognito-identity": "npm:3.915.0"
     "@aws-sdk/credential-provider-env": "npm:3.914.0"
     "@aws-sdk/credential-provider-http": "npm:3.914.0"
     "@aws-sdk/credential-provider-ini": "npm:3.914.0"
@@ -436,7 +436,7 @@ __metadata:
     "@smithy/property-provider": "npm:^4.2.3"
     "@smithy/types": "npm:^4.8.0"
     tslib: "npm:^2.6.2"
-  checksum: 10c0/e5db7a99c318f3269c327686c695cd1907f8d5e537c4a23501efad8e59cca5f824508d4479d57d29fd81018c75d970da27589a29fda147324fc7fd959b1caf68
+  checksum: 10c0/4d02690c3c0456a65ef1ccec46dff83b2a0ceb3ea99df7f15fed258a2c99095d6f7e1a2a1526ebbfee56fe52fcd06fd1c08314639f62318aef8d116f85e5ab67
   languageName: node
   linkType: hard
 
