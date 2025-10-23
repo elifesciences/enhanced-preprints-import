@@ -84,7 +84,7 @@ services:
         condition: service_healthy
 
   temporal-ui:
-    image: temporalio/ui:2.41.0
+    image: temporalio/ui:2.42.1
     ports:
       - 8233:8233
     environment:
