@@ -1,4 +1,4 @@
-import { DocMap, VersionedReviewedPreprint } from '@elifesciences/docmap-ts';
+import { type DocMap, type VersionedReviewedPreprint } from '@elifesciences/docmap-ts';
 
 // Arguments that could be passed through all workflows.
 export type WorkflowArgs = {

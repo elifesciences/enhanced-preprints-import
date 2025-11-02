@@ -1,12 +1,12 @@
-import { Article } from '@stencila/schema';
-import { GetObjectCommand, GetObjectCommandInput, PutObjectCommand } from '@aws-sdk/client-s3';
+import { type Article } from '@stencila/schema';
+import { GetObjectCommand, type GetObjectCommandInput, PutObjectCommand } from '@aws-sdk/client-s3';
 import { Context } from '@temporalio/activity';
-import { parser } from '@elifesciences/docmap-ts';
-import { S3File, constructEPPVersionS3FilePath, getEPPS3Client } from '../S3Bucket';
-import { EnhancedArticle, EnhancedArticlePreprint } from './send-version-to-epp';
-import { ImportContentOutput } from '../workflows/import-content';
+import { type parser } from '@elifesciences/docmap-ts';
+import { type S3File, constructEPPVersionS3FilePath, getEPPS3Client } from '../S3Bucket';
+import { type EnhancedArticle, type EnhancedArticlePreprint } from './send-version-to-epp';
+import { type ImportContentOutput } from '../workflows/import-content';
 import { NonRetryableError } from '../errors';
-import { VersionTypes } from '../types';
+import { type VersionTypes } from '../types';
 import { isVersionedReviewedPreprint } from '../type-guards';
 
 const parseJsonContentToProcessedArticle = (content: string) => {

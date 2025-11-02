@@ -1,9 +1,9 @@
 import { proxyActivities } from '@temporalio/workflow';
-import { S3File } from '../S3Bucket';
-import { MecaFiles } from '../activities/extract-meca';
-import { EPPPeerReview } from '../activities/fetch-review-content';
+import { type S3File } from '../S3Bucket';
+import { type MecaFiles } from '../activities/extract-meca';
+import { type EPPPeerReview } from '../activities/fetch-review-content';
 import type * as activities from '../activities/index';
-import { VersionTypes, WorkflowArgs } from '../types';
+import { type VersionTypes, type WorkflowArgs } from '../types';
 import { isVersionedReviewedPreprint } from '../type-guards';
 
 const {

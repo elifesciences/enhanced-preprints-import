@@ -1,11 +1,11 @@
 import { mockClient } from 'aws-sdk-client-mock';
 import {
   CopyObjectCommand,
-  CopyObjectCommandInput,
+  type CopyObjectCommandInput,
   HeadObjectCommand,
-  HeadObjectCommandInput,
+  type HeadObjectCommandInput,
   PutObjectCommand,
-  PutObjectCommandInput,
+  type PutObjectCommandInput,
   S3Client,
 } from '@aws-sdk/client-s3';
 import { copySourcePreprintToEPP } from './copy-source-meca';

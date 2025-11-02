@@ -1,7 +1,7 @@
 import { MockActivityEnvironment } from '@temporalio/testing';
 import axios from 'axios';
 import { mocked } from 'jest-mock';
-import { ReviewType, VersionedReviewedPreprint } from '@elifesciences/docmap-ts';
+import { ReviewType, type VersionedReviewedPreprint } from '@elifesciences/docmap-ts';
 import { fetchReviewContent } from './fetch-review-content';
 
 jest.mock('axios');

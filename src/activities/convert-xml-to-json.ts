@@ -10,14 +10,14 @@ import {
   HeadObjectCommand,
   NotFound,
   PutObjectCommand,
-  PutObjectCommandOutput,
+  type PutObjectCommandOutput,
 } from '@aws-sdk/client-s3';
 import {
-  constructEPPVersionS3FilePath, getEPPS3Client, getPrefixlessKey, S3File,
+  constructEPPVersionS3FilePath, getEPPS3Client, getPrefixlessKey, type S3File,
 } from '../S3Bucket';
-import { MecaFiles } from './extract-meca';
+import { type MecaFiles } from './extract-meca';
 import { config } from '../config';
-import { VersionTypes, WorkflowArgs } from '../types';
+import { type VersionTypes, type WorkflowArgs } from '../types';
 
 type TransformXmlResponse = {
   xml: string,

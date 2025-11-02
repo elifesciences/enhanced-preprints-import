@@ -9,7 +9,7 @@ import {
   startChild,
 } from '@temporalio/workflow';
 import type * as activities from '../activities/index';
-import { DocMapHashes, ImportDocmapsMessage, WorkflowArgs } from '../types';
+import { type DocMapHashes, type ImportDocmapsMessage, type WorkflowArgs } from '../types';
 import { importDocmap } from './import-docmap';
 
 const {

@@ -13,6 +13,7 @@ module.exports = {
     "no-only-tests/no-only-tests": ["error", {
       "focus": ["only"]
     }],
-    "import/no-extraneous-dependencies": ["error", {"devDependencies": ["src/**/*.test.ts"]}]
+    "import/no-extraneous-dependencies": ["error", {"devDependencies": ["src/**/*.test.ts"]}],
+    "@typescript-eslint/consistent-type-imports": ["error", { "fixStyle": "inline-type-imports" }],
   }
 };

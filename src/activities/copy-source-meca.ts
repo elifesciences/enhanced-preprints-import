@@ -1,6 +1,6 @@
 import {
   CopyObjectCommand,
-  CopyObjectCommandInput,
+  type CopyObjectCommandInput,
   GetObjectCommand,
   PutObjectCommand,
   HeadObjectCommand,
@@ -9,7 +9,7 @@ import {
 import { Context } from '@temporalio/activity';
 import { createHash } from 'crypto';
 import {
-  S3File,
+  type S3File,
   constructEPPVersionS3FilePath,
   getEPPS3Client,
   getMecaS3Client,
@@ -18,7 +18,7 @@ import {
   constructEPPMecaS3FilePath,
 } from '../S3Bucket';
 import { NonRetryableError } from '../errors';
-import { VersionTypes } from '../types';
+import { type VersionTypes } from '../types';
 
 type CopySourcePreprintToEPPOutput = {
   source: string,

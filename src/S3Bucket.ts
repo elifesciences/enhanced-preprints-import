@@ -1,11 +1,11 @@
-import { VersionedPreprint } from '@elifesciences/docmap-ts';
+import { type VersionedPreprint } from '@elifesciences/docmap-ts';
 import { createWriteStream, readFileSync } from 'fs';
 import { S3Client } from '@aws-sdk/client-s3';
 import { fromWebToken, fromTemporaryCredentials } from '@aws-sdk/credential-providers';
-import { Readable } from 'stream';
+import { type Readable } from 'stream';
 import { NodeHttpHandler } from '@aws-sdk/node-http-handler';
-import { S3Config, config } from './config';
-import { VersionTypes } from './types';
+import { type S3Config, config } from './config';
+import { type VersionTypes } from './types';
 
 const getAWSCredentials = (s3config: S3Config) => {
   if (s3config.webIdentityTokenFile !== undefined && s3config.awsAssumeRoleArn !== undefined) {

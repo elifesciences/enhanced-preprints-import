@@ -1,5 +1,5 @@
 import { createHash } from 'crypto';
-import { DocMapHashes } from '../types';
+import { type DocMapHashes } from '../types';
 
 type DocMapLikeWithId = {
   id: string,

@@ -2,14 +2,14 @@ import { XMLParser } from 'fast-xml-parser';
 import { mkdtemp } from 'fs/promises';
 import { tmpdir } from 'os';
 import path from 'path';
-import { GetObjectCommand, GetObjectCommandInput, PutObjectCommand } from '@aws-sdk/client-s3';
+import { GetObjectCommand, type GetObjectCommandInput, PutObjectCommand } from '@aws-sdk/client-s3';
 import * as fs from 'fs';
 import { Context } from '@temporalio/activity';
 import { Readable } from 'stream';
 import unzipper from 'unzipper';
 import { constructEPPVersionS3FilePath, getEPPS3Client, streamToFile } from '../S3Bucket';
 import { NonRetryableError } from '../errors';
-import { VersionTypes } from '../types';
+import { type VersionTypes } from '../types';
 
 export type MecaFile = {
   id: string,

@@ -1,9 +1,9 @@
 import { mockClient } from 'aws-sdk-client-mock';
 import {
-  GetObjectCommand, PutObjectCommand, PutObjectCommandInput, S3Client,
+  GetObjectCommand, PutObjectCommand, type PutObjectCommandInput, S3Client,
 } from '@aws-sdk/client-s3';
 import { sdkStreamMixin } from '@aws-sdk/util-stream-node';
-import { ReadStream, createReadStream } from 'fs';
+import { type ReadStream, createReadStream } from 'fs';
 import { extractMeca } from './extract-meca';
 import extractedMecaResult from '../test-utils/extracted-meca-file.json';
 

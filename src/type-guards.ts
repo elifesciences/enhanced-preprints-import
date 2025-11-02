@@ -1,5 +1,5 @@
-import { VersionedPreprint, VersionedReviewedPreprint } from '@elifesciences/docmap-ts';
-import { VersionOfRecord } from './types';
+import { type VersionedPreprint, type VersionedReviewedPreprint } from '@elifesciences/docmap-ts';
+import { type VersionOfRecord } from './types';
 
 export const isVersionedReviewedPreprint = (version: any): version is VersionedReviewedPreprint => 'preprint' in version;
 

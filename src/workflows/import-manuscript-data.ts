@@ -1,8 +1,8 @@
-import { ManuscriptData } from '@elifesciences/docmap-ts';
+import { type ManuscriptData } from '@elifesciences/docmap-ts';
 import {
   executeChild, proxyActivities, upsertSearchAttributes, workflowInfo,
 } from '@temporalio/workflow';
-import { ImportManuscriptResult, VersionTypes, WorkflowArgs } from '../types';
+import { type ImportManuscriptResult, type VersionTypes, type WorkflowArgs } from '../types';
 import { importContent } from './import-content';
 import type * as activities from '../activities/index';
 import { isVersionedPreprint, isVersionedReviewedPreprint, isVersionOfRecord } from '../type-guards';

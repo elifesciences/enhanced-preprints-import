@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { GetObjectCommand, PutObjectCommand } from '@aws-sdk/client-s3';
 import { constructEPPStateS3FilePath, getEPPS3Client } from '../S3Bucket';
-import { DocMapHashes, DocMapIndex, DocMapWithHashes } from '../types';
+import { type DocMapHashes, type DocMapIndex, type DocMapWithHashes } from '../types';
 import { createDocMapHash } from './create-docmap-hash';
 
 export const filterDocmapIndex = async (docMapIndex: string, s3StateFile?: string, start?: number, end?: number): Promise<DocMapHashes[]> => {

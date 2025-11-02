@@ -1,13 +1,13 @@
 import axios from 'axios';
 import {
-  BlockContent, CreativeWorkTypes, InlineContent, Node, Organization, Person,
+  type BlockContent, type CreativeWorkTypes, type InlineContent, type Node, type Organization, type Person,
 } from '@stencila/schema';
 import { ApplicationFailure, Context } from '@temporalio/activity';
 import { GetObjectCommand } from '@aws-sdk/client-s3';
 import { config } from '../config';
-import { EPPPeerReview } from './fetch-review-content';
-import { S3File, getEPPS3Client } from '../S3Bucket';
-import { WorkflowArgs } from '../types';
+import { type EPPPeerReview } from './fetch-review-content';
+import { type S3File, getEPPS3Client } from '../S3Bucket';
+import { type WorkflowArgs } from '../types';
 
 export type Content = Array<Node> | Node;
 

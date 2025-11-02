@@ -1,9 +1,9 @@
 import axios from 'axios';
 import { Context } from '@temporalio/activity';
-import { VersionedReviewedPreprint } from '@elifesciences/docmap-ts';
+import { type VersionedReviewedPreprint } from '@elifesciences/docmap-ts';
 import { transformXML, transformXMLToJson, updateMecaFilePaths } from './convert-xml-to-json';
 import { config } from '../config';
-import { MecaFile, MecaFiles } from './extract-meca';
+import { type MecaFile, type MecaFiles } from './extract-meca';
 import { getPrefixlessKey } from '../S3Bucket';
 
 jest.mock('../S3Bucket', () => ({

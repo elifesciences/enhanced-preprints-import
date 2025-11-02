@@ -1,7 +1,7 @@
-import { Evaluation, ReviewType } from '@elifesciences/docmap-ts';
+import { type Evaluation, type ReviewType } from '@elifesciences/docmap-ts';
 import { Context } from '@temporalio/activity';
 import axios from 'axios';
-import { VersionTypes } from '../types';
+import { type VersionTypes } from '../types';
 
 type EPPParticipant = {
   name: string;

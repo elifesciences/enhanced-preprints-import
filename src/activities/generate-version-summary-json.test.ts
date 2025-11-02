@@ -1,5 +1,5 @@
 import { mockClient } from 'aws-sdk-client-mock';
-import { PutObjectCommand, PutObjectCommandInput, S3Client } from '@aws-sdk/client-s3';
+import { PutObjectCommand, type PutObjectCommandInput, S3Client } from '@aws-sdk/client-s3';
 import { Context } from '@temporalio/activity';
 import { generateVersionSummaryJson } from '.';
 import { NonRetryableError } from '../errors';

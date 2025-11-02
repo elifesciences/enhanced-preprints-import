@@ -1,8 +1,8 @@
 import { PutObjectCommand } from '@aws-sdk/client-s3';
 import { Context } from '@temporalio/activity';
-import { VersionedPreprint } from '@elifesciences/docmap-ts';
-import { S3File, constructEPPVersionS3FilePath, getEPPS3Client } from '../S3Bucket';
-import { ExternalVersionSummary } from './send-version-to-epp';
+import { type VersionedPreprint } from '@elifesciences/docmap-ts';
+import { type S3File, constructEPPVersionS3FilePath, getEPPS3Client } from '../S3Bucket';
+import { type ExternalVersionSummary } from './send-version-to-epp';
 import { NonRetryableError } from '../errors';
 
 type GenerateVersionSummaryJson = (

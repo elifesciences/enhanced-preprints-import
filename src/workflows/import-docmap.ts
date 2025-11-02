@@ -2,9 +2,9 @@ import {
   proxyActivities,
   upsertSearchAttributes,
 } from '@temporalio/workflow';
-import { DocMap } from '@elifesciences/docmap-ts';
+import { type DocMap } from '@elifesciences/docmap-ts';
 import type * as activities from '../activities/index';
-import { ImportDocmapMessage, WorkflowArgs } from '../types';
+import { type ImportDocmapMessage, type WorkflowArgs } from '../types';
 import { importManuscriptData } from './import-manuscript-data';
 
 const { parseDocMap } = proxyActivities<typeof activities>({
