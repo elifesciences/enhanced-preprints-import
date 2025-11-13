@@ -3334,9 +3334,9 @@ __metadata:
   linkType: hard
 
 "@tsconfig/node16@npm:^16.0.0":
-  version: 16.1.6
-  resolution: "@tsconfig/node16@npm:16.1.6"
-  checksum: 10c0/d1746bf027241ffbe8b2a5667685bd13188db32e134e7a7edc04ff4c1655d56a337a8efbf8875f871c73630e9af80f54ef7e2ba8e0a80a509456f2b169dc080b
+  version: 16.1.7
+  resolution: "@tsconfig/node16@npm:16.1.7"
+  checksum: 10c0/d612ed8a4b914f25ac3d68aaa6e109508f7e6711c8a6a3236fe80d60dfbe7d96994430c9b59fd054e4cb8fad04938577be9a3eebc5f912410d711f7a8fba9d2e
   languageName: node
   linkType: hard
 
