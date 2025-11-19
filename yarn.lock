@@ -3475,21 +3475,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/node@npm:*, @types/node@npm:>=13.7.0":
+"@types/node@npm:*, @types/node@npm:>=13.7.0, @types/node@npm:^24.0.0":
   version: 24.10.1
   resolution: "@types/node@npm:24.10.1"
   dependencies:
     undici-types: "npm:~7.16.0"
   checksum: 10c0/d6bca7a78f550fbb376f236f92b405d676003a8a09a1b411f55920ef34286ee3ee51f566203920e835478784df52662b5b2af89159d9d319352e9ea21801c002
-  languageName: node
-  linkType: hard
-
-"@types/node@npm:^22.0.0":
-  version: 22.19.1
-  resolution: "@types/node@npm:22.19.1"
-  dependencies:
-    undici-types: "npm:~6.21.0"
-  checksum: 10c0/6edd93aea86da740cb7872626839cd6f4a67a049d3a3a6639cb592c620ec591408a30989ab7410008d1a0b2d4985ce50f1e488e79c033e4476d3bec6833b0a2f
   languageName: node
   linkType: hard
 
@@ -5107,7 +5098,7 @@ __metadata:
     "@tsconfig/node16": "npm:^16.0.0"
     "@types/eslint": "npm:9.6.1"
     "@types/jest": "npm:^30.0.0"
-    "@types/node": "npm:^22.0.0"
+    "@types/node": "npm:^24.0.0"
     "@types/unzipper": "npm:^0.10.9"
     "@typescript-eslint/eslint-plugin": "npm:^7.0.0"
     "@typescript-eslint/parser": "npm:^7.0.0"
@@ -9924,13 +9915,6 @@ __metadata:
   version: 2.0.5
   resolution: "undefsafe@npm:2.0.5"
   checksum: 10c0/96c0466a5fbf395917974a921d5d4eee67bca4b30d3a31ce7e621e0228c479cf893e783a109af6e14329b52fe2f0cb4108665fad2b87b0018c0df6ac771261d5
-  languageName: node
-  linkType: hard
-
-"undici-types@npm:~6.21.0":
-  version: 6.21.0
-  resolution: "undici-types@npm:6.21.0"
-  checksum: 10c0/c01ed51829b10aa72fc3ce64b747f8e74ae9b60eafa19a7b46ef624403508a54c526ffab06a14a26b3120d055e1104d7abe7c9017e83ced038ea5cf52f8d5e04
   languageName: node
   linkType: hard
 
