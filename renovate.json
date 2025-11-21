@@ -3,6 +3,7 @@
   "extends": [
     "config:base"
   ],
+  "assigneesFromCodeOwners": true,
   "dependencyDashboardTitle":"Dependency Dashboard - EPP import",
   "packageRules": [
     {
