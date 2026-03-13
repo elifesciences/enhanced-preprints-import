@@ -28,7 +28,7 @@ const mockAuthorResponse = {
 };
 
 describe('fetch-review-content', () => {
-  it('adds remote-fetched content to the peer review content', async () => {
+  it('adds remote-fetched content to the peer review content if it matches the sciety URL structure', async () => {
     // Arrange
     const mockedGet = mocked(axios.get);
 
@@ -58,6 +58,63 @@ describe('fetch-review-content', () => {
         authorResponse: {
           ...mockAuthorResponse,
           contentUrls: ['http://review-content.mockedapi/hypothesis:reviewId3/content'],
+        },
+      },
+    };
+
+    const env = new MockActivityEnvironment();
+    const result = await env.run(fetchReviewContent, versionData);
+    expect(result).toStrictEqual({
+      evaluationSummary: {
+        ...mockEvaluationSummary,
+        participants: [{
+          name: 'Reviewing Editor',
+          role: 'senior-editor',
+          institution: 'Monsters University, Monstropolis',
+        }],
+        text: '<h1>Review</h1><p>Review content</p>',
+      },
+      authorResponse: {
+        ...mockAuthorResponse,
+        text: '<h1>Review</h1><p>Review content</p>',
+      },
+      reviews: [{
+        ...mockReview,
+        text: '<h1>Review</h1><p>Review content</p>',
+      }],
+    });
+  });
+
+  it.failing('adds remote-fetched content to the peer review content if it matches the Data Hub URL structure', async () => {
+    // Arrange
+    const mockedGet = mocked(axios.get);
+
+    // @ts-ignore
+    mockedGet.mockImplementation(() => Promise.resolve({
+      data: '<h1>Review</h1><p>Review content</p>',
+      status: 200,
+    }));
+
+    const versionData: VersionedReviewedPreprint = {
+      id: 'testid',
+      doi: 'testdoi',
+      versionIdentifier: '1',
+      preprint: {
+        id: 'testpreprintid',
+        doi: 'testpreprintdoi',
+      },
+      peerReview: {
+        reviews: [{
+          ...mockReview,
+          contentUrls: ['http://review-content.mockedapi/evaluation/get-by-evaluation-id?evaluation_id=reviewId1'],
+        }],
+        evaluationSummary: {
+          ...mockEvaluationSummary,
+          contentUrls: ['http://review-content.mockedapi/evaluation/get-by-evaluation-id?evaluation_id=reviewId2'],
+        },
+        authorResponse: {
+          ...mockAuthorResponse,
+          contentUrls: ['http://review-content.mockedapi/evaluation/get-by-evaluation-id?evaluation_id=reviewId3'],
         },
       },
     };
