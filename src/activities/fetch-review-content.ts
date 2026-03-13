@@ -22,6 +22,11 @@ export type EPPPeerReview = {
 };
 
 export const fetchEvaluationContent = async (evaluation: Evaluation): Promise<string> => {
+  const dataHubContentUrl = evaluation.contentUrls.filter((url) => url.match(/evaluation\/get-by-evaluation-id\?evaluation_id=/));
+  if (dataHubContentUrl.length === 1) {
+    const { data } = await axios.get(dataHubContentUrl[0]);
+    return data;
+  }
   const scietyContentUrl = evaluation.contentUrls.filter((url) => url.match(/hypothesis:[^/]+\/content$/));
   if (scietyContentUrl.length === 1) {
     const { data } = await axios.get(scietyContentUrl[0]);

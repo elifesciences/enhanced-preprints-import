@@ -85,7 +85,7 @@ describe('fetch-review-content', () => {
     });
   });
 
-  it.failing('adds remote-fetched content to the peer review content if it matches the Data Hub URL structure', async () => {
+  it('adds remote-fetched content to the peer review content if it matches the Data Hub URL structure', async () => {
     // Arrange
     const mockedGet = mocked(axios.get);
 
