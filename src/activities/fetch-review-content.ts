@@ -1,5 +1,5 @@
 import { type Evaluation, type ReviewType } from '@elifesciences/docmap-ts';
-import { Context } from '@temporalio/activity';
+import { Context, log } from '@temporalio/activity';
 import axios from 'axios';
 import { type VersionTypes } from '../types';
 
@@ -22,13 +22,16 @@ export type EPPPeerReview = {
 };
 
 export const fetchEvaluationContent = async (evaluation: Evaluation): Promise<string> => {
+  log.info('All urls', { urls: evaluation.contentUrls });
   const dataHubContentUrl = evaluation.contentUrls.filter((url) => url.match(/evaluation\/get-by-evaluation-id\?evaluation_id=/));
   if (dataHubContentUrl.length === 1) {
+    log.info('DataHub content url detected', { url: dataHubContentUrl[0] });
     const { data } = await axios.get(dataHubContentUrl[0]);
     return data;
   }
   const scietyContentUrl = evaluation.contentUrls.filter((url) => url.match(/hypothesis:[^/]+\/content$/));
   if (scietyContentUrl.length === 1) {
+    log.info('Sciety content url detected', { url: scietyContentUrl[0] });
     const { data } = await axios.get(scietyContentUrl[0]);
     return data;
   }
