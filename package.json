@@ -25,7 +25,7 @@
   "devDependencies": {
     "@aws-sdk/util-stream-node": "^3.374.0",
     "@temporalio/testing": "^1.7.4",
-    "@tsconfig/node16": "^16.0.0",
+    "@tsconfig/node18": "^18.2.0",
     "@types/eslint": "9.6.1",
     "@types/jest": "^30.0.0",
     "@types/node": "^22.0.0",
