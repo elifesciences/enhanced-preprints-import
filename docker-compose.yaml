@@ -1,35 +1,18 @@
 version: '3.4'
 services:
-  minio:
-    image: quay.io/minio/minio:RELEASE.2025-09-07T16-13-09Z
+  s3mock:
+    image: adobe/s3mock:5.2.3
     ports:
-      - 9100:9000
-      - 9101:9001
-    volumes:
-      - minio_storage:/data
+      - 9100:9090
     environment:
-      MINIO_ROOT_USER: minio
-      MINIO_ROOT_PASSWORD: miniotest
-    command: server --console-address ":9001" /data
+      # creates both buckets on startup; epp is left empty, biorxiv is populated by loadbucket (docker-compose.override.yaml)
+      COM_ADOBE_TESTING_S3MOCK_STORE_INITIAL_BUCKETS: epp,biorxiv
     healthcheck:
-      test: curl http://minio:9000/minio/health/live
+      test: wget -q -O /dev/null http://s3mock:9090/favicon.ico
       interval: 5s
       timeout: 5s
       retries: 10
       start_period: 2s
-
-  createbucket:
-    image: quay.io/minio/mc:RELEASE.2025-08-13T08-35-41Z
-    depends_on:
-      minio:
-        condition: service_healthy
-    entrypoint: >
-      /bin/sh -c "
-      /usr/bin/mc alias set myminio http://minio:9000 minio miniotest;
-      /usr/bin/mc mb myminio/epp;
-      /usr/bin/mc mb myminio/biorxiv;
-      exit 0;
-      "
 
   temporal-db:
     image: percona/percona-server:8.0.34-26.1-multi
@@ -111,8 +94,8 @@ services:
       context: .
       target: worker
     depends_on:
-      createbucket:
-        condition: service_completed_successfully
+      s3mock:
+        condition: service_healthy
       yarn:
         condition: service_completed_successfully
       temporal-setup-search:
@@ -131,15 +114,15 @@ services:
       TASK_QUEUE_NAME: epp
 
       # EPP S3 bucket
-      S3_ENDPOINT: http://minio:9000
-      AWS_ACCESS_KEY_ID: minio
-      AWS_SECRET_ACCESS_KEY: miniotest
+      S3_ENDPOINT: http://s3mock:9090
+      AWS_ACCESS_KEY_ID: s3mock
+      AWS_SECRET_ACCESS_KEY: s3mock
       BUCKET_NAME: epp
 
-      # Meca S3 Bucket (on minio)
-      MECA_S3_ENDPOINT: http://minio:9000
-      MECA_AWS_ACCESS_KEY_ID: minio
-      MECA_AWS_SECRET_ACCESS_KEY: miniotest
+      # Meca S3 Bucket (on s3mock)
+      MECA_S3_ENDPOINT: http://s3mock:9090
+      MECA_AWS_ACCESS_KEY_ID: s3mock
+      MECA_AWS_SECRET_ACCESS_KEY: s3mock
 
       # other services
       XSLT_TRANSFORM_ADDRESS: http://xslt:80
@@ -163,8 +146,8 @@ services:
       context: .
       target: worker
     depends_on:
-      createbucket:
-        condition: service_completed_successfully
+      s3mock:
+        condition: service_healthy
       yarn:
         condition: service_completed_successfully
       temporal-setup-search:
@@ -184,15 +167,15 @@ services:
       TEMPORAL_TASK_QUEUE: import-docmaps
 
       # EPP S3 bucket
-      S3_ENDPOINT: http://minio:9000
-      AWS_ACCESS_KEY_ID: minio
-      AWS_SECRET_ACCESS_KEY: miniotest
+      S3_ENDPOINT: http://s3mock:9090
+      AWS_ACCESS_KEY_ID: s3mock
+      AWS_SECRET_ACCESS_KEY: s3mock
       BUCKET_NAME: epp
 
-      # Meca S3 Bucket (on minio)
-      MECA_S3_ENDPOINT: http://minio:9000
-      MECA_AWS_ACCESS_KEY_ID: minio
-      MECA_AWS_SECRET_ACCESS_KEY: miniotest
+      # Meca S3 Bucket (on s3mock)
+      MECA_S3_ENDPOINT: http://s3mock:9090
+      MECA_AWS_ACCESS_KEY_ID: s3mock
+      MECA_AWS_SECRET_ACCESS_KEY: s3mock
 
       # other services
       XSLT_TRANSFORM_ADDRESS: http://xslt:80
@@ -313,9 +296,9 @@ services:
     image: ghcr.io/elifesciences/epp-image-server:master-66ed0c30-20260219.0514
     environment:
       SOURCE_STATIC: S3Source
-      S3SOURCE_ENDPOINT: http://minio:9000/
-      S3SOURCE_ACCESS_KEY_ID: minio
-      S3SOURCE_SECRET_KEY: miniotest
+      S3SOURCE_ENDPOINT: http://s3mock:9090/
+      S3SOURCE_ACCESS_KEY_ID: s3mock
+      S3SOURCE_SECRET_KEY: s3mock
       S3SOURCE_BASICLOOKUPSTRATEGY_PATH_PREFIX: /automation/
       S3SOURCE_BASICLOOKUPSTRATEGY_BUCKET_NAME: epp
     ports:
@@ -341,7 +324,6 @@ services:
       - ./.docker/nginx.conf:/etc/nginx/conf.d/default.conf
 
 volumes:
-  minio_storage:
   mongodb_data:
   mysql_data:
   temporal_data:

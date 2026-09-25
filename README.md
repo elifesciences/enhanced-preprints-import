@@ -93,7 +93,7 @@ tctl workflow signal --workflow_id import-docmap-test --name approval -i true
 
 ## Run an import workflow with saved state
 
-To run an import workflow that only imports docmaps that are new or have changed since a previous run, start an importDocmaps workflow with a [state file name](#state-file) as the second parameter and add a state file to minio:
+To run an import workflow that only imports docmaps that are new or have changed since a previous run, start an importDocmaps workflow with a [state file name](#state-file) as the second parameter and add a state file to the S3 bucket (s3mock locally):
 
 ```shell
 temporal workflow execute --type importDocmaps -t epp -w import-docmap-test -i '{ "docMapIndexUrl": "http://mock-datahub/enhanced-preprints/docmaps/v1/index", "s3StateFileUrl": "state.json" }'

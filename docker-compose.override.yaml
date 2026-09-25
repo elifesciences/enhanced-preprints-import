@@ -1,16 +1,19 @@
 services:
-  # mount mock-data/meca, copy .meca and .zip to minio biorxiv s3
+  # mount mock-data/meca, copy .meca and .zip to s3mock biorxiv bucket
   loadbucket:
-    image: quay.io/minio/mc:RELEASE.2025-08-13T08-35-41Z
+    image: amazon/aws-cli:2.31.20
     depends_on:
-      createbucket:
-        condition: service_completed_successfully
+      s3mock:
+        condition: service_healthy
     entrypoint: >
       /bin/sh -c "
-      /usr/bin/mc alias set myminio http://minio:9000 minio miniotest;
-      /usr/bin/mc cp --recursive /mock-meca/*.meca /mock-meca/*.zip myminio/biorxiv/;
+      aws --endpoint-url http://s3mock:9090 s3 cp --recursive /mock-meca s3://biorxiv/ --exclude '*' --include '*.meca' --include '*.zip';
       exit 0;
       "
+    environment:
+      AWS_ACCESS_KEY_ID: s3mock
+      AWS_SECRET_ACCESS_KEY: s3mock
+      AWS_DEFAULT_REGION: us-east-1
     volumes:
       - ./mock-data/meca:/mock-meca
 

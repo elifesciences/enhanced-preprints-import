@@ -6,5 +6,4 @@ services:
       MECA_S3_ENDPOINT:
       MECA_AWS_ROLE_ARN: ${MECA_AWS_ROLE_ARN}
 volumes:
-  minio_storage: {}
   mongodb_data: {}
