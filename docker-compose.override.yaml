@@ -1,7 +1,7 @@
 services:
   # mount mock-data/meca, copy .meca and .zip to s3mock biorxiv bucket
   loadbucket:
-    image: amazon/aws-cli:2.31.20
+    image: amazon/aws-cli:2.37.9
     depends_on:
       s3mock:
         condition: service_healthy
