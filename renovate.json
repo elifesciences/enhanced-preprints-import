@@ -32,7 +32,7 @@
       "versioning": "node"
     },
     {
-      "matchPackageNames": ["@stencila/encoda", "@elifesciences/docmap-ts"],
+      "matchPackageNames": ["@elifesciences/docmap-ts"],
       "automerge": false
     }
   ]
