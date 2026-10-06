@@ -95,7 +95,7 @@ export const transformXMLToJson = async (xml: string, version: string, replaceme
   });
   Context.current().heartbeat('Finishing XML to JSON transform');
   return {
-    version: transformedResponse.headers['content-type'].split(';').map((i: string) => i.trim())[0],
+    version: String(transformedResponse.headers['content-type'] ?? '').split(';').map((i: string) => i.trim())[0],
     body: JSON.stringify(transformedResponse.data),
   };
 };
