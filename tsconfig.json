@@ -4,6 +4,7 @@
     "lib": ["ES2021", "ES2022.Error"],
     "module": "node16",
     "target": "ES2021",
-    "resolveJsonModule": true
+    "resolveJsonModule": true,
+    "types": ["node", "jest"]
   }
 }
