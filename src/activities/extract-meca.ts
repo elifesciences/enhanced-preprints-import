@@ -95,7 +95,7 @@ export const extractMeca = async (version: VersionTypes): Promise<MecaFiles> => 
   ];
   const parser = new XMLParser({
     ignoreAttributes: false,
-    isArray: (name, jpath) => alwaysArray.indexOf(jpath) !== -1,
+    isArray: (name, jpath) => typeof jpath === 'string' && alwaysArray.includes(jpath),
   });
 
   Context.current().heartbeat('Parsing XML');
