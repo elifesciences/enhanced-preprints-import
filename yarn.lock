@@ -2523,10 +2523,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@tsconfig/node20@npm:^20.1.0":
-  version: 20.1.10
-  resolution: "@tsconfig/node20@npm:20.1.10"
-  checksum: 10c0/8ae050b55fceec0aaf3233f7ac41647ec7fc1af0d919c74323c35393fc3c036da7a961ab2391de929467d734d677d6e066c9206ac8adbf0a0bc314f527ef7b4a
+"@tsconfig/node22@npm:^22.0.0":
+  version: 22.0.6
+  resolution: "@tsconfig/node22@npm:22.0.6"
+  checksum: 10c0/595f70f90820a16b34db5e192ac47f66567b694c14a2249e24009df27214fab665f6634c6346ad1b6aa2d222aee7377edfeba7821f0076cba075bc79a0be728c
   languageName: node
   linkType: hard
 
@@ -4444,7 +4444,7 @@ __metadata:
     "@temporalio/testing": "npm:^1.7.4"
     "@temporalio/worker": "npm:^1.7.4"
     "@temporalio/workflow": "npm:^1.7.4"
-    "@tsconfig/node20": "npm:^20.1.0"
+    "@tsconfig/node22": "npm:^22.0.0"
     "@types/eslint": "npm:9.6.1"
     "@types/jest": "npm:^30.0.0"
     "@types/node": "npm:^24.0.0"
