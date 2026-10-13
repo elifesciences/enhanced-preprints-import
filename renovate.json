@@ -34,6 +34,11 @@
     {
       "matchPackageNames": ["@elifesciences/docmap-ts"],
       "automerge": false
+    },
+    {
+      "description": "TypeScript 7 (native Go port) drops the JS API our lint/test/run tooling relies on",
+      "matchPackageNames": ["typescript"],
+      "allowedVersions": "<6.0.0"
     }
   ]
 }
