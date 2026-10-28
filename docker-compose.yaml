@@ -293,7 +293,7 @@ services:
 
   ## Image Server
   image-server:
-    image: ghcr.io/elifesciences/epp-image-server:master-d94ff069-20261027.0614
+    image: ghcr.io/elifesciences/epp-image-server:master-eb126499-20261028.0306
     environment:
       SOURCE_STATIC: S3Source
       S3SOURCE_ENDPOINT: http://s3mock:9090/
