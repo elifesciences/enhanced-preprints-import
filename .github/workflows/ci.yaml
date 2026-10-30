@@ -32,7 +32,7 @@ jobs:
       - name: run lint
         run: docker run ${{ env.IMPORT_WORKER_IMAGE_REPO }}:test-${{ github.sha }} yarn lint
       - name: run test
-        run: docker run ${{ env.IMPORT_WORKER_IMAGE_REPO }}:test-${{ github.sha }} -v ./mock-data:/app/mock-data yarn test
+        run: docker run -v "$PWD/mock-data:/app/mock-data" ${{ env.IMPORT_WORKER_IMAGE_REPO }}:test-${{ github.sha }} yarn test
       - name: run tsc
         run: docker run ${{ env.IMPORT_WORKER_IMAGE_REPO }}:test-${{ github.sha }} yarn tsc --noEmit
   build-and-push:
