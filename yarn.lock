@@ -36,8 +36,8 @@ __metadata:
   linkType: hard
 
 "@aws-sdk/client-s3@npm:^3.374.0":
-  version: 3.1162.0
-  resolution: "@aws-sdk/client-s3@npm:3.1162.0"
+  version: 3.1163.0
+  resolution: "@aws-sdk/client-s3@npm:3.1163.0"
   dependencies:
     "@aws-sdk/checksums": "npm:^3.1002.2"
     "@aws-sdk/core": "npm:^3.980.0"
@@ -50,7 +50,7 @@ __metadata:
     "@smithy/node-http-handler": "npm:^4.14.0"
     "@smithy/types": "npm:^4.19.0"
     tslib: "npm:^2.6.2"
-  checksum: 10c0/63d67b0a311cc9b66005ed2c0f1636ca813d8847d1ac21a855e5d3752123c3206f7a7b8831d38480349cbbf9147a053d605be779b59166241969c5eb96267a61
+  checksum: 10c0/488eaaaf7b95bedb8c26e36fd562b4fa1113b2f125abb13ed1f978a56c651325152a8861596e2a4c82298e79f2aef993a813f236053dbb301ab89fae8bcd88c9
   languageName: node
   linkType: hard
 
@@ -208,8 +208,8 @@ __metadata:
   linkType: hard
 
 "@aws-sdk/credential-providers@npm:^3.374.0":
-  version: 3.1162.0
-  resolution: "@aws-sdk/credential-providers@npm:3.1162.0"
+  version: 3.1163.0
+  resolution: "@aws-sdk/credential-providers@npm:3.1163.0"
   dependencies:
     "@aws-sdk/core": "npm:^3.980.0"
     "@aws-sdk/credential-provider-cognito-identity": "npm:^3.972.80"
@@ -227,7 +227,7 @@ __metadata:
     "@smithy/credential-provider-imds": "npm:^4.5.2"
     "@smithy/types": "npm:^4.19.0"
     tslib: "npm:^2.6.2"
-  checksum: 10c0/5092dae9e47cd5c34c1d3cd7a8f182b72b66e34512f665430193658e4b9f0f5d09438aca5620d6fc66c357ba6871b8b673d153d4620063f41ce4ff9500c018a4
+  checksum: 10c0/398f8010a5fa2235b1c9cf1167c21449a54bbfcb9119191e2ad8b07d04fd4ca9cdf8da9aa4839adc867e5b0176b1a985a81b4f4661a58e5d9bf5a556b77ee95d
   languageName: node
   linkType: hard
 
