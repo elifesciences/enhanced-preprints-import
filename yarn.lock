@@ -2401,118 +2401,118 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@temporalio/activity@npm:1.25.0, @temporalio/activity@npm:^1.7.4":
-  version: 1.25.0
-  resolution: "@temporalio/activity@npm:1.25.0"
+"@temporalio/activity@npm:1.26.0, @temporalio/activity@npm:^1.7.4":
+  version: 1.26.0
+  resolution: "@temporalio/activity@npm:1.26.0"
   dependencies:
-    "@temporalio/client": "npm:1.25.0"
-    "@temporalio/common": "npm:1.25.0"
+    "@temporalio/client": "npm:1.26.0"
+    "@temporalio/common": "npm:1.26.0"
   peerDependencies:
     long: ^5.3.2
     protobufjs: ^8.7.1
-  checksum: 10c0/0ef46c86262d7561c5834227a8e1031b432dfe35904bb068c52ed014c1a4a197dc674943d2ed37b193c92966f2022f814a097b612f4fdc9cc32cb9cd3d1a5deb
+  checksum: 10c0/ab5e12c5f4d6619679259508f777183f83a4f69777d33f67c21c47791cc666025f7245ecec1861948c9ad099bf769c1b6cbeaa22642f11b1588a4ba89832e6a5
   languageName: node
   linkType: hard
 
-"@temporalio/client@npm:1.25.0, @temporalio/client@npm:^1.7.4":
-  version: 1.25.0
-  resolution: "@temporalio/client@npm:1.25.0"
+"@temporalio/client@npm:1.26.0, @temporalio/client@npm:^1.7.4":
+  version: 1.26.0
+  resolution: "@temporalio/client@npm:1.26.0"
   dependencies:
     "@grpc/grpc-js": "npm:^1.13.6"
-    "@temporalio/common": "npm:1.25.0"
-    "@temporalio/proto": "npm:1.25.0"
+    "@temporalio/common": "npm:1.26.0"
+    "@temporalio/proto": "npm:1.26.0"
     nexus-rpc: "npm:^0.0.3"
     uuid: "npm:^11.1.0"
   peerDependencies:
     long: ^5.3.2
     protobufjs: ^8.7.1
-  checksum: 10c0/77d21ee8d14273f48527bea5959fe2240eb2cb1f5e6fac9f91483d021f605eac04d26b4a085e7b54957e8f7355be5bf3cee9e62a6208dba1e7a30b29965132c2
+  checksum: 10c0/bf2b6120f817fbf1bd31e4a25859ff1a67b182e66dead68421770a8189ceb72ddb3cae4e5e67159b6ed971677ed1b43cfe0b37938d97658775ef16832a48337e
   languageName: node
   linkType: hard
 
-"@temporalio/common@npm:1.25.0, @temporalio/common@npm:^1.7.4":
-  version: 1.25.0
-  resolution: "@temporalio/common@npm:1.25.0"
+"@temporalio/common@npm:1.26.0, @temporalio/common@npm:^1.7.4":
+  version: 1.26.0
+  resolution: "@temporalio/common@npm:1.26.0"
   dependencies:
-    "@temporalio/proto": "npm:1.25.0"
+    "@temporalio/proto": "npm:1.26.0"
     ms: "npm:3.0.0-canary.202508261828"
     nexus-rpc: "npm:^0.0.3"
   peerDependencies:
     long: ^5.3.2
     protobufjs: ^8.7.1
-  checksum: 10c0/d96406f1156387c2f1ec76d2a46e7fe800a6bb6116abc29e854160cdba5ce3b3cee9d4daaf7aa91b7840bfa81b93f7c659112398b6ebca014fca3915500e24d9
+  checksum: 10c0/200cd9b852c9dd552ee2dec88b32427a29f53b774a7a0bd3d6d468d3e4a78d49a5e0f61ca0f0f3d8873e296f4e8de429b43fc32d8c05d93393d1853473edb8bf
   languageName: node
   linkType: hard
 
-"@temporalio/core-bridge@npm:1.25.0":
-  version: 1.25.0
-  resolution: "@temporalio/core-bridge@npm:1.25.0"
+"@temporalio/core-bridge@npm:1.26.0":
+  version: 1.26.0
+  resolution: "@temporalio/core-bridge@npm:1.26.0"
   dependencies:
     "@grpc/grpc-js": "npm:^1.13.6"
-    "@temporalio/common": "npm:1.25.0"
+    "@temporalio/common": "npm:1.26.0"
   peerDependencies:
     long: ^5.3.2
     protobufjs: ^8.7.1
-  checksum: 10c0/be82506d902e50b78211f4f58c1058cad9e0fa15bfd1990d04514dd15594233d32da437f93c628c019154510409ad209db610e23798c3a9b8a83fe15873a9db2
+  checksum: 10c0/f5bce286afd691883183c0ca392c64aea35364acf3cafeb9781679d29ea54aec76d76fa332818ce77c653c1abeff4d329bb6e6ed10e8667de48419cb651535de
   languageName: node
   linkType: hard
 
-"@temporalio/nexus@npm:1.25.0":
-  version: 1.25.0
-  resolution: "@temporalio/nexus@npm:1.25.0"
+"@temporalio/nexus@npm:1.26.0":
+  version: 1.26.0
+  resolution: "@temporalio/nexus@npm:1.26.0"
   dependencies:
-    "@temporalio/client": "npm:1.25.0"
-    "@temporalio/common": "npm:1.25.0"
-    "@temporalio/proto": "npm:1.25.0"
+    "@temporalio/client": "npm:1.26.0"
+    "@temporalio/common": "npm:1.26.0"
+    "@temporalio/proto": "npm:1.26.0"
     nexus-rpc: "npm:^0.0.3"
   peerDependencies:
     long: ^5.3.2
     protobufjs: ^8.7.1
-  checksum: 10c0/f1decc851a3b3bd382aebcdac732fb22117da290c6b6dd9840ca3ed35c3e4bd6b064a90619d1de06ab0e599d91d758df2cc4027f88ed82ef62543dc556a53517
+  checksum: 10c0/526f7c5f6a5a7c827b9d97f3e9e66411f57627d9d1ce588568c447c70f1cc5517b87d0882e5adc1ae57f73373b67aec95215d3fe8440ef2051c1b8e3ec7fa767
   languageName: node
   linkType: hard
 
-"@temporalio/proto@npm:1.25.0":
-  version: 1.25.0
-  resolution: "@temporalio/proto@npm:1.25.0"
+"@temporalio/proto@npm:1.26.0":
+  version: 1.26.0
+  resolution: "@temporalio/proto@npm:1.26.0"
   dependencies:
     long: "npm:^5.3.2"
     protobufjs: "npm:^8.7.1"
-  checksum: 10c0/847d0099abbcb67c23a2f67e777ce63af7389514c288fefc76d25d410d16c628a0964c32bc55f78ff7b7a7986e859adb9347cc3596d90670e91cf8194c90ef4a
+  checksum: 10c0/811d0c3091c6c19b6e097bcfdaf924ef702c5b6a371a7c43f297b68be6aee8bc8e7635aeab98c7c6d6d69bfc995ce1f0cb9e630ce33707ac2b9d8ad4b7b83625
   languageName: node
   linkType: hard
 
 "@temporalio/testing@npm:^1.7.4":
-  version: 1.25.0
-  resolution: "@temporalio/testing@npm:1.25.0"
+  version: 1.26.0
+  resolution: "@temporalio/testing@npm:1.26.0"
   dependencies:
-    "@temporalio/activity": "npm:1.25.0"
-    "@temporalio/client": "npm:1.25.0"
-    "@temporalio/common": "npm:1.25.0"
-    "@temporalio/core-bridge": "npm:1.25.0"
-    "@temporalio/proto": "npm:1.25.0"
-    "@temporalio/worker": "npm:1.25.0"
-    "@temporalio/workflow": "npm:1.25.0"
+    "@temporalio/activity": "npm:1.26.0"
+    "@temporalio/client": "npm:1.26.0"
+    "@temporalio/common": "npm:1.26.0"
+    "@temporalio/core-bridge": "npm:1.26.0"
+    "@temporalio/proto": "npm:1.26.0"
+    "@temporalio/worker": "npm:1.26.0"
+    "@temporalio/workflow": "npm:1.26.0"
   peerDependencies:
     long: ^5.3.2
     protobufjs: ^8.7.1
-  checksum: 10c0/79dcbc3afc64f8004031441f02af1f1388bb9347d43c48d0f0f2fdb997401b893eae337f7000b0adc741186bd5c5c3d6127904443afbe7d890172e589f2d438b
+  checksum: 10c0/334fa695dfe24bcf50d0feb090e0cc3874a4bdb3e5f62a2cc0dc99df983aad7c61ce9d60d5fa905795d69a93320c20a164dceb073488c972232ddf994bb778af
   languageName: node
   linkType: hard
 
-"@temporalio/worker@npm:1.25.0, @temporalio/worker@npm:^1.7.4":
-  version: 1.25.0
-  resolution: "@temporalio/worker@npm:1.25.0"
+"@temporalio/worker@npm:1.26.0, @temporalio/worker@npm:^1.7.4":
+  version: 1.26.0
+  resolution: "@temporalio/worker@npm:1.26.0"
   dependencies:
     "@grpc/grpc-js": "npm:^1.13.6"
     "@swc/core": "npm:^1.3.102"
-    "@temporalio/activity": "npm:1.25.0"
-    "@temporalio/client": "npm:1.25.0"
-    "@temporalio/common": "npm:1.25.0"
-    "@temporalio/core-bridge": "npm:1.25.0"
-    "@temporalio/nexus": "npm:1.25.0"
-    "@temporalio/proto": "npm:1.25.0"
-    "@temporalio/workflow": "npm:1.25.0"
+    "@temporalio/activity": "npm:1.26.0"
+    "@temporalio/client": "npm:1.26.0"
+    "@temporalio/common": "npm:1.26.0"
+    "@temporalio/core-bridge": "npm:1.26.0"
+    "@temporalio/nexus": "npm:1.26.0"
+    "@temporalio/proto": "npm:1.26.0"
+    "@temporalio/workflow": "npm:1.26.0"
     heap-js: "npm:^2.6.0"
     memfs: "npm:^4.6.0"
     nexus-rpc: "npm:^0.0.3"
@@ -2526,21 +2526,21 @@ __metadata:
   peerDependencies:
     long: ^5.3.2
     protobufjs: ^8.7.1
-  checksum: 10c0/f7bbf11b81c4cbe79a49af602e761dee822233e0ebb771325982ced3b8d03313d285edc5a63fa871f569de0694e4c01afc53d4a6bf16a074ad89b135f2891463
+  checksum: 10c0/f20598775c0d12795c27637f4c2912b177778a5f39d007a1b20eeb53640e0a109153862d8351cc0684b0c74c394435643b26736305626c92cdbe8f65c10fd149
   languageName: node
   linkType: hard
 
-"@temporalio/workflow@npm:1.25.0, @temporalio/workflow@npm:^1.7.4":
-  version: 1.25.0
-  resolution: "@temporalio/workflow@npm:1.25.0"
+"@temporalio/workflow@npm:1.26.0, @temporalio/workflow@npm:^1.7.4":
+  version: 1.26.0
+  resolution: "@temporalio/workflow@npm:1.26.0"
   dependencies:
-    "@temporalio/common": "npm:1.25.0"
-    "@temporalio/proto": "npm:1.25.0"
+    "@temporalio/common": "npm:1.26.0"
+    "@temporalio/proto": "npm:1.26.0"
     nexus-rpc: "npm:^0.0.3"
   peerDependencies:
     long: ^5.3.2
     protobufjs: ^8.7.1
-  checksum: 10c0/11661307363d698a1345b12943621da86fb3b24438c7a555a6806d38f19b877a6958f51564f9fc8469e654d48ee7bfd5f9573d83b8d2cb7f8c893953a227be4f
+  checksum: 10c0/4ed3f3385643d53df9279b3ff39dbc5a11b0a3e7e96839a741bc24fffc05379401f724caaa9de593dd1fc4c9c1ccbde8ea6e947db00facfab2ede98f06aa8630
   languageName: node
   linkType: hard
 
